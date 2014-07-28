@@ -1,0 +1,30 @@
+{
+  "name": "django-global",
+  "description": "Installs/Configures python and Django",
+  "long_description": "Description\n===========\n\nThis recipe installs the Python Django",
+  "maintainer": "XLAB d.o.o.",
+  "maintainer_email": "matej.artac@xlab.si",
+  "platforms": {
+    "ubuntu": ">= 0.0.0",
+  },
+  "dependencies": {
+    "python": ">= 0.0.0"
+  },
+  "recommendations": {
+  },
+  "suggestions": {
+  },
+  "conflicting": {
+  },
+  "providing": {
+  },
+  "replacing": {
+  },
+  "attributes": {
+  },
+  "groupings": {
+  },
+  "recipes": {
+  },
+  "version": "0.1.10"
+}
