@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of mongodb-10gen.
 
+## 0.1.11
+
+* changed the default package to mongodb-org as this seems to be the up-to-date package. @matej_artac
+* configuration set for ubuntu for now. @matej_artac
+* resolved the problem with the command['apt-get update'] not being visible. @matej_artac
+
 ## 0.1.10
 
 * fix: #6 Error when using a base_dir different of /data/mongodb/ @mgrenonville

@@ -1,7 +1,7 @@
 ## choose version as package name
-# mongodb18-10gen, mongodb20-10gen,mongodb-10gen
+# mongodb18-10gen, mongodb20-10gen,mongodb-10gen,mongodb-org
 default['mongodb']['nodename'] = "mongodb"
-default['mongodb']['package'] = "mongodb-10gen"
+default['mongodb']['package'] = "mongodb-org"
 default['mongodb']['port']   = 27017
 default['mongodb']['log_verbose']   = false
 default['mongodb']['log_cpu']   = true
@@ -14,11 +14,16 @@ default['mongodb']['enable_nojournal'] = false
 default['mongodb']['enable_directoryperdb'] = true
 default['mongodb']['oplogSize'] = 5120
 
-default['mongodb']['base_dir'] = '/data/mongodb'
-default['mongodb']['etc_dir'] = File.join(node['mongodb']['base_dir'], "etc")
-default['mongodb']['log_dir'] = File.join(node['mongodb']['base_dir'], "log")
-default['mongodb']['data_dir'] = File.join(node['mongodb']['base_dir'], "db")
-default['mongodb']['misc_dir'] = File.join(node['mongodb']['base_dir'], "misc")
+#default['mongodb']['base_dir'] = '/data/mongodb'
+#default['mongodb']['etc_dir'] = File.join(node['mongodb']['base_dir'], "etc")
+#default['mongodb']['log_dir'] = File.join(node['mongodb']['base_dir'], "log")
+#default['mongodb']['data_dir'] = File.join(node['mongodb']['base_dir'], "db")
+#default['mongodb']['misc_dir'] = File.join(node['mongodb']['base_dir'], "misc")
+
+default['mongodb']['etc_dir'] = "/var/etc" 
+default['mongodb']['log_dir'] = "/var/log/mongodb" 
+default['mongodb']['data_dir'] = "/var/lib/mongodb" 
+default['mongodb']['misc_dir'] = "/var/lib/mongodb/misc"
 
 
 ## for replica sets

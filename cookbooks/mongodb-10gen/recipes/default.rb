@@ -47,16 +47,16 @@ file "/etc/default/mongodb" do
   content "ENABLE_MONGODB=no"
 end
 
+execute "apt-get update" do
+  command "apt-get update"
+  ignore_failure true
+  action :nothing
+end
+
 # cookbook apt has bug ?
 # apt-get update notifies does not work.
 # here is work around.
 if node['chef_packages']['chef']['version'] < "10"
-  execute "apt-get update" do
-    command "apt-get update"
-    ignore_failure true
-    action :run
-  end
-
   file "/etc/apt/sources.list.d/mongodb-10gen.update-once.list" do
     action :create_if_missing
     notifies :run, "execute[apt-get update]", :immediately
