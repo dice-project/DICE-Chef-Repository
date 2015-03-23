@@ -2,7 +2,7 @@
 default['mysql']['service_name'] = 'default'
 
 # passwords
-default['mysql']['server_root_password'] = 'ilikerandompasswords'
+default['mysql']['server_root_password'] = 'root'
 default['mysql']['server_debian_password'] = nil
 default['mysql']['server_repl_password'] = nil
 
