@@ -1,0 +1,32 @@
+---
+driver_plugin: vagrant
+
+driver_config:
+  require_chef_omnibus: true
+
+provisioner:
+  name: chef_zero
+  data_path: test/shared
+
+platforms:
+  - name: ubuntu-14.04
+  - name: ubuntu-12.04
+  - name: ubuntu-10.04
+  - name: centos-6.4
+  - name: centos-5.9
+
+suites:
+- name: default
+  run_list:
+  - recipe[chef-vault]
+  - recipe[test]
+
+- name: secret_resource
+  run_list:
+  - recipe[chef-vault]
+  - recipe[test::chef_vault_secret]
+
+- name: with-sugar
+  run_list:
+  - recipe[chef-sugar]
+  - recipe[chef-vault]
