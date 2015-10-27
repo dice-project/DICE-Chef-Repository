@@ -1,0 +1,15 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-12.04
+
+suites:
+  - name: storm-nimbus
+    run_list:
+      - recipe[storm-cluster::nimbus]
+    attributes:
