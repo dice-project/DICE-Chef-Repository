@@ -33,8 +33,4 @@ template configuration_server do
 	}
 end
 
-log "blueprint id: #{node["cloudify"]["blueprint_id"]}"
-log "my IP: #{node["ipaddress"]}"
-log "related node's IP: #{node["cloudify"]["related"]["runtime_properties"]["chef_attributes"]["ipaddress"]}"
-log "my node id: #{node["cloudify"]["node_id"]}"
-log "related node's id: #{node["cloudify"]["related"]["node_id"]}"
+log "#{JSON.pretty_generate(node["cloudify"])}"

@@ -17,14 +17,16 @@
 # limitations under the License.
 #
 
-zookeepers = search(:node, "recipes:hadoop\\:\\:zookeeper_server")
+zookeepers_hash = 
+	node["cloudify"]["runtime_properties"]["zookeeper_servers"]
+zookeepers = zookeepers_hash.values.map { |ipaddress| ipaddress }
 
 zookeeper_conf_dir = "/etc/zookeeper/#{node['zookeeper']['conf_dir']}"
 
 if node['zookeeper'].key?('zoocfg') && !node['zookeeper']['zoocfg'].empty?
 	zoocfg = node['zookeeper']['zoocfg'].to_hash.dup
-	zookeepers.each_with_index do |node, i| 
-		zoocfg["server.#{i}"] = "#{node['ipaddress']}:#{node['zookeeper']['peer_port']}"
+	zookeepers.each_with_index do |zkp, i| 
+		zoocfg["server.#{i}"] = "#{zkp}:#{node['zookeeper']['peer_port']}"
 	end
 
 	# Setup zoo.cfg
@@ -36,8 +38,4 @@ if node['zookeeper'].key?('zoocfg') && !node['zookeeper']['zoocfg'].empty?
 	  action :create
 	  variables :properties => zoocfg
 	end # End zoo.cfg
-end
-
-service 'zookeeper-server' do 
-	action :start
 end

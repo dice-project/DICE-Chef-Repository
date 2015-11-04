@@ -95,6 +95,8 @@ unless zookeeper_datalog_dir == zookeeper_data_dir
   end
 end
 
+zoocfg = node['zookeeper']['zoocfg']
+
 # Setup zoo.cfg
 template "#{zookeeper_conf_dir}/zoo.cfg" do
   source 'generic.properties.erb'

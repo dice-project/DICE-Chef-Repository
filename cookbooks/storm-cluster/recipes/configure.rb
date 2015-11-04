@@ -20,13 +20,15 @@ install_dir = node['storm']['install_dir']
 
 storm_yaml = node['storm']['storm_yaml'].to_hash.dup
 
-zookeepers = search(:node, "recipes:hadoop\\:\\:zookeeper_server")
-zookeeper_addresses = zookeepers.map { |node| node['ipaddress'] }
+zookeepers_hash = 
+	node["cloudify"]["runtime_properties"]["zookeeper_servers"]
+zookeeper_addresses = zookeepers_hash.values
 
-nimbus = search(:node, 'recipes:storm-cluster\\:\\:nimbus')
+nimbus = 
+	node["cloudify"]["runtime_properties"]["nimbus_server_address"]
 
 storm_yaml["storm.zookeeper.servers"] = zookeeper_addresses
-storm_yaml["nimbus.host"] = nimbus[0]["ipaddress"]
+storm_yaml["nimbus.host"] = nimbus
 
 template "#{install_dir}/#{storm_version}/conf/storm.yaml" do
   source 'storm.yaml.erb'
@@ -36,10 +38,4 @@ template "#{install_dir}/#{storm_version}/conf/storm.yaml" do
   variables(
     'storm_yaml' => JSON.parse(storm_yaml.to_json)
   )
-end
-
-service 'storm-supervisor' do
-  supports :status => true, :restart => true
-  provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
-  action :restart
 end
