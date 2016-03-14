@@ -32,7 +32,13 @@ default["conf-dir"] = "/etc/hadoop"
 default["core-site"]["fs.defaultFS"] = "hdfs://#{node["fqdn"]}"
 default["hdfs-site"]["dfs.namenode.name.dir"] = "file:///home/hdfs/namenode"
 default["hdfs-site"]["dfs.datanode.data.dir"] = "file:///home/hdfs/datanode"
+
 default["yarn-site"]["yarn.resourcemanager.hostname"] = node["fqdn"]
+default["yarn-site"]["yarn.nodemanager.local-dirs"] =
+  "file:///home/yarn/local"
+default["yarn-site"]["yarn.nodemanager.log-dirs"] =
+  "file:///home/yarn/logs"
+
 default["capacity-scheduler"]\
        ["yarn.scheduler.capacity.maximum-applications"] = 10000
 default["capacity-scheduler"]\
