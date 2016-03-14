@@ -29,7 +29,8 @@ pre-start exec <%= @opts["runner"] %> \
                start <%= @opts["service"] %>
 
 script
-  while jps | grep -q NodeManager; do
+  while jps | grep -qi <%= @opts["service"] %>
+  do
     sleep 5
   done
 end script
