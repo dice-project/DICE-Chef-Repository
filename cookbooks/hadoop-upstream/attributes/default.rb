@@ -33,6 +33,29 @@ default["core-site"]["fs.defaultFS"] = "hdfs://#{node["fqdn"]}"
 default["hdfs-site"]["dfs.namenode.name.dir"] = "file:///home/hdfs/namenode"
 default["hdfs-site"]["dfs.datanode.data.dir"] = "file:///home/hdfs/datanode"
 default["yarn-site"]["yarn.resourcemanager.hostname"] = node["fqdn"]
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.maximum-applications"] = 10000
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.maximum-am-resource-percent"] = 0.1
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.resource-calculator"] =
+         "org.apache.hadoop.yarn.util.resource.DefaultResourceCalculator"
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.root.queues"] = "default"
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.root.default.capacity"] = 100
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.root.default.user-limit-factor"] = 1
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.root.default.maximum-capacity"] = 100
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.root.default.state"] = "RUNNING"
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.root.default.acl_submit_applications"] = "*"
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.root.default.acl_administer_queue"] = "*"
+default["capacity-scheduler"]\
+       ["yarn.scheduler.capacity.node-locality-delay"] = 40
 
 default["hadoop-env"]["JAVA_HOME"] = "/usr/lib/jvm/java-7-oracle"
 default["hadoop-env"]["HADOOP_CONF_DIR"] = node["conf-dir"]
@@ -48,3 +71,6 @@ default["hadoop-env"]["HADOOP_SECONDARYNAMENODE_OPTS"] =
 default["hadoop-env"]["HADOOP_PORTMAP_OPTS"] = "-Xmx512m"
 default["hadoop-env"]["HADOOP_CLIENT_OPTS"] = "-Xmx512m"
 default["hadoop-env"]["HADOOP_PID_DIR"] = "/var/run/"
+
+default["yarn-env"]["JAVA_HOME"] = "/usr/lib/jvm/java-7-oracle"
+default["yarn-env"]["YARN_LOG_DIR"] = "/var/log/hadoop/yarn"

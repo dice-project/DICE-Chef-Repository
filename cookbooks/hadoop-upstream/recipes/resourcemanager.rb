@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hadoop-upstream
-# Recipe:: datanode
+# Recipe:: resourcemanager
 #
 # Copyright 2016, XLAB
 #
@@ -21,48 +21,35 @@
 include_recipe "hadoop-upstream::default"
 hadoop_home = "#{node["prefix"]}/#{node["hadoop-version"]}"
 
-user "hdfs" do
-  home "/home/hdfs"
+user "yarn" do
+  home "/home/yarn"
   shell "/bin/bash"
 end
 
-data_dirs = node["hdfs-site"]["dfs.datanode.data.dir"].split(",")
-data_dirs_local = data_dirs.map {|v| v.gsub("file://", "")}
-
-data_dirs_local.each do |folder|
-  directory folder do
-    mode "0700"
-    owner "hdfs"
-    group "hdfs"
-    action :create
-    recursive true
-  end
-end
-
-directory "#{node["hadoop-env"]["HADOOP_LOG_DIR"]}" do
+directory "#{node["yarn-env"]["YARN_LOG_DIR"]}" do
   mode "0755"
-  owner "hdfs"
-  group "hdfs"
+  owner "yarn"
+  group "yarn"
   action :create
   recursive true
 end
 
-template "/etc/init/datanode.conf" do
+template "/etc/init/resourcemanager.conf" do
   source "init.conf.erb"
   mode "0644"
   owner "root"
   group "root"
   action :create
   variables :opts => {
-    "description" => "Hadoop HDFS datanode",
-    "runner" => "#{hadoop_home}/sbin/hadoop-daemon.sh",
+    "description" => "Hadoop YARN resourcemanager",
+    "runner" => "#{hadoop_home}/sbin/yarn-daemon.sh",
     "config" => "#{node["conf-dir"]}",
-    "service" => "datanode",
-    "user" => "hdfs"
+    "service" => "resourcemanager",
+    "user" => "yarn"
   }
 end
 
-service "datanode" do
+service "resourcemanager" do
   provider Chef::Provider::Service::Upstart
   action [:enable, :start]
 end

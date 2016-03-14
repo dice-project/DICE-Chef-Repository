@@ -42,15 +42,15 @@ directory node["conf-dir"] do
   recursive true
 end
 
-%w(core hdfs yarn).each do |name|
-  template "#{node["conf-dir"]}/#{name}-site.xml" do
+["core-site", "hdfs-site", "yarn-site", "capacity-scheduler"].each do |name|
+  template "#{node["conf-dir"]}/#{name}.xml" do
     source "site.xml.erb"
     mode "0644"
     owner "root"
     group "root"
     action :create
-    variables :opts => node["#{name}-site"]
-    only_if { node.key?("#{name}-site") }
+    variables :opts => node["#{name}"]
+    only_if { node.key?("#{name}") }
   end
 end
 

@@ -20,7 +20,7 @@ description "<%= @opts["description"] %>"
 start on (started networking)
 stop on shutdown
 
-setuid hdfs
+setuid <%= @opts["user"] %>
 respawn
 
 # actually start service

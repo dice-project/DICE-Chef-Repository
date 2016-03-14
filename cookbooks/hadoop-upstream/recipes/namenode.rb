@@ -66,7 +66,8 @@ template "/etc/init/namenode.conf" do
     "description" => "Hadoop HDFS namenode",
     "runner" => "#{hadoop_home}/sbin/hadoop-daemon.sh",
     "config" => "#{node["conf-dir"]}",
-    "service" => "namenode"
+    "service" => "namenode",
+    "user" => "hdfs"
   }
 end
 
