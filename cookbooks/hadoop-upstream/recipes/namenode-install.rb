@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hadoop-upstream
-# Recipe:: namenode
+# Recipe:: namenode-install
 #
 # Copyright 2016, XLAB
 #
@@ -69,9 +69,4 @@ template "/etc/init/namenode.conf" do
     "service" => "namenode",
     "user" => "hdfs"
   }
-end
-
-service "namenode" do
-  provider Chef::Provider::Service::Upstart
-  action [:enable, :start]
 end

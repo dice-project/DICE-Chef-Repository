@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hadoop-upstream
-# Recipe:: nodemanager
+# Recipe:: resourcemanager-install
 #
 # Copyright 2016, XLAB
 #
@@ -26,21 +26,6 @@ user "yarn" do
   shell "/bin/bash"
 end
 
-data_dirs = node["yarn-site"]["yarn.nodemanager.local-dirs"].split(",")
-dirs = data_dirs.map {|v| v.gsub("file://", "")}
-log_dirs = node["yarn-site"]["yarn.nodemanager.log-dirs"].split(",")
-dirs += log_dirs.map {|v| v.gsub("file://", "")}
-
-dirs.each do |folder|
-  directory folder do
-    mode "0700"
-    owner "yarn"
-    group "yarn"
-    action :create
-    recursive true
-  end
-end
-
 directory "#{node["yarn-env"]["YARN_LOG_DIR"]}" do
   mode "0755"
   owner "yarn"
@@ -49,22 +34,17 @@ directory "#{node["yarn-env"]["YARN_LOG_DIR"]}" do
   recursive true
 end
 
-template "/etc/init/nodemanager.conf" do
+template "/etc/init/resourcemanager.conf" do
   source "init.conf.erb"
   mode "0644"
   owner "root"
   group "root"
   action :create
   variables :opts => {
-    "description" => "Hadoop YARN nodemanager",
+    "description" => "Hadoop YARN resourcemanager",
     "runner" => "#{hadoop_home}/sbin/yarn-daemon.sh",
     "config" => "#{node["conf-dir"]}",
-    "service" => "nodemanager",
+    "service" => "resourcemanager",
     "user" => "yarn"
   }
-end
-
-service "nodemanager" do
-  provider Chef::Provider::Service::Upstart
-  action [:enable, :start]
 end

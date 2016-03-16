@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: hadoop-upstream
-# Recipe:: datanode
+# Recipe:: datanode-install
 #
 # Copyright 2016, XLAB
 #
@@ -60,9 +60,4 @@ template "/etc/init/datanode.conf" do
     "service" => "datanode",
     "user" => "hdfs"
   }
-end
-
-service "datanode" do
-  provider Chef::Provider::Service::Upstart
-  action [:enable, :start]
 end
