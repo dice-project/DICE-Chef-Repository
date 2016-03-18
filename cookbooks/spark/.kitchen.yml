@@ -1,0 +1,44 @@
+---
+driver:
+  name: vagrant
+  network:
+    - ["private_network", {type: "dhcp"}]
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: master
+    run_list:
+      - recipe[dice-common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[spark::default]
+      - recipe[spark::configure]
+      - recipe[spark::start]
+    attributes:
+      spark:
+        type: master
+      cloudify:
+        properties:
+          configuration: {}
+        runtime_properties: {}
+
+  - name: worker
+    run_list:
+      - recipe[dice-common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[spark::default]
+      - recipe[spark::configure]
+    attributes:
+      spark:
+        type: worker
+      cloudify:
+        properties:
+          configuration: {}
+        runtime_properties:
+          master_ip: 1.2.3.4

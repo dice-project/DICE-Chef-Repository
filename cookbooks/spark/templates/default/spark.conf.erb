@@ -1,0 +1,25 @@
+author          "Tadej Borovšak <tadej.borovsak@xlab.si>"
+description     "Spark <%= @type %> job"
+
+# TODO: This is ugly hack that uses Spark provided scripts and polls jps.
+#       We need to dig into spark-daemon.sh file and get proper run command.
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+setuid <%= @user %>
+setgid <%= @user %>
+
+env SPARK_CONF_DIR=<%= @conf_dir %>
+
+pre-start exec <%= @spark_home %>/sbin/start-<%= @script_name %>.sh \
+                 <%= @master %>
+
+script
+  while jps | grep -qi <%= @type %>
+  do
+    sleep 5
+  done
+end script
+
+post-stop exec <%= @spark_home %>/sbin/stop-<%= @script_name %>.sh
