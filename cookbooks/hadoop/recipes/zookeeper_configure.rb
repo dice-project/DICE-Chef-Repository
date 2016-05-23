@@ -17,25 +17,46 @@
 # limitations under the License.
 #
 
-zookeepers_hash = 
-	node["cloudify"]["runtime_properties"]["zookeeper_servers"]
-zookeepers = zookeepers_hash.values.map { |ipaddress| ipaddress }
-
 zookeeper_conf_dir = "/etc/zookeeper/#{node['zookeeper']['conf_dir']}"
+zookeeper_data_dir =
+  if node['zookeeper'].key?('zoocfg') &&
+     node['zookeeper']['zoocfg'].key?('dataDir')
+    node['zookeeper']['zoocfg']['dataDir']
+  else
+    '/var/lib/zookeeper'
+  end
 
-if node['zookeeper'].key?('zoocfg') && !node['zookeeper']['zoocfg'].empty?
-	zoocfg = node['zookeeper']['zoocfg'].to_hash.dup
-	zookeepers.each_with_index do |zkp, i| 
-		zoocfg["server.#{i}"] = "#{zkp}:#{node['zookeeper']['peer_port']}"
-	end
+if !node['zookeeper'].key?('zoocfg')
+  node['zookeeper']['zoocfg'] = {}
+end
+zoocfg = node['zookeeper']['zoocfg'].to_hash.dup
 
-	# Setup zoo.cfg
-	template "#{zookeeper_conf_dir}/zoo.cfg" do
-	  source 'generic.properties.erb'
-	  owner 'root'
-	  group 'root'
-	  mode '0644'
-	  action :create
-	  variables :properties => zoocfg
-	end # End zoo.cfg
+myid = nil
+zookeepers = node["cloudify"]["runtime_properties"]["zookeeper_quorum"]
+zookeepers.each.with_index(1) do |zkp, i|
+  zoocfg["server.#{i}"] = "#{zkp}:#{node['zookeeper']['peer_port']}"
+  if zkp == node['ipaddress']
+    myid = i
+  end
+end
+
+config = node['cloudify']['properties']['configuration']
+zoocfg = zoocfg.merge(config)
+
+template "#{zookeeper_conf_dir}/zoo.cfg" do
+  source 'generic.properties.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create
+  variables :properties => zoocfg
+end
+
+template "#{zookeeper_data_dir}/myid" do
+  source 'zookeeper-myid.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+  action :create
+  variables :myid => myid
 end
