@@ -61,6 +61,7 @@ script 'install_storm' do
     rm -rf #{install_dir}/#{storm_version}
     mv #{install_dir}/#{storm_package_name} #{install_dir}/#{storm_version}
     chown -R #{storm_user}:#{storm_user} #{install_dir}/#{storm_version}
+    ln -s #{install_dir}/#{storm_version}/bin/storm /usr/local/bin/storm
   EOL
   not_if { ::File.exist?("#{install_dir}/#{storm_version}") }
 end

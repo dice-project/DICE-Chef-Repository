@@ -1,11 +1,18 @@
-storm-cookbook [![Build Status](https://travis-ci.org/Lewuathe/storm-cookbook.svg?branch=master)](https://travis-ci.org/Lewuathe/storm-cookbook) ![storm-cluster](https://img.shields.io/cookbook/v/storm-cluster.svg) ![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)
+storm-cookbook ![storm-cluster](https://img.shields.io/cookbook/v/storm-cluster.svg) ![LICENSE](https://img.shields.io/badge/license-MIT-blue.svg)
 ==============
 
-This is a chef cookbook for [apache storm](http://storm.apache.org/)
+This is a chef cookbook for [apache storm](http://storm.apache.org/) to be used 
+by the [DICE TOSCA library](https://github.com/dice-project/DICE-Deployment-Cloudify).
+The cookbook is based on the [storm-cluster](https://supermarket.chef.io/cookbooks/storm-cluster)
+cookbook version 0.0.22 by Kai Sasaki([Lewuathe](https://github.com/Lewuathe))
+and Bill Warner([TD-4242](https://github.com/TD-4242)). In the 
+[DICE project](http://dice-h2020.eu/), we have extended the cookbook to provide
+separate recipes for configuring the services and to run them. The recipes are
+ready for use in the cloud orchestrator [Cloudify](http://getcloudify.org/).
 
 Download
 ----------
-[storm-cluster: Chef Supermarket](https://supermarket.chef.io/cookbooks/storm-cluster)
+Available in [GitHub](https://github.com/dice-project/DICE-Chef-Repository).
 
 Requirements
 ------------
@@ -61,7 +68,8 @@ For nimbus node
 {
   "name":"nimbus_host",
   "run_list": [
-    "storm::nimbus"
+    "storm::nimbus",
+    "storm::start"
   ]
 }
 ```
@@ -72,7 +80,9 @@ For supervisor node
 {
   "name":"supervisor_host",
   "run_list": [
-    "storm::supervisor"
+    "storm::supervisor",
+    "storm::configure",
+    "storm::start"
   ]
 }
 ```
