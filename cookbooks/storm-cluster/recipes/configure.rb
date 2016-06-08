@@ -13,22 +13,20 @@
 require 'json'
 
 storm_user = node['storm']['user']
-storm_package_name = node['storm']['package']
 storm_version = node['storm']['version']
-storm_remote_name = "#{node['storm']['download_url']}#{node['storm']['download_dir']}"
 install_dir = node['storm']['install_dir']
 
 storm_yaml = node['storm']['storm_yaml'].to_hash.dup
+if node.key?('cloudify')
 
-zookeepers_hash = 
-	node["cloudify"]["runtime_properties"]["zookeeper_servers"]
-zookeeper_addresses = zookeepers_hash.values
-
-nimbus = 
-	node["cloudify"]["runtime_properties"]["nimbus_server_address"]
-
-storm_yaml["storm.zookeeper.servers"] = zookeeper_addresses
-storm_yaml["nimbus.host"] = nimbus
+  rt_props = node['cloudify']['runtime_properties']
+  storm_yaml['storm.zookeeper.servers'] = rt_props['zookeeper_quorum']
+  storm_yaml['nimbus.host'] = if rt_props.key?('storm_nimbus_ip')
+                                rt_props['storm_nimbus_ip']
+                              else
+                                node['ipaddress']
+                              end
+end
 
 template "#{install_dir}/#{storm_version}/conf/storm.yaml" do
   source 'storm.yaml.erb'
