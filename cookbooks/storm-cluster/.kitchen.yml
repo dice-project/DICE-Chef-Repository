@@ -6,10 +6,46 @@ provisioner:
   name: chef_zero
 
 platforms:
-  - name: ubuntu-12.04
+  - name: ubuntu-14.04
 
 suites:
-  - name: storm-nimbus
+  - name: nimbus
     run_list:
       - recipe[storm-cluster::nimbus]
+      - recipe[storm-cluster::supervisor]
+      - recipe[storm-cluster::configure]
     attributes:
+      storm:
+        install_method: remote_file
+        download_url: http://193.77.50.17/
+        version: 0.9.3
+        install_dir: /usr/share/storm
+        user: storm
+
+      cloudify:
+        properties:
+          configuration:
+            test_config_1: value_1
+            test_config_2: value_2
+        runtime_properties:
+          zookeeper_quorum:
+            - 123.231.45.66
+            - 123.231.45.67
+          storm_nimbus_ip: 123.231.45.68
+
+  - name: storm
+    run_list:
+      - recipe[storm-cluster::supervisor]
+      - recipe[storm-cluster::configure]
+    attributes:
+      storm:
+        install_method: remote_file
+        download_url: http://193.77.50.17/
+        version: 0.9.3
+        install_dir: /usr/share/storm
+        user: storm
+        storm_yaml:
+          nimbus.host: 543.210.65.43
+          storm.zookeeper.servers:
+            - a.b.c.d
+            - e.f.g.h

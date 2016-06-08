@@ -31,19 +31,3 @@ service 'storm-ui' do
   provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
   action :start
 end
-
-# script 'start_nimbus' do
-#  interpreter 'bash'
-#  user 'storm'
-#  code <<-EOL
-#    #{install_dir}/#{storm_version}/bin/storm nimbus
-#  EOL
-# end
-#
-# script 'start_ui' do
-#  interpreter 'bash'
-#  user 'storm'
-#  code <<-EOL
-#    #{install_dir}/#{storm_version}/bin/storm ui
-#  EOL
-# end

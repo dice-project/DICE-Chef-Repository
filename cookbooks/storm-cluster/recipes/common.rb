@@ -65,13 +65,3 @@ script 'install_storm' do
   EOL
   not_if { ::File.exist?("#{install_dir}/#{storm_version}") }
 end
-
-template "#{install_dir}/#{storm_version}/conf/storm.yaml" do
-  source 'storm.yaml.erb'
-  mode '0644'
-  owner storm_user
-  group storm_user
-  variables(
-    'storm_yaml' => JSON.parse(node['storm']['storm_yaml'].to_hash.dup.to_json)
-  )
-end

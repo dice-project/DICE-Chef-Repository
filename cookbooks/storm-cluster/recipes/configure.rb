@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 # This recipe should be called when the application is being
-# configured, i.e., when the related components (zookeeper, 
+# configured, i.e., when the related components (zookeeper,
 # any other Storm nodes) have been created, but not yet connected.
 
 require 'json'
@@ -18,6 +18,7 @@ install_dir = node['storm']['install_dir']
 
 storm_yaml = node['storm']['storm_yaml'].to_hash.dup
 if node.key?('cloudify')
+  storm_yaml.merge!(node['cloudify']['properties']['configuration'])
 
   rt_props = node['cloudify']['runtime_properties']
   storm_yaml['storm.zookeeper.servers'] = rt_props['zookeeper_quorum']
