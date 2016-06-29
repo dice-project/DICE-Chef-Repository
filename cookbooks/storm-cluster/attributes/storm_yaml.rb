@@ -1,5 +1,5 @@
 ########### These MUST be filled in for a storm configuration
-default['storm']['storm_yaml']['nimbus.host'] = ''
+default['storm']['storm_yaml']['nimbus.seeds'] = []
 default['storm']['storm_yaml']['storm.zookeeper.servers'] = ['']
 #
 #

@@ -22,11 +22,11 @@ if node.key?('cloudify')
 
   rt_props = node['cloudify']['runtime_properties']
   storm_yaml['storm.zookeeper.servers'] = rt_props['zookeeper_quorum']
-  storm_yaml['nimbus.host'] = if rt_props.key?('storm_nimbus_ip')
-                                rt_props['storm_nimbus_ip']
-                              else
-                                node['ipaddress']
-                              end
+  storm_yaml['nimbus.seeds'] = if rt_props.key?('storm_nimbus_ip')
+                                 [rt_props['storm_nimbus_ip']]
+                               else
+                                 [node['ipaddress']]
+                               end
 end
 
 template "#{install_dir}/#{storm_version}/conf/storm.yaml" do

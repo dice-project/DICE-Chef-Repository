@@ -11,17 +11,13 @@ platforms:
 suites:
   - name: nimbus
     run_list:
-      - recipe[storm-cluster::nimbus]
-      - recipe[storm-cluster::supervisor]
+      - recipe[storm-cluster::common]
       - recipe[storm-cluster::configure]
+      - recipe[storm-cluster::start_nimbus]
+      - recipe[storm-cluster::start_supervisor]
     attributes:
-      storm:
-        install_method: remote_file
-        download_url: http://193.77.50.17/
-        version: 0.9.3
-        install_dir: /usr/share/storm
-        user: storm
-
+      java:
+        jdk_version: "7"
       cloudify:
         properties:
           configuration:
@@ -35,17 +31,16 @@ suites:
 
   - name: storm
     run_list:
-      - recipe[storm-cluster::supervisor]
+      - recipe[storm-cluster::common]
       - recipe[storm-cluster::configure]
+      - recipe[storm-cluster::start_supervisor]
     attributes:
+      java:
+        jdk_version: "7"
       storm:
-        install_method: remote_file
-        download_url: http://193.77.50.17/
-        version: 0.9.3
-        install_dir: /usr/share/storm
-        user: storm
         storm_yaml:
-          nimbus.host: 543.210.65.43
+          nimbus.seeds:
+            - 543.210.65.43
           storm.zookeeper.servers:
             - a.b.c.d
             - e.f.g.h

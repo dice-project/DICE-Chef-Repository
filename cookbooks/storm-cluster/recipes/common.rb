@@ -65,3 +65,34 @@ script 'install_storm' do
   EOL
   not_if { ::File.exist?("#{install_dir}/#{storm_version}") }
 end
+
+# Service files
+template '/etc/init/storm-supervisor.conf' do
+  source 'storm-daemon.conf.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+  variables(
+    :service => 'supervisor'
+  )
+end
+
+template '/etc/init/storm-nimbus.conf' do
+  source 'storm-daemon.conf.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+  variables(
+    :service => 'nimbus'
+  )
+end
+
+template '/etc/init/storm-ui.conf' do
+  source 'storm-daemon.conf.erb'
+  mode '0644'
+  owner 'root'
+  group 'root'
+  variables(
+    :service => 'ui'
+  )
+end
