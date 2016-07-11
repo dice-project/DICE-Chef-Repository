@@ -1,0 +1,5 @@
+New in v.0.1.4:
+
+* Default Java version increased to 7.
+* Update Apache Storm recipes for 1.0.1 release.
+
