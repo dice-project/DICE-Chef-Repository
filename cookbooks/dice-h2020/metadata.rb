@@ -1,0 +1,10 @@
+name             'dice-h2020'
+maintainer       'XLAB d.o.o.'
+maintainer_email 'matej.artac@xlab.si'
+license          'BSD-3'
+description      'Installs/Configures dice-h2020'
+long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
+version          '0.1.0'
+depends          'apt'
+depends          'java'
+depends          'poise-python'

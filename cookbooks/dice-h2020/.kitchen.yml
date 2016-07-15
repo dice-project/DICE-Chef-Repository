@@ -1,0 +1,27 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: conf-optim
+    run_list:
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[dice-h2020::conf-optim]
+    attributes:
+      dice-h2020:
+        conf-optim:
+          matlab-installpath: /opt/matlab
+          ds-container: 4a7459f7-914e-4e83-ab40-b04fd1975542
+        deployment-service:
+          url: http://10.10.50.3:8000
+          username: admin
+          password: LetJustMeIn
+        d-mon:
+          url: http://10.10.50.20:5001
