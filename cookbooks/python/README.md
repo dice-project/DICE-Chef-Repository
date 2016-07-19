@@ -3,6 +3,16 @@ Description
 
 Installs and configures Python.  Also includes LWRPs for managing python packages with `pip` and `virtualenv` isolated Python environments.
 
+## **THIS COOKBOOK IS DEPRECATED**
+
+[Poise-python](https://github.com/poise/poise-python) is a vastly better cookbook
+for managing Python-related things. This cookbook will remain for compatibility
+but any future release will only be to gut it and turn it into a wrapper for
+`poise-python`.
+
+## **I REPEAT, THIS COOKBOOK IS DEPRECATED**
+
+
 Requirements
 ============
 
