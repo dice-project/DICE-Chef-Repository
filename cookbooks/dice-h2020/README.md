@@ -37,6 +37,7 @@ The following attributes can be changed if needed:
   ["dice-h2020"]["conf-optim"]["release-url"]                | URL of the Configuration Optimization's release
   ["dice-h2020"]["conf-optim"]["matlab-url"]                 | URL where the MATLAB Compiler Runtime R2015a resides
   ["dice-h2020"]["conf-optim"]["matlab-installpath"]         | Install MATLAB into this path
+  ["dice-h2020"]["deployment-service"]["release-url"]        | URL of the DICE deployment release package
   ["dice-h2020"]["deployment-service"]["tools-install-path"] | Install DICE deployment service CLI tools into this path
 
 
