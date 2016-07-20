@@ -70,7 +70,6 @@ Then obtain this cookbook repository:
 ```bash
 $ git clone https://github.com/dice-project/DICE-Chef-Repository.git
 $ cd DICE-Chef-Repository
-$ git checkout feature/dice-co
 ```
 
 Before we run the installation, we just need to provide the configuration,
