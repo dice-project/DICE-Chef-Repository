@@ -1,0 +1,45 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+  cookbook_path: /home/tadej/xlab/dice/DICE-chef-repo/cookbooks
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: seed
+    driver:
+      network:
+        - ["private_network", {ip: "192.168.33.30"}]
+    run_list:
+      - recipe[java::default]
+      - recipe[cassandra::default]
+      - recipe[cassandra::configure]
+      - recipe[cassandra::start]
+    attributes:
+      java:
+        jdk_version: "8"
+      cloudify:
+        runtime_properties:
+          host_ip: 192.168.33.30
+
+  - name: worker
+    driver:
+      network:
+        - ["private_network", {ip: "192.168.33.31"}]
+    run_list:
+      - recipe[java::default]
+      - recipe[cassandra::default]
+      - recipe[cassandra::configure]
+      - recipe[cassandra::start]
+    attributes:
+      java:
+        jdk_version: "8"
+      cloudify:
+        runtime_properties:
+          host_ip: 192.168.33.31
+          seeds:
+            - 192.168.33.30
