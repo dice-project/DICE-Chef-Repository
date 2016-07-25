@@ -41,7 +41,8 @@ describe "Configuration Optimization installed" do
 		end
 	end
 	files_expected = ['/opt/co/main', '/opt/co/run_main.sh',
-		'/opt/co/merge_expconfig.py' ]
+		'/opt/co/merge_expconfig.py', '/opt/co/conf/app-config.yaml',
+		'/opt/co/conf/expconfig.yaml' ]
 	files_expected.each do |file|
 		describe file(file) do
 			it { should be_file }

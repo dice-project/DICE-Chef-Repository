@@ -13,8 +13,3 @@ services:
     tools: <%= @deployment_service_install_path %>
   - servicename: monitoring.service
     URL: <%= @dmon_url %>
-  - servicename: "broker"
-    URL: http://localhost:8082 # kafka 
-  - servicename: zookeeper.servers
-    URL: localhost:2181
-    ip: ["10.10.50.11"]

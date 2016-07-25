@@ -132,5 +132,21 @@ template 'config.yaml' do
 		:deployment_service_password => deployment_service_password,
 		:deployment_service_install_path => node["dice-h2020"]["deployment-service"]["tools-install-path"],
 		:dmon_url => node["dice-h2020"]["d-mon"]["url"]
+	action :create
 end
 
+cookbook_file 'app-config.yaml' do
+	source 'co-app-config-sample.yaml'
+	path ::File.join(co_install_path, 'conf', 'app-config.yaml')
+	action :create
+end
+
+bash 'expconfig.yaml' do
+	cwd co_install_path
+	code <<-EOH
+		./merge_expconfig.py \
+		    -c conf/config.yaml \
+		    -a conf/app-config.yaml \
+		    -O conf/expconfig.yaml
+		EOH
+end
