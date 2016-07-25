@@ -8,7 +8,7 @@ default["dice-h2020"]["conf-optim"]["release-url"] =
 	"https://github.com/dice-project/DICE-Configuration-BO4CO/releases/download/" # v0.1.1/bin.zip
 # URL of the whole BO4CO code
 default["dice-h2020"]["conf-optim"]["src-release-url"] =
-	"https://github.com/matejart/DICE-Configuration-BO4CO/archive/develop.zip"
+	"https://github.com/dice-project/DICE-Configuration-BO4CO/archive/master.zip"
 # deployment services container UUID reserved for the CO
 default["dice-h2020"]["conf-optim"]["ds-container"] = "7b5750a7-914e-4e83-ab40-b04fd1975542"
 
