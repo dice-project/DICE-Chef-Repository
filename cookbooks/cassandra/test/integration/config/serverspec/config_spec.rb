@@ -1,0 +1,33 @@
+require 'spec_helper'
+
+describe file('/etc/cassandra/cassandra.yaml') do
+  it { should be_file }
+  its(:content_as_yaml) do
+    should include('listen_address' => '123.135.147.159')
+  end
+  its(:content_as_yaml) do
+    should include('rpc_address' => '123.135.147.159')
+  end
+  its(:content_as_yaml) do
+    should include(
+      'seed_provider' => include(
+        'class_name' => 'org.apache.cassandra.locator.SimpleSeedProvider',
+        'parameters' => include(
+          'seeds' => '111.11.1.123,111.11.1.124'
+        )
+      )
+    )
+  end
+end
+
+describe file('/etc/cassandra/cassandra-env.sh') do
+  it { should be_file }
+end
+
+describe file('/etc/cassandra/cassandra-rackdc.properties') do
+  it { should be_file }
+end
+
+describe file('/etc/cassandra/logback.xml') do
+  it { should be_file }
+end

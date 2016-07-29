@@ -4,16 +4,12 @@ driver:
 
 provisioner:
   name: chef_zero
-  cookbook_path: /home/tadej/xlab/dice/DICE-chef-repo/cookbooks
 
 platforms:
   - name: ubuntu-14.04
 
 suites:
-  - name: seed
-    driver:
-      network:
-        - ["private_network", {ip: "192.168.33.30"}]
+  - name: run
     run_list:
       - recipe[java::default]
       - recipe[cassandra::default]
@@ -23,23 +19,19 @@ suites:
       java:
         jdk_version: "8"
       cloudify:
-        runtime_properties:
-          host_ip: 192.168.33.30
+        runtime_properties: {}
 
-  - name: worker
-    driver:
-      network:
-        - ["private_network", {ip: "192.168.33.31"}]
+  - name: config
     run_list:
       - recipe[java::default]
       - recipe[cassandra::default]
       - recipe[cassandra::configure]
-      - recipe[cassandra::start]
     attributes:
       java:
         jdk_version: "8"
       cloudify:
         runtime_properties:
-          host_ip: 192.168.33.31
+          host_ip: 123.135.147.159
           seeds:
-            - 192.168.33.30
+            - 111.11.1.123
+            - 111.11.1.124
