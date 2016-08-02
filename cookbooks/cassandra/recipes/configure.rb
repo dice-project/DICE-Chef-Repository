@@ -15,21 +15,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Configure cassandra
-cassandra_conf = node['cassandra']['yaml'].to_hash
-
+# Obtain host ip
 ip = if node['cloudify']['runtime_properties'].key?('host_ip')
        node['cloudify']['runtime_properties']['host_ip']
      else
        node['ipaddress']
      end
 
+# If no seeds are present, we are the seed
 seeds = if node['cloudify']['runtime_properties'].key?('seeds')
           node['cloudify']['runtime_properties']['seeds'].join(',')
         else
           ip
         end
 
+# Configure cassandra
+cassandra_conf = node['cassandra']['yaml'].to_hash
+cassandra_conf.merge!(node['cloudify']['properties']['configuration'].to_hash)
+
+# Next three settings cannot be overriden by user
 cassandra_conf['listen_address'] = ip
 cassandra_conf['rpc_address'] = ip
 cassandra_conf['seed_provider'] = [{

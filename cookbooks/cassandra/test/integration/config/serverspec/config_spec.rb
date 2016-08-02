@@ -18,6 +18,21 @@ describe file('/etc/cassandra/cassandra.yaml') do
       )
     )
   end
+  its(:content_as_yaml) do
+    should include('conf_1' => 'string_value')
+  end
+  its(:content_as_yaml) do
+    should include('conf_2' => 123)
+  end
+  its(:content_as_yaml) do
+    should include(
+      'conf_3' => include(
+        'this' => 'is',
+        'nested' => 'dict',
+        'with' => ['array', 'of', 'strings']
+      )
+    )
+  end
 end
 
 describe file('/etc/cassandra/cassandra-env.sh') do
