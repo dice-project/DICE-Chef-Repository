@@ -1,0 +1,41 @@
+FQDNLookup true
+
+PIDFile "/var/run/collectd.pid"
+
+LoadPlugin logfile
+<Plugin "logfile">
+  LogLevel "info"
+  File "/var/log/collectd.log"
+  Timestamp true
+</Plugin>
+
+LoadPlugin cpu
+LoadPlugin df
+<Plugin df>
+        Device "/dev/sda1"
+        MountPoint "/"
+        FSType "ext4"
+        ReportReserved "true"
+</Plugin>
+LoadPlugin interface
+LoadPlugin load
+LoadPlugin memory
+LoadPlugin syslog
+<Plugin syslog>
+        LogLevel info
+</Plugin>
+
+LoadPlugin network
+<Plugin "interface">
+    Interface "eth0"
+    IgnoreSelected false
+</Plugin>
+<Plugin "network">
+    Server "<%= node['dmon_agent']['logstash']['ip'] %>" "<%= node['dmon_agent']['logstash']['udp_port'] %>"
+</Plugin>
+
+LoadPlugin swap
+
+<Include "/etc/collectd/collectd.conf.d">
+        Filter ".conf"
+</Include>
