@@ -1,0 +1,22 @@
+---
+driver:
+  name: vagrant
+  network: 
+    - ["private_network", {ip: "10.211.55.110"}]
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[apt::default]
+      - recipe[dmon_agent::default]
+    attributes:
+      dmon_agent:
+        logstash:
+          ip: '10.211.55.100'
+          udp_port: '25826'

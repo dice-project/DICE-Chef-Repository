@@ -10,10 +10,9 @@ user "#{node['dmon_agent']['user']}" do
   shell '/bin/bash'
 end
 
-#runs apt-get update
-apt_update 'all platforms' do
-  frequency 86400
-  action :periodic
+#append to host
+execute 'host' do
+  command "echo \"127.0.1.1 #{node['hostname']} #{node['hostname']}\" >> /etc/hosts"
 end
 
 #install collectd
@@ -31,17 +30,18 @@ end
 
 #restart collectd
 service 'collectd' do
-  action [:start, :reload, :restart]
+  action :restart
 end
 
-#save logstash-forwarder repository definition
-bash 'install logstash-forwarder' do
-  code <<-EOH
-  echo "deb http://packages.elasticsearch.org/logstashforwarder/debian stable main" | sudo tee -a /etc/apt/sources.list.d/logstashforwarder.list
-  wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-  apt-get update
-  EOH
+
+#add logstash-forwarder repository definition
+apt_repository 'logstash-forwarder' do
+  uri 'http://packages.elasticsearch.org/logstashforwarder/debian'
+  components ['main']
+  distribution 'stable'
+  key 'http://packages.elasticsearch.org/GPG-KEY-elasticsearch'
 end
+
 
 #install logstash-forwarder
 package 'logstash-forwarder'  do
@@ -73,7 +73,7 @@ end
 
 #restart logstash-forwarder
 service 'logstash-forwarder'  do
-  action [:start, :reload, :restart]
+  action :start
 end
 
 #install python
@@ -117,7 +117,6 @@ end
 execute 'copy collectd pid' do
   command "cp /run/collectd.pid #{node['dmon_agent']['home_dir']}/dmon-agent/pid/collectd.pid"
   user "#{node['dmon_agent']['user']}"
-  not_if { File.exist?("#{node['dmon_agent']['home_dir']}/dmon-agent/pid/collectd.pid") }
 end
 
 
@@ -137,7 +136,7 @@ bash 'start dmon-agent' do
   user "#{node['dmon_agent']['user']}"
   cwd "#{node['dmon_agent']['home_dir']}/dmon-agent"
   code <<-EOH
-  python dmon-agent.py > log/dmon-agent.out 2>&1 &
+  nohup python dmon-agent.py > log/dmon-agent.out 2>&1 &
   echo $! > pid/dmon-agent.pid
   EOH
   not_if { File.exists?("#{node['dmon_agent']['home_dir']}/dmon-agent/pid/dmon-agent.pid") }
