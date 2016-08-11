@@ -1,0 +1,19 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: worker
+    run_list:
+      - recipe[apt::default]
+      - recipe[dice-common::default]
+    attributes:
+      cloudify:
+        properties:
+          master_ip: 8.8.8.8
