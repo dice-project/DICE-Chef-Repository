@@ -1,0 +1,11 @@
+description "Flower"
+author "tadeboro"
+
+start on started celery
+stop on stopping celery
+
+setuid <%= @user %>
+setgid <%= @user %>
+
+exec <%= @venv %>/bin/celery flower \
+  --log_file_prefix=/var/log/celery/flower.log

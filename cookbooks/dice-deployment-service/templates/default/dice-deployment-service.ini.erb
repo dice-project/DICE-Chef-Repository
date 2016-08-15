@@ -1,0 +1,11 @@
+[uwsgi]
+chdir = <%= @app_folder %>
+home = <%= @app_venv %>
+module = dice_deploy.wsgi:application
+
+master = true
+processes = 5
+
+socket = <%= @app_socket %>
+chmod-socket = 664
+vacuum = true

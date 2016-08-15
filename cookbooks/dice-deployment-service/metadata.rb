@@ -1,0 +1,12 @@
+name 'dice-deployment-service'
+maintainer 'The Authors'
+maintainer_email 'you@example.com'
+license 'all_rights'
+description 'Installs/Configures dice-deployment-service'
+long_description 'Installs/Configures dice-deployment-service'
+version '0.1.0'
+
+depends 'apt'
+depends 'dice-common'
+depends 'poise-python'
+depends 'poise-archive'

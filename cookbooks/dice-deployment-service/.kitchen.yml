@@ -1,0 +1,30 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+  - name: default
+    run_list:
+      - recipe[apt::default]
+      - recipe[dice-common::host]
+      - recipe[dice-deployment-service::default]
+      - recipe[dice-common::consul-common]
+      - recipe[dice-common::consul-server]
+    attributes:
+      cloudify:
+        properties:
+          ssh_key: abs
+          debug_mode: true
+          sources: https://github.com/dice-project/DICE-Deployment-Service/archive/develop.tar.gz
+          manager: 1.2.3.4
+          manager_user: tadej
+          manager_pass: passw
+          superuser_username: xuser
+          superuser_password: xpass
+          superuser_email: xmail
