@@ -61,6 +61,13 @@ describe port(53) do
   it { should be_listening.with('udp') }
 end
 
+# Main application
+describe file('/var/lib/dice-deployment-service/dds') do
+  it { should be_directory }
+  it { should be_owned_by 'dice' }
+  it { should be_grouped_into 'dice' }
+end
+
 # uWSGI
 describe service('uwsgi') do
   it { should be_enabled }

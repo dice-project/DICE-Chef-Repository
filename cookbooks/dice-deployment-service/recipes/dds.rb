@@ -58,14 +58,14 @@ end
 temp_folder = "#{Chef::Config[:file_cache_path]}/dds"
 poise_archive temp_file do
   destination temp_folder
-  user dice_user
-  group dice_user
 end
 
 execute 'Move package to final place' do
   command "mv #{temp_folder}/dice_deploy_django #{app_folder}"
-  user dice_user
-  group dice_user
+end
+
+execute 'Fix application permissions' do
+  command "chown -R #{dice_user}:#{dice_user} #{app_folder}"
 end
 
 # Create virtualenv and install packages
