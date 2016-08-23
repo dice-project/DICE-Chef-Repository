@@ -29,3 +29,8 @@ suites:
     run_list:
       - recipe[apt::default]
       - recipe[dice-h2020::deployment-service-tool]
+    attributes:
+      dice-h2020:
+        deployment-service:
+          release-url: https://github.com/dice-project/DICE-Deployment-Service/archive/feature/rel0.3.1.zip
+

@@ -41,7 +41,7 @@ bash 'install-ds-tools' do
 		
 		cp tools/dice-deploy-cli #{install_path}
 		cp tools/extract-blueprint-parameters.py #{install_path}
-		cp tools/update_blueprint_parameters.py #{install_path}
+		cp tools/update-blueprint-parameters.py #{install_path}
 		cp -r tools/config_tool #{install_path}
 		EOH
 	action :run
