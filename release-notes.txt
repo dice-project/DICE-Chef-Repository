@@ -1,3 +1,22 @@
+New in v.0.1.5:
+
+* Added a DICE-H2020 cookbook and included recipes for installing
+  BO4CO.
+* Added a recipe to the DICE-H2020 cookbook for installing client
+  programs for DICE deployment service.
+* Added support for Apache Cassandra in the technology library.
+* Added support for Spark in technology library. At this time we support
+  the stand-alone version only.
+* Added support for installing DICE Deployment Service - the server side.
+* Added dependency cookbooks:
+  * seven_zip
+  * poise
+  * poise-language
+  * poise-service
+  * poise-archive
+  * poise-python
+
+
 New in v.0.1.4:
 
 * Default Java version increased to 7.
