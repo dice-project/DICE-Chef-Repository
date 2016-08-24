@@ -30,35 +30,13 @@ describe service('collectd') do
   it { should be_running }
 end
 
-#test if Logstash-forwarder is successfully installed, configured and started.
-describe package('logstash-forwarder') do
-  it { should be_installed }
-end
-
-describe file('/opt/certs') do
-  it { should be_directory }
-  it { should be_owned_by 'dmon-agent' }
-end
-
-describe file('/opt/certs/logstash-forwarder.crt') do
+#test if storm is configured.
+describe file('/etc/spark/metrics.properties') do
   it { should be_file }
   it { should be_owned_by 'dmon-agent' }
-end
-
-describe x509_certificate('/opt/certs/logstash-forwarder.crt') do
-  it { should be_certificate }
-  it { should be_valid }
-end
-
-describe file('/etc/logstash-forwarder.conf') do
-  it { should be_file }
-  it { should be_owned_by 'dmon-agent' }
-  it { should contain('10.211.55.100').from(/servers/).to(/timeout/) }
-  it { should contain('5000').from(/servers/).to(/timeout/) }
-end
-
-describe service('logstash-forwarder') do
-  it { should be_running }
+  it { should contain('10.211.55.100').from(/host/).to(/host/) }
+  it { should contain('5002').from(/host/).to(/period/) }
+  it { should contain('5').from(/period/).to(/seconds/) }
 end
 
 #test if python was installed

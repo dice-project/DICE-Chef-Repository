@@ -1,0 +1,14 @@
+*.sink.Graphite.class=org.apache.spark.metrics.sink.GraphiteSink
+*.sink.Graphite.host=<%= node['dmon_agent']['logstash']['ip'] %>
+*.sink.Graphite.port=<%= node['dmon_agent']['logstash']['g_port'] %>
+*.sink.GraphiteSink.period=<%= node['dmon_agent']['logstash']['period'] %>
+*.sink.GraphiteSink.unit=seconds
+
+
+master.source.jvm.class=org.apache.spark.metrics.source.JvmSource
+
+worker.source.jvm.class=org.apache.spark.metrics.source.JvmSource
+
+driver.source.jvm.class=org.apache.spark.metrics.source.JvmSource
+
+executor.source.jvm.class=org.apache.spark.metrics.source.JvmSource
