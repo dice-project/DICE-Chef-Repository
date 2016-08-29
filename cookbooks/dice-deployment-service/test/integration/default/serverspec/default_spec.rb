@@ -89,3 +89,10 @@ end
 describe port(5555) do
   it { should be_listening.with('tcp') }
 end
+
+# nginx
+describe file('/etc/nginx/sites-available/dice-deployment-service') do
+  its(:content) do
+    should include 'client_max_body_size 50m;'
+  end
+end
