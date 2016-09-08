@@ -1,8 +1,6 @@
 ---
 driver:
   name: vagrant
-  network:
-    - ["private_network", {ip: "10.211.55.100"}]
   customize:
     memory: 4096
     cpus: 4
@@ -14,9 +12,11 @@ platforms:
   - name: ubuntu-14.04
 
 suites:
-  - name: default
+  - name: elk
     run_list:
       - recipe[apt::default]
       - recipe[git::default]
+      - recipe[java::default]
       - recipe[dmon::default]
-    attributes:
+      - recipe[dmon::elk]
+      - recipe[dmon::elk_conf]

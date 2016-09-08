@@ -1,0 +1,39 @@
+input {
+
+	lumberjack{
+    	port => <%= @lPort %>
+    	ssl_certificate => "<%= @sslcert %>"
+    	ssl_key=> "<%= @sslkey %>"
+	}
+
+	graphite{
+	    mode => server
+	    port => <%= @gPort %>
+	    type => "graphite"
+	}
+
+	udp {
+	    port => <%= @udpPort %>         # 25826 matches port specified in collectd.conf
+	    buffer_size => 1452   # 1452 is the default buffer size for Collectd
+	    codec => collectd { } # specific Collectd codec to invoke
+	    type => collectd
+	}    
+}
+
+filter{
+
+	if [type]=="graphite"{
+ 		grok{
+  			break_on_match => false
+  			match=>["message","\A%{WORD:appID}.%{NOTSPACE:sparkMetric} %{NUMBER:Value} %{NUMBER:timestamp}"]
+		}
+	}
+}
+
+
+output {
+	elasticsearch {
+		hosts => ["<%= @EShostIP %>:<%= @EShostPort %>"] #For version 2.x of logstash
+        index => "logstash-%{+YYY.MM.dd}"
+    }
+}

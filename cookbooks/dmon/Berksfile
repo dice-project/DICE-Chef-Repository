@@ -2,4 +2,5 @@ source 'https://supermarket.chef.io'
 cookbook 'apt', path: '../apt'
 cookbook 'git', path: '../git'
 cookbook 'poise-python', path: '../poise-python'
+cookbook 'java', path: '../java'
 metadata

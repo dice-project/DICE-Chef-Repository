@@ -1,0 +1,16 @@
+description "dmon rest api service"
+author      "Robert Cvitkovic"
+
+start on filesystem or runlevel [2345]
+stop on shutdown
+
+env DIR=<%= node['dmon']['install_dir'] %>
+
+setuid <%= node['dmon']['user'] %>
+setgid <%= node['dmon']['group'] %>
+
+script
+
+    $DIR/dmonEnv/bin/python $DIR/src/start.py -p <%= node['dmon']['port'] %> > $DIR/src/logs/dmon.log 2>&1
+
+end script
