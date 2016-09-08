@@ -3,47 +3,73 @@ dmon_agent Cookbook
 
 This cookbook installs dmon_agent from 
 https://github.com/igabriel85/IeAT-DICE-Repository/tree/master/dmon-agent.
-It also installs and configures additional programs for data collection 
-according to the big data system (role) that you chose.
+It's a microservice designed to provide controll over different metrics 
+collection components. In the current version these include Collectd and 
+Logstash-forwarder. Those programs are installed according to the big data 
+system (role) that you choose.
 
-Roles
-------------
+## Cookbook requirements
 
-## storm
+- apt
+- dice-common
+- poise-python
+
+
+## Recipes
+
+- `dmon_agent::default` - installs dmon_agent registers the node on dmon
+- `dmon_agent::collectd` - installs Collectd (running dice-common::host before 
+this is required)
+- `dmon_agent::lsf` - installs Logstash-forwarder
+- `dmon_agent::storm` - sets node role (storm) on dmon
+- `dmon_agent::spark` - configure spark (run after spark installation) and sets 
+node role (spark) on dmon
+
+
+# Roles
+
+### Storm
+
+Use run list:
+```
+- recipe[apt::default]
+- recipe[dice-common::host]
+- recipe[dmon_agent::default]
+- recipe[dmon_agent::collectd]
+- recipe[dmon_agent::storm]
+```
 
 Only Collectd is installed for system data collection. Dmon gets all additional 
-information form the storm REST API.
+information form the Storm REST API.
 
-## spark
+### Spark
+
+Use run list:
+```
+- recipe[apt::default]
+- recipe[dice-common::host]
+- recipe[dmon_agent::default]
+- recipe[dmon_agent::collectd]
+- recipe[dmon_agent::spark]
+```
 
 Collectd is installed for system data collection. Additionally a 
-matrics.properties file is configured so that spark himself is sending data to 
-dmon. That is done via the graphite port on Logstash that must be enabled. One 
-can do this by adding a node with the 'spark' role on dmon.
-More on https://github.com/igabriel85/IeAT-DICE-Repository/tree/master/src
+`matrics.properties` file is configured so that spark himself is sending data to 
+dmon.
 
 
-TODO:
-## yarn and hdfs
-
-Collectd is installed for system data collection.
-For running Logstash-forwarder the lumberjack port on Logstash must be enabled. 
-One can do this by adding a node with the 'yarn' role on dmon.
-More on https://github.com/igabriel85/IeAT-DICE-Repository/tree/master/src
-You also need the certificate that is used for securing the lumberjack 
-connection. Its default location on dmon is 
-/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder.crt.
-
-
-Attributes
-----------
+# Attributes
 
 ### General
 * `['dmon_agent']['group']` - group of the user who runs dmon_agent
 * `['dmon_agent']['user']` - user who runs dmon_agent
 * `['dmon_agent']['home_dir']` - directory of dmon_agent installation
-* `['dmon_agent']['git_url']` - git url of dmon_agent release (.tar.gz file)
-* `['dmon_agent']['roles']` - array of big data programs thet are runing
+* `['dmon_agent']['tarball']` - tar url of dmon_agent release
+* `['dmon_agent']['node_name']` - name as which the node will appearer on dmon
+
+### Dmon
+* `['dmon_agent']['dmon']['ip']` - ip of dmon
+* `['dmon_agent']['dmon']['port']` - port of dmon
 
 ### Logstash 
 * `['dmon_agent']['logstash']['ip']` - ip of Logstash

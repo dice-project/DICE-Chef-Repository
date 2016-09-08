@@ -1,3 +1,5 @@
 source 'https://supermarket.chef.io'
 cookbook 'apt', path: '../apt'
+cookbook 'dice-common', path: '../dice-common'
+cookbook 'poise-python', path: '../poise-python'
 metadata

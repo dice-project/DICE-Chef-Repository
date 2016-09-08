@@ -1,8 +1,3 @@
-#append to host
-execute 'host' do
-  command "echo \"127.0.1.1 #{node['hostname']} #{node['hostname']}\" >> /etc/hosts"
-end
-
 #install collectd
 package 'collectd' do
   action :install
@@ -19,4 +14,10 @@ end
 #restart collectd
 service 'collectd' do
   action :restart
+end
+
+#copy collectd pid
+execute 'copy collectd pid' do
+  command "cp /run/collectd.pid #{node['dmon_agent']['home_dir']}/dmon-agent/pid/collectd.pid"
+  user "#{node['dmon_agent']['user']}"
 end

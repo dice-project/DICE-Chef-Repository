@@ -30,22 +30,13 @@ describe service('collectd') do
   it { should be_running }
 end
 
-#test if storm is configured.
+#test if spark is configured.
 describe file('/etc/spark/metrics.properties') do
   it { should be_file }
   it { should be_owned_by 'dmon-agent' }
   it { should contain('10.211.55.100').from(/host/).to(/host/) }
   it { should contain('5002').from(/host/).to(/period/) }
   it { should contain('5').from(/period/).to(/seconds/) }
-end
-
-#test if python was installed
-describe package('python-dev') do
-  it { should be_installed }
-end
-
-describe package('python-pip') do
-  it { should be_installed }
 end
 
 #test if dmon-agent was downloaded
@@ -69,12 +60,29 @@ describe file('/home/dmon-agent/dmon-agent/pid/collectd.pid') do
   it { should be_owned_by 'dmon-agent' }
 end
 
+#test if python virtualenv was created
+describe file('/home/dmon-agent/dmon-agent/dmonEnv') do
+  it { should be_directory }
+  it { should be_owned_by 'dmon-agent' }
+end
+
+describe command('. /home/dmon-agent/dmon-agent/dmonEnv/bin/activate') do
+  its(:exit_status) { should eq 0 }
+end
+
 #test if python packages were installed
 describe file('/home/dmon-agent/dmon-agent/lock/agent.lock') do
   it { should be_file }
 end
 
-#test if dmo-agent is running
-describe file('/home/dmon-agent/dmon-agent/pid/dmon-agent.pid') do
+#test if dmon-agent is installed and running
+describe file('/etc/init/dmon_agent.conf') do
   it { should be_file }
+  it { should contain('/home/dmon-agent').from(/DIR/).to(/dmon-agent/) }
+  it { should contain('dmon-agent').from(/setuid/).to(/setgid/) }
+  it { should contain('dmon-agent').from(/setgid/).to(/script/) }
+end
+
+describe service('dmon_agent') do
+  it { should be_running }
 end

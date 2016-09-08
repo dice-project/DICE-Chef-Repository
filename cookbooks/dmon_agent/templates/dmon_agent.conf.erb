@@ -1,0 +1,16 @@
+description "dmon_agent rest api service"
+author      "Robert Cvitkovic"
+
+start on filesystem or runlevel [2345]
+stop on shutdown
+
+env DIR=<%= node['dmon_agent']['home_dir'] %>/dmon-agent
+
+setuid <%= node['dmon_agent']['user'] %>
+setgid <%= node['dmon_agent']['group'] %>
+
+script
+
+    $DIR/dmonEnv/bin/python $DIR/dmon-agent.py > $DIR/log/dmon-agent.out 2>&1
+
+end script
