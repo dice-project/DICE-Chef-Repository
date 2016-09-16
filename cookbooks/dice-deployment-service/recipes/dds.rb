@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: dice-deployment-service
-# Recipe:: default
+# Recipe:: dds
 #
 # Copyright 2016, XLAB
 #
@@ -50,13 +50,8 @@ link '/usr/bin/node' do
 end
 
 # Install dice deployment service files
-temp_file = "#{Chef::Config[:file_cache_path]}/dds.tar.gz"
-remote_file temp_file do
-  source node['cloudify']['properties']['sources']
-end
-
 temp_folder = "#{Chef::Config[:file_cache_path]}/dds"
-poise_archive temp_file do
+poise_archive node['cloudify']['runtime_properties']['dds_tarball'] do
   destination temp_folder
 end
 
