@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: dice-deployment-service
+# Cookbook Name:: dice_deployment_service
 # Recipe:: uwsgi
 #
 # Copyright 2016, XLAB
@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
-dice_user = node['dice-deployment-service']['app_user']
-app_folder = node['dice-deployment-service']['app_folder']
-app_socket = node['dice-deployment-service']['app_socket']
-app_venv = node['dice-deployment-service']['app_venv']
+dice_user = node['dice_deployment_service']['app_user']
+app_folder = node['dice_deployment_service']['app_folder']
+app_socket = node['dice_deployment_service']['app_socket']
+app_venv = node['dice_deployment_service']['app_venv']
 
 service 'uwsgi' do
   action :nothing
@@ -47,19 +47,12 @@ end
 
 template '/etc/uwsgi/sites/dice-deployment-service.ini' do
   source 'dice-deployment-service.ini.erb'
-  variables({
-    'app_folder' => app_folder,
-    'app_venv' => app_venv,
-    'app_socket' => app_socket
-  })
+  variables(app_folder: app_folder, app_venv: app_venv, app_socket: app_socket)
   notifies :restart, 'service[uwsgi]'
 end
 
 template '/etc/init/uwsgi.conf' do
   source 'uwsgi.conf.erb'
-  variables({
-    'user' => dice_user,
-    'app_venv' => app_venv
-  })
+  variables(user: dice_user, app_venv: app_venv)
   notifies :restart, 'service[uwsgi]'
 end

@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-deployment-service
-# Recipe:: rabbitmq
+# Cookbook Name:: dice_deployment_service
+# Recipe:: dnsmasq
 #
 # Copyright 2016, XLAB
 #
@@ -17,12 +17,13 @@
 # limitations under the License.
 #
 
-service 'rabbitmq-server' do
+package 'dnsmasq'
+
+service 'dnsmasq' do
   action :nothing
 end
 
-execute 'Enable RabbitMQ we console' do
-  command 'rabbitmq-plugins enable rabbitmq_management'
-  notifies :restart, 'service[rabbitmq-server]'
-  only_if { node['cloudify']['properties']['debug_mode'] }
+cookbook_file '/etc/dnsmasq.conf' do
+  source 'dnsmasq.conf'
+  notifies :restart, 'service[dnsmasq]', :immediately
 end

@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-deployment-service
-# Recipe:: celery
+# Cookbook Name:: dice_deployment_service
+# Recipe:: flower
 #
 # Copyright 2016, XLAB
 #
@@ -17,11 +17,10 @@
 # limitations under the License.
 #
 
-dice_user = node['dice-deployment-service']['app_user']
-app_venv = node['dice-deployment-service']['app_venv']
-app_folder = node['dice-deployment-service']['app_folder']
+dice_user = node['dice_deployment_service']['app_user']
+app_venv = node['dice_deployment_service']['app_venv']
 
-service 'celery' do
+service 'flower' do
   action :nothing
 end
 
@@ -29,14 +28,12 @@ directory '/var/log/celery' do
   owner dice_user
   group dice_user
   mode 0755
+  only_if { node['cloudify']['properties']['debug_mode'] }
 end
 
-template '/etc/init/celery.conf' do
-  source 'celery.conf.erb'
-  variables({
-    'user' => dice_user,
-    'venv' => app_venv,
-    'app_folder' => app_folder
-  })
+template '/etc/init/flower.conf' do
+  source 'flower.conf.erb'
+  variables(user: dice_user, venv: app_venv)
   notifies :restart, 'service[celery]'
+  only_if { node['cloudify']['properties']['debug_mode'] }
 end

@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: dice-deployment-service
+# Cookbook Name:: dice_deployment_service
 # Attribute:: default
 #
 # Copyright 2016, XLAB d.o.o.
@@ -17,15 +17,15 @@
 # limitations under the License.
 #
 
-default['dice-deployment-service']['app_user'] = 'dice'
-default['dice-deployment-service']['app_prefix'] =
+default['dice_deployment_service']['app_user'] = 'dice'
+default['dice_deployment_service']['app_prefix'] =
   '/var/lib/dice-deployment-service'
-default['dice-deployment-service']['app_folder'] =
-  "#{node['dice-deployment-service']['app_prefix']}/dds"
-default['dice-deployment-service']['app_socket'] =
-  "#{node['dice-deployment-service']['app_prefix']}/dds.socket"
-default['dice-deployment-service']['app_venv'] =
-  "#{node['dice-deployment-service']['app_prefix']}/venv"
+default['dice_deployment_service']['app_folder'] =
+  "#{node['dice_deployment_service']['app_prefix']}/dds"
+default['dice_deployment_service']['app_socket'] =
+  "#{node['dice_deployment_service']['app_prefix']}/dds.socket"
+default['dice_deployment_service']['app_venv'] =
+  "#{node['dice_deployment_service']['app_prefix']}/venv"
 
 # Cloudify provided attributes (do not uncomment this, this is here for
 # documentation purpose only):

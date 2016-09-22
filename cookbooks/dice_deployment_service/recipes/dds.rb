@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: dice-deployment-service
+# Cookbook Name:: dice_deployment_service
 # Recipe:: dds
 #
 # Copyright 2016, XLAB
@@ -17,11 +17,9 @@
 # limitations under the License.
 #
 
-dice_user = node['dice-deployment-service']['app_user']
-app_prefix = node['dice-deployment-service']['app_prefix']
-app_folder = node['dice-deployment-service']['app_folder']
-app_socket = node['dice-deployment-service']['app_socket']
-app_venv = node['dice-deployment-service']['app_venv']
+dice_user = node['dice_deployment_service']['app_user']
+app_folder = node['dice_deployment_service']['app_folder']
+app_venv = node['dice_deployment_service']['app_venv']
 
 # Add custom ssh key if provided
 directory "/home/#{dice_user}/.ssh" do
@@ -86,11 +84,11 @@ end
 # Create local settings
 template "#{app_folder}/dice_deploy/local_settings.py" do
   source 'local_settings.py.erb'
-  variables({
-    'manager_url' => node['cloudify']['properties']['manager'],
-    'manager_username' => node['cloudify']['properties']['manager_user'],
-    'manager_password' => node['cloudify']['properties']['manager_pass']
-  })
+  variables(
+    manager_url: node['cloudify']['properties']['manager'],
+    manager_username: node['cloudify']['properties']['manager_user'],
+    manager_password: node['cloudify']['properties']['manager_pass']
+  )
   owner dice_user
   group dice_user
 end

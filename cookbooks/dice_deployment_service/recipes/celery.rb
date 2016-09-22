@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-deployment-service
-# Recipe:: default
+# Cookbook Name:: dice_deployment_service
+# Recipe:: celery
 #
 # Copyright 2016, XLAB
 #
@@ -17,12 +17,22 @@
 # limitations under the License.
 #
 
-include_recipe "#{cookbook_name}::common"
-include_recipe "#{cookbook_name}::python"
-include_recipe "#{cookbook_name}::dnsmasq"
-include_recipe "#{cookbook_name}::nginx"
-include_recipe "#{cookbook_name}::uwsgi"
-include_recipe "#{cookbook_name}::dds"
-include_recipe "#{cookbook_name}::celery"
-include_recipe "#{cookbook_name}::flower"
-include_recipe "#{cookbook_name}::rabbitmq"
+dice_user = node['dice_deployment_service']['app_user']
+app_venv = node['dice_deployment_service']['app_venv']
+app_folder = node['dice_deployment_service']['app_folder']
+
+service 'celery' do
+  action :nothing
+end
+
+directory '/var/log/celery' do
+  owner dice_user
+  group dice_user
+  mode 0755
+end
+
+template '/etc/init/celery.conf' do
+  source 'celery.conf.erb'
+  variables(user: dice_user, venv: app_venv, app_folder: app_folder)
+  notifies :restart, 'service[celery]'
+end

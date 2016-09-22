@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-deployment-service
-# Recipe:: dnsmasq
+# Cookbook Name:: dice_deployment_service
+# Recipe:: common
 #
 # Copyright 2016, XLAB
 #
@@ -17,13 +17,29 @@
 # limitations under the License.
 #
 
-package 'dnsmasq'
+dice_user = node['dice_deployment_service']['app_user']
+app_prefix = node['dice_deployment_service']['app_prefix']
 
-service 'dnsmasq' do
-  action :nothing
+group dice_user do
+  action :create
 end
 
-cookbook_file '/etc/dnsmasq.conf' do
-  source 'dnsmasq.conf'
-  notifies :restart, 'service[dnsmasq]', :immediately
+user dice_user do
+  gid dice_user
+  shell '/bin/bash'
+  action :create
+end
+
+directory "/home/#{dice_user}" do
+  mode 0700
+  user dice_user
+  group dice_user
+  action :create
+end
+
+directory app_prefix do
+  mode 0755
+  user dice_user
+  group dice_user
+  action :create
 end

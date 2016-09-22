@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-deployment-service
-# Recipe:: python
+# Cookbook Name:: dice_deployment_service
+# Recipe:: default
 #
 # Copyright 2016, XLAB
 #
@@ -17,12 +17,12 @@
 # limitations under the License.
 #
 
-dice_user = node['dice-deployment-service']['app_user']
-app_venv = node['dice-deployment-service']['app_venv']
-
-python_runtime '2'
-
-python_virtualenv app_venv do
-  user dice_user
-  group dice_user
-end
+include_recipe "#{cookbook_name}::common"
+include_recipe "#{cookbook_name}::python"
+include_recipe "#{cookbook_name}::dnsmasq"
+include_recipe "#{cookbook_name}::nginx"
+include_recipe "#{cookbook_name}::uwsgi"
+include_recipe "#{cookbook_name}::dds"
+include_recipe "#{cookbook_name}::celery"
+include_recipe "#{cookbook_name}::flower"
+include_recipe "#{cookbook_name}::rabbitmq"

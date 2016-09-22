@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-deployment-service
-# Recipe:: common
+# Cookbook Name:: dice_deployment_service
+# Recipe:: python
 #
 # Copyright 2016, XLAB
 #
@@ -17,29 +17,12 @@
 # limitations under the License.
 #
 
-dice_user = node['dice-deployment-service']['app_user']
-app_prefix = node['dice-deployment-service']['app_prefix']
+dice_user = node['dice_deployment_service']['app_user']
+app_venv = node['dice_deployment_service']['app_venv']
 
-group dice_user do
-  action :create
-end
+python_runtime '2'
 
-user dice_user do
-  gid dice_user
-  shell '/bin/bash'
-  action :create
-end
-
-directory "/home/#{dice_user}" do
-  mode 0700
+python_virtualenv app_venv do
   user dice_user
   group dice_user
-  action :create
-end
-
-directory app_prefix do
-  mode 0755
-  user dice_user
-  group dice_user
-  action :create
 end

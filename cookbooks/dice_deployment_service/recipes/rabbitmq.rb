@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-deployment-service
-# Recipe:: flower
+# Cookbook Name:: dice_deployment_service
+# Recipe:: rabbitmq
 #
 # Copyright 2016, XLAB
 #
@@ -17,26 +17,12 @@
 # limitations under the License.
 #
 
-dice_user = node['dice-deployment-service']['app_user']
-app_venv = node['dice-deployment-service']['app_venv']
-
-service 'flower' do
+service 'rabbitmq-server' do
   action :nothing
 end
 
-directory '/var/log/celery' do
-  owner dice_user
-  group dice_user
-  mode 0755
-  only_if { node['cloudify']['properties']['debug_mode'] }
-end
-
-template '/etc/init/flower.conf' do
-  source 'flower.conf.erb'
-  variables({
-    'user' => dice_user,
-    'venv' => app_venv
-  })
-  notifies :restart, 'service[celery]'
+execute 'Enable RabbitMQ we console' do
+  command 'rabbitmq-plugins enable rabbitmq_management'
+  notifies :restart, 'service[rabbitmq-server]'
   only_if { node['cloudify']['properties']['debug_mode'] }
 end

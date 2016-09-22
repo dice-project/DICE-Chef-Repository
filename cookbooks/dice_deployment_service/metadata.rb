@@ -1,0 +1,11 @@
+name 'dice_deployment_service'
+maintainer 'XLAB d.o.o.'
+maintainer_email 'tadej.borovsak@xlab.si'
+license 'Apache 2.0'
+description 'Install DICE deployment service'
+version '0.1.0'
+
+depends 'apt'
+depends 'dice_common'
+depends 'poise-python'
+depends 'poise-archive'

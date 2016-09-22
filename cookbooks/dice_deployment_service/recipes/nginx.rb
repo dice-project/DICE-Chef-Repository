@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: dice-deployment-service
+# Cookbook Name:: dice_deployment_service
 # Recipe:: nginx
 #
 # Copyright 2016, XLAB
@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-app_folder = node['dice-deployment-service']['app_folder']
-app_socket = node['dice-deployment-service']['app_socket']
+app_folder = node['dice_deployment_service']['app_folder']
+app_socket = node['dice_deployment_service']['app_socket']
 
 package 'nginx'
 
@@ -28,10 +28,7 @@ end
 
 template '/etc/nginx/sites-available/dice-deployment-service' do
   source 'dice-deployment-service.erb'
-  variables({
-    'app_folder' => app_folder,
-    'app_socket' => app_socket
-  })
+  variables(app_folder: app_folder, app_socket: app_socket)
   notifies :restart, 'service[nginx]'
 end
 
