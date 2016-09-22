@@ -8,4 +8,8 @@
 .chef
 *~
 nodes/
-.kitchen/
+
+# Ignore test runner aux files
+.kitchen
+/.kitchen.yml
+/test
