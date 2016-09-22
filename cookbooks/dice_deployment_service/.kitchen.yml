@@ -18,6 +18,7 @@ suites:
       - recipe[dice_common::consul_server]
     attributes:
       cloudify:
+        runtime_properties: {}
         properties:
           ssh_key: abs
           debug_mode: true

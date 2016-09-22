@@ -48,13 +48,25 @@ link '/usr/bin/node' do
 end
 
 # Install dice deployment service files
-temp_folder = "#{Chef::Config[:file_cache_path]}/dds"
-poise_archive node['cloudify']['runtime_properties']['dds_tarball'] do
-  destination temp_folder
+dds_tar = "#{Chef::Config[:file_cache_path]}/dds.tar.gz"
+dds_folder = "#{Chef::Config[:file_cache_path]}/dds"
+dds_tar_source =
+  if node['cloudify']['runtime_properties'].key?('dds_tarball')
+    "file:///#{node['cloudify']['runtime_properties']['dds_tarball']}"
+  else
+    node['cloudify']['properties']['sources']
+  end
+remote_file 'Obtain deployment service sources' do
+  path dds_tar
+  source dds_tar_source
+end
+
+poise_archive dds_tar do
+  destination dds_folder
 end
 
 execute 'Move package to final place' do
-  command "mv #{temp_folder}/dice_deploy_django #{app_folder}"
+  command "mv #{dds_folder}/dice_deploy_django #{app_folder}"
 end
 
 execute 'Fix application permissions' do
