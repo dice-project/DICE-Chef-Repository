@@ -1,0 +1,33 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+
+  - name: storm
+    run_list:
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[storm::default]
+      - recipe[storm::configure]
+      - recipe[storm::start_nimbus]
+      - recipe[storm::start_supervisor]
+    attributes:
+      java:
+        jdk_version: "7"
+      cloudify:
+        properties:
+          configuration:
+            test_config_1: value_1
+            test_config_2: value_2
+        runtime_properties:
+          zookeeper_quorum:
+            - 123.231.45.66
+            - 123.231.45.67
+          storm_nimbus_ip: 123.231.45.68
