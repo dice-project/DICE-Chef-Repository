@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-common
-# Recipe:: consul-common
+# Cookbook Name:: dice_common
+# Recipe:: consul_common
 #
 # Copyright 2016, XLAB
 #
@@ -40,8 +40,8 @@ package 'unzip'
 temp_file = "#{Chef::Config[:file_cache_path]}/consul.zip"
 
 remote_file temp_file do
-  source node['dice-common']['consul-zip']
-  checksum node['dice-common']['consul-sha256sum']
+  source node['dice_common']['consul-zip']
+  checksum node['dice_common']['consul-sha256sum']
 end
 
 execute 'Unzip consul' do

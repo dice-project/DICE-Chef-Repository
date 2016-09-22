@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-common
-# Recipe:: default
+# Cookbook Name:: dice_common
+# Recipe:: dns_redirect
 #
 # Copyright 2016, XLAB
 #
@@ -17,19 +17,14 @@
 # limitations under the License.
 #
 
-ohai 'reload' do
-  action :nothing
+# NOTE: This will probably only work on Ubuntu 14.04. For other OSes and
+# versions, we will need to provide custom rules.
+file '/etc/resolv.conf' do
+  manage_symlink_source false
+  action :delete
 end
 
-template "/etc/hosts" do
-  source 'hosts.erb'
-  owner 'root'
-  group 'root'
-  mode 0644
-  variables({
-    'ip' => node['ipaddress'],
-    'fqdn' => "#{node['hostname']}.node.consul",
-    'hostname' => node['hostname']
-  })
-  notifies :reload, 'ohai[reload]', :immediately
+template '/etc/resolv.conf' do
+  source 'resolv.conf.erb'
+  variables master: node['cloudify']['properties']['master_ip']
 end

@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-common
-# Recipe:: consul-agent
+# Cookbook Name:: dice_common
+# Recipe:: consul_server
 #
 # Copyright 2016, XLAB
 #
@@ -17,16 +17,13 @@
 # limitations under the License.
 #
 
-template '/etc/init/consul-agent.conf' do
-  source 'consul-agent.conf.erb'
-  variables({
-    :master => node['cloudify']['properties']['master_ip'],
-    :data => '/var/lib/consul'
-  })
+template '/etc/init/consul-server.conf' do
+  source 'consul-server.conf.erb'
+  variables data: '/var/lib/consul'
 end
 
-service 'consul-agent' do
-  supports :status => true, :restart => true
+service 'consul-server' do
+  supports status: true, restart: true
   provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
   action :start
 end

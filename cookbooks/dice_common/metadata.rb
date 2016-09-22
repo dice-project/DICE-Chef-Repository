@@ -1,4 +1,4 @@
-name 'dice-common'
+name 'dice_common'
 maintainer 'XLAB d.o.o.'
 maintainer_email 'tadej.borovsak@xlab.si'
 license 'Apache 2.0'

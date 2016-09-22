@@ -7,6 +7,6 @@ long_description 'Installs/Configures dice-deployment-service'
 version '0.1.0'
 
 depends 'apt'
-depends 'dice-common'
+depends 'dice_common'
 depends 'poise-python'
 depends 'poise-archive'

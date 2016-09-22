@@ -1,5 +1,5 @@
 cassandra
 dmon_agent
-dice-common
+dice_common
 dice-deployment-service
 spark

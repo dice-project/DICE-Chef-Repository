@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: dice-common
+# Cookbook Name:: dice_common
 # Recipe:: default
 #
 # Copyright 2016, XLAB
@@ -18,6 +18,6 @@
 #
 
 include_recipe "#{cookbook_name}::host"
-include_recipe "#{cookbook_name}::dns-redirect"
-include_recipe "#{cookbook_name}::consul-common"
-include_recipe "#{cookbook_name}::consul-agent"
+include_recipe "#{cookbook_name}::dns_redirect"
+include_recipe "#{cookbook_name}::consul_common"
+include_recipe "#{cookbook_name}::consul_agent"

@@ -11,8 +11,8 @@ platforms:
 suites:
   - name: storm
     run_list:
+      - recipe[dice_common::host]
       - recipe[apt::default]
-      - recipe[dice-common::host]
       - recipe[dmon_agent::mock_dmon]
       - recipe[dmon_agent::default]
       - recipe[dmon_agent::collectd]
@@ -27,8 +27,8 @@ suites:
   
   - name: spark
     run_list:
+      - recipe[dice_common::host]
       - recipe[apt::default]
-      - recipe[dice-common::host]
       - recipe[dmon_agent::mock_dmon]
       - recipe[dmon_agent::default]
       - recipe[dmon_agent::collectd]

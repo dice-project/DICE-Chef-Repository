@@ -1,4 +1,4 @@
-# Cookbook Name:: dice-common
+# Cookbook Name:: dice_common
 # Attribute:: default
 #
 # Copyright 2016, XLAB d.o.o.
@@ -15,9 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['dice-common']['consul-zip'] =
+default['dice_common']['consul-zip'] =
   'https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_linux_amd64.zip'
-default['dice-common']['consul-sha256sum'] =
+default['dice_common']['consul-sha256sum'] =
   'abdf0e1856292468e2c9971420d73b805e93888e006c76324ae39416edcf0627'
 
 # Cloudify provided attributes (do not uncomment this, this is here for

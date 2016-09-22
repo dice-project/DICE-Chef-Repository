@@ -40,6 +40,6 @@ describe file('/etc/resolv.conf') do
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
   its(:content) do
-    should include "nameserver 8.8.8.8"
+    should include 'nameserver 8.8.8.8'
   end
 end

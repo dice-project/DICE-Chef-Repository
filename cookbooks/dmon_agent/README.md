@@ -11,7 +11,7 @@ system (role) that you choose.
 ## Cookbook requirements
 
 - apt
-- dice-common
+- dice_common
 - poise-python
 
 
@@ -19,7 +19,7 @@ system (role) that you choose.
 
 - `dmon_agent::default` - installs dmon_agent registers the node on dmon
 - `dmon_agent::mock_dmon` - runs mock http server for testing http_request
-- `dmon_agent::collectd` - installs Collectd (running dice-common::host before 
+- `dmon_agent::collectd` - installs Collectd (running dice_common::host before 
 this is required)
 - `dmon_agent::lsf` - installs Logstash-forwarder
 - `dmon_agent::storm` - sets node role (storm) on dmon
@@ -34,7 +34,7 @@ node role (spark) on dmon
 Use run list:
 ```
 - recipe[apt::default]
-- recipe[dice-common::host]
+- recipe[dice_common::host]
 - recipe[dmon_agent::default]
 - recipe[dmon_agent::collectd]
 - recipe[dmon_agent::storm]
@@ -48,7 +48,7 @@ information form the Storm REST API.
 Use run list:
 ```
 - recipe[apt::default]
-- recipe[dice-common::host]
+- recipe[dice_common::host]
 - recipe[dmon_agent::default]
 - recipe[dmon_agent::collectd]
 - recipe[dmon_agent::spark]

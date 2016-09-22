@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-common
-# Recipe:: consul-server
+# Cookbook Name:: dice_common
+# Recipe:: default
 #
 # Copyright 2016, XLAB
 #
@@ -17,15 +17,19 @@
 # limitations under the License.
 #
 
-template '/etc/init/consul-server.conf' do
-  source 'consul-server.conf.erb'
-  variables({
-    :data => '/var/lib/consul'
-  })
+ohai 'reload' do
+  action :nothing
 end
 
-service 'consul-server' do
-  supports :status => true, :restart => true
-  provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
-  action :start
+template '/etc/hosts' do
+  source 'hosts.erb'
+  owner 'root'
+  group 'root'
+  mode 0644
+  variables(
+    ip: node['ipaddress'],
+    fqdn: "#{node['hostname']}.node.consul",
+    hostname: node['hostname']
+  )
+  notifies :reload, 'ohai[reload]', :immediately
 end

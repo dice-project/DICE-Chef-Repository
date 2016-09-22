@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: dice-common
-# Recipe:: dns-redirect
+# Cookbook Name:: dice_common
+# Recipe:: consul_agent
 #
 # Copyright 2016, XLAB
 #
@@ -17,14 +17,16 @@
 # limitations under the License.
 #
 
-# NOTE: This will probably only work on Ubuntu 14.04. For other OSes and
-# versions, we will need to provide custom rules.
-file '/etc/resolv.conf' do
-  manage_symlink_source false
-  action :delete
+template '/etc/init/consul-agent.conf' do
+  source 'consul-agent.conf.erb'
+  variables(
+    master: node['cloudify']['properties']['master_ip'],
+    data: '/var/lib/consul'
+  )
 end
 
-template '/etc/resolv.conf' do
-  source 'resolv.conf.erb'
-  variables :master => node['cloudify']['properties']['master_ip']
+service 'consul-agent' do
+  supports status: true, restart: true
+  provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
+  action :start
 end

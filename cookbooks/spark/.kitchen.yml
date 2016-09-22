@@ -13,7 +13,7 @@ platforms:
 suites:
   - name: master
     run_list:
-      - recipe[dice-common::host]
+      - recipe[dice_common::host]
       - recipe[apt::default]
       - recipe[java::default]
       - recipe[spark::default]
@@ -29,7 +29,7 @@ suites:
 
   - name: worker
     run_list:
-      - recipe[dice-common::host]
+      - recipe[dice_common::host]
       - recipe[apt::default]
       - recipe[java::default]
       - recipe[spark::default]
