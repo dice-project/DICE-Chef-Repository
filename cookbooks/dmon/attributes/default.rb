@@ -23,10 +23,10 @@ CN = *
 subjectKeyIdentifier = hash
 authorityKeyIdentifier = keyid,issuer
 basicConstraints = CA:TRUE
-subjectAltName = IP:#{node["network"]["interfaces"]["eth1"]["addresses"].keys[1]}
+subjectAltName = IP:dummy-ip
 [v3_ca]
 keyUsage = digitalSignature, keyEncipherment
-subjectAltName = IP:#{node["network"]["interfaces"]["eth1"]["addresses"].keys[1]}
+subjectAltName = IP:dummy-ip
 "
 
 #Elasticsearch configuration attributes

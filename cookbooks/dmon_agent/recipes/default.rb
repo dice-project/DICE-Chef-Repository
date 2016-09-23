@@ -82,7 +82,7 @@ end
 node_hash = {
   :Nodes => [
     :NodeName => node['dmon_agent']['node_name'] ,
-    :NodeIP =>  node["network"]["interfaces"]["eth1"]["addresses"].keys[1],
+    :NodeIP =>  node['ipaddress'],
     :NodeOS => node['platform'],
     :key => "null",
     :username => "null",
