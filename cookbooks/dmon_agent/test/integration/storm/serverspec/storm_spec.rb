@@ -14,22 +14,6 @@ describe user('dmon-agent') do
   it { should have_login_shell '/bin/bash' }
 end
 
-#test if Collectd is successfully installed, configured and started.
-describe package('collectd') do
-  it { should be_installed }
-end
-
-describe file('/etc/collectd/collectd.conf') do
-  it { should be_file }
-  it { should be_owned_by 'dmon-agent' }
-  it { should contain('10.211.55.100').from(/<Plugin "network">/).to(/<\/Plugin>/) }
-  it { should contain('25826').from(/<Plugin "network">/).to(/<\/Plugin>/) }
-end
-
-describe service('collectd') do
-  it { should be_running }
-end
-
 #test if dmon-agent was downloaded
 describe file('/home/dmon-agent/dmon-agent') do
   it { should be_directory }
@@ -43,12 +27,6 @@ dirs.each do |dir|
     it { should be_directory }
     it { should be_owned_by 'dmon-agent' }
   end
-end
-
-#test if collectd.pid was copied
-describe file('/home/dmon-agent/dmon-agent/pid/collectd.pid') do
-  it { should be_file }
-  it { should be_owned_by 'dmon-agent' }
 end
 
 #test if python virtualenv was created
@@ -76,4 +54,39 @@ end
 
 describe service('dmon_agent') do
   it { should be_running }
+end
+
+#test if dmon-agent is registered on dmon
+describe file('/var/log/dmon.log') do
+  it { should be_file }
+  it { should contain 'PUT /dmon/v1/overlord/nodes' }
+  it { should contain('10.211.55.110').from(/NodeIP/).to(/NodeOS/) }
+end
+
+#test if Collectd is successfully installed, configured and started.
+describe package('collectd') do
+  it { should be_installed }
+end
+
+describe file('/etc/collectd/collectd.conf') do
+  it { should be_file }
+  it { should be_owned_by 'dmon-agent' }
+  it { should contain('10.211.55.100').from(/<Plugin "network">/).to(/<\/Plugin>/) }
+  it { should contain('25826').from(/<Plugin "network">/).to(/<\/Plugin>/) }
+end
+
+describe service('collectd') do
+  it { should be_running }
+end
+
+#test if collectd.pid was copied
+describe file('/home/dmon-agent/dmon-agent/pid/collectd.pid') do
+  it { should be_file }
+  it { should be_owned_by 'dmon-agent' }
+end
+
+#test if node is registered as storm
+describe file('/var/log/dmon.log') do
+  it { should contain 'PUT /dmon/v1/overlord/nodes/roles' }
+  it { should contain('storm').from(/Roles/) }
 end

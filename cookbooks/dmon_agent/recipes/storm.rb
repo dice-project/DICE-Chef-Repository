@@ -1,7 +1,7 @@
 # generate role hash
 role_hash = {
   :Nodes => [
-    :NodeName => node['dmon_agent']['node_name'],
+    :NodeName => node['hostname'],
     :Roles => ['storm']
   ]
 }

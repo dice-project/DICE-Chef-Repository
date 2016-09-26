@@ -3,7 +3,7 @@ dmon_agent Cookbook
 
 This cookbook installs dmon_agent from 
 https://github.com/igabriel85/IeAT-DICE-Repository/tree/master/dmon-agent.
-It's a microservice designed to provide controll over different metrics 
+It's a microservice designed to provide control over different metrics 
 collection components. In the current version these include Collectd and 
 Logstash-forwarder. Those programs are installed according to the big data 
 system (role) that you choose.
@@ -18,6 +18,7 @@ system (role) that you choose.
 ## Recipes
 
 - `dmon_agent::default` - installs dmon_agent registers the node on dmon
+- `dmon_agent::mock_dmon` - runs mock http server for testing http_request
 - `dmon_agent::collectd` - installs Collectd (running dice-common::host before 
 this is required)
 - `dmon_agent::lsf` - installs Logstash-forwarder
@@ -65,7 +66,7 @@ dmon.
 * `['dmon_agent']['user']` - user who runs dmon_agent
 * `['dmon_agent']['home_dir']` - directory of dmon_agent installation
 * `['dmon_agent']['tarball']` - tar url of dmon_agent release
-* `['dmon_agent']['node_name']` - name as which the node will appearer on dmon
+* `['dmon_agent']['node_ip']` - ip of dmon_agent - for testing only
 
 ### Dmon
 * `['dmon_agent']['dmon']['ip']` - ip of dmon

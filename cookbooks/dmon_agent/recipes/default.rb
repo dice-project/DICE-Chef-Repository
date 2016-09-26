@@ -79,10 +79,12 @@ service 'dmon_agent' do
 end
 
 # generate node hash
+ip = node['dmon_agent']['node_ip'].nil? ? node['ipaddress'] : node['dmon_agent']['node_ip']
+
 node_hash = {
   :Nodes => [
-    :NodeName => node['dmon_agent']['node_name'] ,
-    :NodeIP =>  node['ipaddress'],
+    :NodeName => node['hostname'],
+    :NodeIP => ip,
     :NodeOS => node['platform'],
     :key => "null",
     :username => "null",

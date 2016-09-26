@@ -10,35 +10,39 @@ platforms:
 
 suites:
   - name: storm
+    driver:
+      network:
+        - ["private_network", {ip: "10.211.55.110"}]
     run_list:
       - recipe[apt::default]
       - recipe[dice-common::host]
+      - recipe[dmon_agent::mock_dmon]
       - recipe[dmon_agent::default]
       - recipe[dmon_agent::collectd]
       - recipe[dmon_agent::storm]
     attributes:
       dmon_agent:
-        node_name: 'storm_agent'
+        node_ip: "10.211.55.110"
         dmon:
-          ip: '10.211.55.100' 
-          port: '5001'
+          ip: '127.0.0.1' 
         logstash:
           ip: '10.211.55.100' 
-          udp_port: '25826'
   
   - name: spark
+    driver:
+      network:
+        - ["private_network", {ip: "10.211.55.111"}]
     run_list:
       - recipe[apt::default]
       - recipe[dice-common::host]
+      - recipe[dmon_agent::mock_dmon]
       - recipe[dmon_agent::default]
       - recipe[dmon_agent::collectd]
       - recipe[dmon_agent::spark]
     attributes:
       dmon_agent:
-        node_name: 'spark_agent'
+        node_ip: "10.211.55.111"
         dmon:
-          ip: '10.211.55.100' 
-          port: '5001'
+          ip: '127.0.0.1' 
         logstash:
-          ip: '10.211.55.100' 
-          udp_port: '25826'
+          ip: '10.211.55.100'

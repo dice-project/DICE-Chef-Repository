@@ -12,13 +12,12 @@ template '/etc/spark/metrics.properties' do
   owner "#{node['dmon_agent']['user']}"
   group "#{node['dmon_agent']['group']}"
   action :create
-  not_if { File.directory?("/etc/spark") }
 end
 
 # generate role hash
 role_hash = {
   :Nodes => [
-    :NodeName => node['dmon_agent']['node_name'],
+    :NodeName => node['hostname'],
     :Roles => ['spark']
   ]
 }
