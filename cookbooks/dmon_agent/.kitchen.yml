@@ -10,9 +10,6 @@ platforms:
 
 suites:
   - name: storm
-    driver:
-      network:
-        - ["private_network", {ip: "10.211.55.110"}]
     run_list:
       - recipe[apt::default]
       - recipe[dice-common::host]
@@ -29,9 +26,6 @@ suites:
           ip: '10.211.55.100' 
   
   - name: spark
-    driver:
-      network:
-        - ["private_network", {ip: "10.211.55.111"}]
     run_list:
       - recipe[apt::default]
       - recipe[dice-common::host]
