@@ -20,7 +20,7 @@
 template '/etc/init/consul-agent.conf' do
   source 'consul-agent.conf.erb'
   variables(
-    master: node['cloudify']['properties']['master_ip'],
+    master: node['cloudify']['properties']['dns_server'],
     data: '/var/lib/consul'
   )
 end

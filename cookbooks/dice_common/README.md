@@ -21,8 +21,8 @@ deployment service cookbook supports this kind of DNS server.
 ## DNS redirecting
 
 In order to make it easier to redirect DNS queries to custom DNS server,
-`dns-redirect` recipe is provided. This recipe relies on Cloudify to provide
-`master_ip` attribute that holds ip address of custom DNS server.
+`dns_redirect` recipe is provided. This recipe relies on Cloudify to provide
+`dns_server` attribute that holds ip address of custom DNS server.
 
 In most cases, this attribute will be properly set by DICE deployment service
 when deploying blueprint. For manual setup, see `.kitchen.yml` file in the
@@ -36,8 +36,8 @@ consul client installed that reports to consul server (most commonly installed
 along side custom DNS server). Two recipes are provided to help with this
 task:
 
-  * consul-common recipe will install common files while
-  * consul-agent will install and start consul agent service.
+  * consul_common recipe will install common files while
+  * consul_agent will install and start consul agent service.
 
 
 # Common usage

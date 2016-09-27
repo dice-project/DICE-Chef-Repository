@@ -26,5 +26,5 @@ end
 
 template '/etc/resolv.conf' do
   source 'resolv.conf.erb'
-  variables master: node['cloudify']['properties']['master_ip']
+  variables master: node['cloudify']['properties']['dns_server']
 end

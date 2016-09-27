@@ -25,4 +25,4 @@ default['dice_common']['consul-sha256sum'] =
 #
 # Address of custom DNS server (most of the time, this attribute will be
 # injected by DICE deployment service.
-# default['cloudify']['properties']['master_ip'] = 8.8.8.8
+# default['cloudify']['properties']['dns_server'] = 8.8.8.8
