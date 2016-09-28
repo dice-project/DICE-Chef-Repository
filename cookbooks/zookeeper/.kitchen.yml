@@ -1,0 +1,27 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+
+  - name: standalone
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[zookeeper::default]
+      - recipe[zookeeper::configure]
+      - recipe[zookeeper::start]
+    attributes:
+      cloudify:
+        properties:
+          configuration: {}
+        runtime_properties:
+          zookeeper_quorum:
+            - localhost

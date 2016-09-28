@@ -1,0 +1,21 @@
+description "ZooKeeper service"
+
+limit nofile 32768 32768
+
+start on runlevel [2345]
+stop on [!12345]
+
+respawn
+respawn limit 2 5
+
+umask 007
+
+kill timeout 300
+
+setuid <%= @zookeeper_user %>
+setgid <%= @zookeeper_user %>
+
+chdir <%= @zookeeper_home %>
+env ZOOCFGDIR=<%= @zookeeper_conf_dir %>
+env ZOO_LOG_DIR=<%= @zookeeper_log_dir %>
+exec bin/zkServer.sh start-foreground

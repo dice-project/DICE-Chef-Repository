@@ -4,3 +4,4 @@ dice_common
 dice_deployment_service
 spark
 storm
+zookeeper
