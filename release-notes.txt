@@ -1,3 +1,20 @@
+New in v.0.1.6:
+
+* Renewed and improved Apache Storm recipe.
+* Updated deployment service cookbook to work without Cloudify.
+* Improvements and bug fixes in `dmon_agent` cookbook, including:
+  * Dmon_agent now runs as a service.
+  * Dmon_agent now registers itself on dmon as a node with the
+    appropriate role
+  * Broken up the default recipe into more specific recipes.
+* Improvements and bug fixes in `dmon` cookbook, including:
+  * Added recipes for installation and configuration of elk stack.
+* Better support for DICE technology library (TOSCA for Cloudify) by
+  downloading tarballs in a separate recipe from the one that uses them.
+* Raised nginx request body limit to 50 MB in the deployment service recipe.
+* Internal name clean-up and better compliance with Chef guidelines.
+
+
 New in v.0.1.5:
 
 * Added a DICE-H2020 cookbook and included recipes for installing
