@@ -3,17 +3,12 @@ service "dmon" do
   action :stop
 end
 
-# kill elk
-stack = ['elasticsearch', 'logstash', 'kibana']
-
-stack.each do |elk|
-  execute 'kill' do
-    command "kill -9 $(cat #{node['dmon']['install_dir']}/src/pid/#{elk}.pid)"
-  end
+execute 'kill' do
+  command "kill -9 $(cat #{node['dmon']['install_dir']}/src/pid/logstash.pid)"
+end
   
-  file "#{node['dmon']['install_dir']}/src/pid/#{elk}.pid" do
-    action :delete
-  end
+file "#{node['dmon']['install_dir']}/src/pid/logstash.pid" do
+  action :delete
 end
 
 # empty db

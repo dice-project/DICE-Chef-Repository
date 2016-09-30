@@ -2,8 +2,8 @@
 driver:
   name: vagrant
   customize:
-    memory: 4096
-    cpus: 4
+    memory: 2048
+    cpus: 2
 
 provisioner:
   name: chef_zero
@@ -18,5 +18,7 @@ suites:
       - recipe[git::default]
       - recipe[java::default]
       - recipe[dmon::default]
-      - recipe[dmon::elk]
-      - recipe[dmon::elk_conf]
+      - recipe[dmon::elasticsearch]
+      - recipe[dmon::kibana]
+      - recipe[dmon::logstash]
+      

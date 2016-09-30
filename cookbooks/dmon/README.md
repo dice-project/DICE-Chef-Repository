@@ -14,10 +14,11 @@ that is sent from dmon-agents.
 
 ## Recipes
 
-- `dmon::default` - installs and starts dmon-controller
-- `dmon::elk` - installs elk stack
-- `dmon::elk_conf` - configures and starts elk stack
-- `dmon::reset` - stops elk and dmon-controller, deletes database
+- `dmon::default` - installs and starts dmon-controller (requires apt and git)
+- `dmon::elasticsearch` - installs and starts elasticsearch (requires java)
+- `dmon::kibana` - installs and starts kibana
+- `dmon::logstash` - installs and starts logstash (requires java and default)
+- `dmon::reset` - deletes database and restarts dmon-controller
 
 ## Install and run 
 
@@ -27,20 +28,19 @@ Use run list:
 - recipe[git::default]
 - recipe[java::default]
 - recipe[dmon::default]
-- recipe[dmon::elk]
-- recipe[dmon::elk_conf]
+- recipe[dmon::elasticsearch]
+- recipe[dmon::kibana]
+- recipe[dmon::logstash]
 ```
-Installs, configers, starts dmon-controller and elk stack.
+Installs, configures, starts dmon-controller and elk stack.
 
 ## Reset dmon
 
 Use run list
 ```
 - recipe[dmon::reset]
-- recipe[dmon::elk_conf]
 ```
-Deletes database, stops all programse. It than reconfigures and starts 
-everything again.
+Deletes database, stops logstash and restarts dmon-controller.
 
 # Attributes
 
@@ -49,6 +49,8 @@ everything again.
 * `['dmon']['user']` - user who runes the monitoring script
 * `['dmon']['git_url']` - git url of dmon
 * `['dmon']['install_dir']` - installation directory of dmon monitoring
+* `['dmon']['port']` - port of dmon-controller
+* `['dmon']['ip']` - ip of dmon-controller
 * `['dmon']['lsf_crt']` - logstash-forwarder certificate
 * `['dmon']['lsf_key']` - logstash-forwarder key
 * `['dmon']['openssl_conf']` - openssl configuration file
@@ -69,6 +71,7 @@ everything again.
 
 ### Logstash 
 * `['dmon']['ls']['cluster_name']` - name of Elasticsearch cluster
+* `['dmon']['ls']['core_heap']` - ram restriction
 * `['dmon']['ls']['host_FQDN']` - fully qualified domain name of Logstash host
 * `['dmon']['ls']['ip']` - ip of the Logstash host
 * `['dmon']['ls']['l_port']` - lumberjack port of Logstash

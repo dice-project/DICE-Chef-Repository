@@ -1,4 +1,0 @@
-INSERT INTO db_s_core (hostFQDN, hostIP, hostOS, inLumberPort, sslCert, sslKey, udpPort, outESclusterName, conf, LSCoreHeap, LSCoreWorkers, LSCoreStatus, LSCorePID, LSCoreStormEndpoint, LSCoreStormPort, LSCoreStormTopology, LSCoreSparkEndpoint, LSCoreSparkPort, diceIndex, timestamp)
-VALUES ( '<%= @fqdn %>', '<%= @ip %>', 'unknown', <%= @lumber %>, 'default', 'default', <%= @udp %>, '<%=@cluster_name %>',
-lsconf
-, '<%= @core_heap %>', '4', 'Running', pid, 'None', 'None', 'None', 'None', 'None', 'logstash', '<%= @timestamp %>');

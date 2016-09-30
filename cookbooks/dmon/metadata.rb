@@ -1,6 +1,6 @@
 name 'dmon'
-maintainer 'Robert Cvitkovic'
-maintainer_email 'robert.cvitkovic@xlab.si'
+maintainer 'Robert Cvitkovič'
+maintainer_email 'robert_cvitkovic@xlab.si'
 license 'all_rights'
 description 'Installs/Configures dmon'
 long_description 'Installs/Configures dmon'
