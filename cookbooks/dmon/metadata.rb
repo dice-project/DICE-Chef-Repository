@@ -4,7 +4,7 @@ maintainer_email 'robert_cvitkovic@xlab.si'
 license 'all_rights'
 description 'Installs/Configures dmon'
 long_description 'Installs/Configures dmon'
-version '0.1.1'
+version '0.1.2'
 
 depends 'apt', '~> 2.9.1'
 depends 'git', '~> 4.0.2'
