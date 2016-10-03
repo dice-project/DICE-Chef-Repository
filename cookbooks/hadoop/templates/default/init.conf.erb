@@ -1,0 +1,10 @@
+description "<%= @description %>"
+
+start on (started networking)
+stop on shutdown
+
+setuid <%= @user %>
+setgid <%= @group %>
+respawn
+
+exec <%= @cmd %> --config <%= @conf_dir %> <%= @service %>

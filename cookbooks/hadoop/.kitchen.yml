@@ -1,0 +1,47 @@
+---
+driver:
+  name: vagrant
+  network:
+    - ["private_network", {type: "dhcp"}]
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+    driver:
+      box: ubuntu/trusty64
+
+suites:
+  - name: namenode
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[hadoop::default]
+      - recipe[hadoop::hdfs_configure]
+      - recipe[hadoop::namenode_configure]
+      - recipe[hadoop::namenode_start]
+    attributes:
+      java:
+        jdk_version: "8"
+      cloudify:
+        properties: {}
+        runtime_properties: {}
+
+  - name: datanode
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[hadoop::default]
+      - recipe[hadoop::hdfs_configure]
+      - recipe[hadoop::datanode_configure]
+      - recipe[hadoop::datanode_start]
+    attributes:
+      java:
+        jdk_version: "8"
+      cloudify:
+        properties: {}
+        runtime_properties:
+          namenode_addr: namenode-ubuntu-1404.node.consul
