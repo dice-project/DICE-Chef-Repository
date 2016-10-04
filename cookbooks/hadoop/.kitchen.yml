@@ -45,3 +45,36 @@ suites:
         properties: {}
         runtime_properties:
           namenode_addr: namenode-ubuntu-1404.node.consul
+
+  - name: resourcemanager
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[hadoop::default]
+      - recipe[hadoop::yarn_configure]
+      - recipe[hadoop::resourcemanager_configure]
+      - recipe[hadoop::resourcemanager_start]
+    attributes:
+      java:
+        jdk_version: "8"
+      cloudify:
+        properties: {}
+        runtime_properties: {}
+
+  - name: nodemanager
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[hadoop::default]
+      - recipe[hadoop::yarn_configure]
+      - recipe[hadoop::nodemanager_configure]
+      - recipe[hadoop::nodemanager_start]
+    attributes:
+      java:
+        jdk_version: "8"
+      cloudify:
+        properties: {}
+        runtime_properties:
+          resourcemanager_addr: resourcemanager-ubuntu-1404.node.consul

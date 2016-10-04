@@ -44,7 +44,7 @@ default['hadoop']['hdfs-site']['dfs.datanode.data.dir'] =
 default['hadoop']['yarn-site']['yarn.nodemanager.local-dirs'] =
   "file://#{node['hadoop']['data_dir']}/yarn/local"
 default['hadoop']['yarn-site']['yarn.nodemanager.log-dirs'] =
-  "file://#{node['hadoop']['data_dir']}/yarn/userlogs"
+  "file://#{node['hadoop']['log_dir']}/yarn/userlogs"
 
 default['hadoop']['mapred-site']['mapreduce.framework.name'] = 'yarn'
 
