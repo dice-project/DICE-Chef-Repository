@@ -1,0 +1,18 @@
+description "Kafka Broker"
+
+start on runlevel [2345]
+stop on starting rc RUNLEVEL=[016]
+
+respawn
+respawn limit 2 5
+
+umask 007
+
+kill timeout 300
+
+setuid <%= @kafka_user %>
+setgid <%= @kafka_user %>
+
+chdir <%= @kafka_home %>
+env LOG_DIR=<%= @kafka_log_dir %>
+exec bin/kafka-server-start.sh <%= @kafka_config %>
