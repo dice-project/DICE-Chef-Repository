@@ -117,6 +117,14 @@ describe file('/opt/IeAT-DICE-Repository/src/conf/logstash.conf') do
   it { should contain('9200').from(/elasticsearch/).to(/logstash/) }
 end
 
+#test db entry
+describe command("sqlite3 /opt/IeAT-DICE-Repository/src/db/dmon.db 'select * from db_es_core' | grep -e 'monitor' -e '127.0.0.1' -e 'esCoreMaster' -e '9200' -e 'diceMonit' -e 'dummy' -e '1g'") do
+  its(:exit_status) { should eq 0 }
+end
+
+describe command("sqlite3 /opt/IeAT-DICE-Repository/src/db/dmon.db 'select * from db_s_core' | grep -e 'monitor' -e '127.0.0.1' -e '5000' -e '25826' -e 'diceMonit' -e '512m'") do
+  its(:exit_status) { should eq 0 }
+end
 
 #test if elk is running
 pids = ['elasticsearch.pid', 'kibana.pid', 'logstash.pid']

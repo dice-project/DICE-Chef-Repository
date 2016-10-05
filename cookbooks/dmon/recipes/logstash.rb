@@ -123,6 +123,52 @@ template "#{node['dmon']['install_dir']}/src/conf/logstash.conf" do
   })
 end
 
+# install sqlite3
+package 'sqlite'
+
+db = "#{node['dmon']['install_dir']}/src/db"
+
+t = Time.now
+
+#upload elasticsearch insert query file
+template "#{db}/elasticsearch.sql" do
+  source 'elasticsearch.sql.erb'
+  owner "#{node['dmon']['user']}"
+  group "#{node['dmon']['group']}"
+  action :create
+  variables({
+    :fqdn => node['dmon']['es']['host_FQDN'],
+    :ip => node['dmon']['es']['ip'],
+    :node_name => node['dmon']['es']['node_name'],
+    :port => node['dmon']['es']['port'],
+    :cluster_name => node['dmon']['es']['cluster_name'],
+    :core_heap => node['dmon']['es']['core_heap'],
+    :timestamp => t.strftime("%Y-%m-%d %H:%M:%S.%6N")
+  })
+end
+
+execute 'upload es to db' do
+  command "sqlite3 #{db}/dmon.db <#{db}/elasticsearch.sql"
+end
+
+
+#upload logstash insert query file
+template "#{db}/logstash.sql" do
+  source 'logstash.sql.erb'
+  owner "#{node['dmon']['user']}"
+  group "#{node['dmon']['group']}"
+  action :create
+  variables({
+    :fqdn => node['dmon']['ls']['host_FQDN'],
+    :ip => node['dmon']['ls']['ip'],
+    :lumber => node['dmon']['ls']['l_port'],
+    :udp => node['dmon']['ls']['udp_port'],
+    :cluster_name => node['dmon']['ls']['cluster_name'],
+    :core_heap => node['dmon']['ls']['core_heap'],
+    :timestamp => t.strftime("%Y-%m-%d %H:%M:%S.%6N")
+  })
+end
+
 #start logstash
 conf = "#{node['dmon']['install_dir']}/src/conf/logstash.conf"
 log = "#{node['dmon']['install_dir']}/src/logs/logstash.log"
@@ -132,7 +178,10 @@ bash 'start logstash' do
     nohup /opt/logstash/bin/logstash agent  -f #{conf} -l #{log} -w 4 &
     pid=$!
     echo $pid > #{node['dmon']['install_dir']}/src/pid/logstash.pid
+    sed -i "s/pid/$pid/g" #{db}/logstash.sql
+    lsconf="X'`hexdump -ve '1/1 \"%.2x\"' #{node['dmon']['install_dir']}/src/conf/logstash.conf`'"
+    sed -i "s/lsconf/$lsconf/g" #{db}/logstash.sql
+    sqlite3 #{db}/dmon.db <#{db}/logstash.sql
     EOH
   user "#{node['dmon']['user']}"
 end
-
