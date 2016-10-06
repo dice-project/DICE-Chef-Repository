@@ -19,6 +19,7 @@
 
 app_folder = node['dice_deployment_service']['app_folder']
 app_socket = node['dice_deployment_service']['app_socket']
+upload_limit = node['dice_deployment_service']['upload_limit']
 
 package 'nginx'
 
@@ -28,7 +29,11 @@ end
 
 template '/etc/nginx/sites-available/dice-deployment-service' do
   source 'dice-deployment-service.erb'
-  variables(app_folder: app_folder, app_socket: app_socket)
+  variables(
+    app_folder: app_folder,
+    app_socket: app_socket,
+    upload_limit: upload_limit
+  )
   notifies :restart, 'service[nginx]'
 end
 

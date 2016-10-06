@@ -1,6 +1,6 @@
 server {
   listen 80 default_server;
-  client_max_body_size 50m;
+  client_max_body_size <%= @upload_limit %>;
   server_name _;
 
   location = /favicon.ico {
