@@ -32,12 +32,9 @@ ruby_block 'Lazy load FQDN' do
   # query it ruby_block in order to delay execution from compile phase to
   # converge phase or we will get bad value.
   block do
-    config['core-site']['fs.defaultFS'] =
-      if node['cloudify']['runtime_properties'].key?('namenode_addr')
-        "hdfs://#{node['cloudify']['runtime_properties']['namenode_addr']}"
-      else
-        "hdfs://#{node['fqdn']}"
-      end
+    rt_props = node['cloudify']['runtime_properties']
+    namenode = rt_props.fetch('namenode_addr', node['fqdn'])
+    config['core-site']['fs.defaultFS'] = "hdfs://#{namenode}"
   end
 end
 

@@ -18,8 +18,6 @@
 #
 
 # Run commmon stuff
-install_dir = node['hadoop']['install_dir']
-conf_dir = node['hadoop']['conf_dir']
 hadoop_group = node['hadoop']['group']
 hdfs_user = node['hadoop']['hdfs_user']
 
@@ -29,17 +27,15 @@ name_dirs_local = name_dirs.map { |v| v.gsub('file://', '') }
 name_dirs_local.each do |folder|
   directory folder do
     mode '0770'
-    owner 'hdfs'
-    group 'hadoop'
+    owner hdfs_user
+    group hadoop_group
     action :create
     recursive true
   end
 end
 
 execute 'hdfs namenode format' do
-  environment 'PATH' => "#{install_dir}/bin:#{ENV['PATH']}"
-  cwd name_dirs_local[0]
-  command "hdfs --config #{conf_dir} namenode -format"
+  command 'hdfs namenode -format'
   creates "#{name_dirs_local[0]}/current/VERSION"
   group hadoop_group
   user hdfs_user

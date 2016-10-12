@@ -32,6 +32,10 @@ describe port(8030) do
   it { should be_listening.with('tcp6') }
 end
 
+describe file('/etc/hadoop/core-site.xml') do
+  its(:content) { should contain 'namenode-ubuntu-1404.node.consul' }
+end
+
 describe port(8031) do
   it { should be_listening.with('tcp6') }
 end

@@ -17,14 +17,18 @@
 # limitations under the License.
 #
 
-install_dir = node['hadoop']['install_dir']
-conf_dir = node['hadoop']['conf_dir']
 hadoop_group = node['hadoop']['group']
+hdfs_user = node['hadoop']['hdfs_user']
 yarn_user = node['hadoop']['yarn_user']
 
+execute 'create tmp folder' do
+  command 'hadoop fs -mkdir /tmp && hadoop fs -chmod 0777 /tmp'
+  group hadoop_group
+  user hdfs_user
+end
+
 execute 'format state store' do
-  environment 'PATH' => "#{install_dir}/bin:#{ENV['PATH']}"
-  command "yarn --config #{conf_dir} resourcemanager -format-state-store"
+  command 'yarn resourcemanager -format-state-store'
   group hadoop_group
   user yarn_user
 end

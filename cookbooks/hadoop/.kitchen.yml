@@ -53,14 +53,16 @@ suites:
       - recipe[java::default]
       - recipe[hadoop::default]
       - recipe[hadoop::yarn_configure]
-      - recipe[hadoop::resourcemanager_configure]
+      # Next recipe requires functioning name node, so we skip it here
+      #- recipe[hadoop::resourcemanager_configure]
       - recipe[hadoop::resourcemanager_start]
     attributes:
       java:
         jdk_version: "8"
       cloudify:
         properties: {}
-        runtime_properties: {}
+        runtime_properties:
+          namenode_addr: namenode-ubuntu-1404.node.consul
 
   - name: nodemanager
     run_list:
@@ -77,4 +79,5 @@ suites:
       cloudify:
         properties: {}
         runtime_properties:
+          namenode_addr: namenode-ubuntu-1404.node.consul
           resourcemanager_addr: resourcemanager-ubuntu-1404.node.consul

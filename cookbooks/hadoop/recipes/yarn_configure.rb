@@ -23,23 +23,29 @@ yarn_user = node['hadoop']['yarn_user']
 
 # Prepare common yarn configuration
 config = {}
-%w(yarn-site mapred-site capacity-scheduler).each do |name|
+%w(core-site yarn-site mapred-site capacity-scheduler).each do |name|
   config[name] = node['hadoop'].fetch(name, {}).to_hash
 end
+# Namenode location needs to be added from runtime props.
+config['core-site']['fs.defaultFS'] =
+  "hdfs://#{node['cloudify']['runtime_properties']['namenode_addr']}"
 
 ruby_block 'Lazy load FQDN' do
   # OHAI is real pain to work with when it comes to dynamic values. We must
   # query it ruby_block in order to delay execution from compile phase to
   # converge phase or we will get bad value.
   block do
+    rt_props = node['cloudify']['runtime_properties']
     config['yarn-site']['yarn.resourcemanager.hostname'] =
-      if node['cloudify']['runtime_properties'].key?('resourcemanager_addr')
-        node['cloudify']['runtime_properties']['resourcemanager_addr']
-      else
-        node['fqdn']
-      end
+      rt_props.fetch('resourcemanager_addr', node['fqdn'])
   end
 end
+
+# Store memory and CPU data for YARN
+config['yarn-site']['yarn.nodemanager.resource.memory-mb'] =
+  node['memory']['total'][/\d*/].to_i / 1024
+config['yarn-site']['yarn.nodemanager.resource.cpu-vcores'] =
+  node['cpu']['total'].to_i
 
 [
   node['hadoop']['yarn-env']['YARN_LOG_DIR'],

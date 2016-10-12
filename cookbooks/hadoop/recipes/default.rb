@@ -75,3 +75,17 @@ end
     )
   end
 end
+
+# Install some wrappers to make running Hadoop commands easier
+%w(hadoop hdfs yarn).each do |command|
+  template "/usr/bin/#{command}" do
+    source 'command.erb'
+    mode '0755'
+    owner 'root'
+    group 'root'
+    action :create
+    variables(
+      command: command, install_dir: install_dir, conf_dir: conf_dir
+    )
+  end
+end
