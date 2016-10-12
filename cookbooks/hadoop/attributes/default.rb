@@ -41,6 +41,8 @@ default['hadoop']['hdfs-site']['dfs.namenode.name.dir'] =
 default['hadoop']['hdfs-site']['dfs.datanode.data.dir'] =
   "file://#{node['hadoop']['data_dir']}/hdfs/datanode"
 
+default['hadoop']['yarn-site']['yarn.nodemanager.address'] =
+  "#{node['fqdn']}:8039" # Keep this in sync with TOSCA library!
 default['hadoop']['yarn-site']['yarn.nodemanager.local-dirs'] =
   "file://#{node['hadoop']['data_dir']}/yarn/local"
 default['hadoop']['yarn-site']['yarn.nodemanager.log-dirs'] =
