@@ -41,6 +41,17 @@ default['hadoop']['hdfs-site']['dfs.namenode.name.dir'] =
 default['hadoop']['hdfs-site']['dfs.datanode.data.dir'] =
   "file://#{node['hadoop']['data_dir']}/hdfs/datanode"
 
+# Notes on node manager address and port
+# ======================================
+#
+# By default, node manager address is set to 0.0.0.0:0. Official documentation
+# states nothing about what exactly this means. On UNIX derived systems,
+# requesting something on port 0 usually means "assign some random, unused
+# port" and tracking address mangling through Hadoop code revealed that YARN
+# indeed follows this tradition.
+#
+# In order to keep things predictable (which is prerequisite for using
+# firewall), we fixed port number to which node manager binds.
 default['hadoop']['yarn-site']['yarn.nodemanager.address'] =
   "#{node['fqdn']}:8039" # Keep this in sync with TOSCA library!
 default['hadoop']['yarn-site']['yarn.nodemanager.local-dirs'] =
