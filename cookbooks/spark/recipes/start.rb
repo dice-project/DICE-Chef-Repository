@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-service_name = "spark-#{node['spark']['type']}"
+service_name = "spark-#{node['spark']['type']}-#{node['spark']['version']}"
 
 service service_name do
   action :start

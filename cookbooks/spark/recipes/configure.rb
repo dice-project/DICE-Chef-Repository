@@ -17,63 +17,54 @@
 # limitations under the License.
 #
 
-spark_home = "#{node['spark']['prefix']}/#{node['spark']['version']}"
-spark_conf = node['spark']['spark-env']['SPARK_CONF_DIR']
+install_dir = node['spark']['install_dir']
+conf_dir = node['spark']['spark-env']['SPARK_CONF_DIR']
 spark_user = node['spark']['user']
+version = node['spark']['version']
 
-spark_env = if node['spark'].key?('spark-env')
-              node['spark']['spark-env'].to_hash
-            else
-              {}
-            end
-spark_env.merge!(
-  'SPARK_LOCAL_IP' => node['ipaddress'],
-  'SPARK_MASTER_HOST' => node['ipaddress']
-)
-template "#{spark_conf}/spark-env.sh" do
+master_ip =
+  node['cloudify']['runtime_properties'].fetch('master_ip', node['ipaddress'])
+master = "spark://#{master_ip}:7077"
+
+template "#{conf_dir}/spark-env.sh" do
   source 'env.sh.erb'
   action :create
-  variables opts: spark_env
+  variables opts: node['spark'].fetch('spark-env', {}).to_hash
 end
 
-# YARN mode stuff
-assembly_jar = 'lib/spark-assembly-1.6.1-hadoop2.2.0.jar'
-spark_defaults = { 'spark.yarn.jar' => "local:#{spark_home}/#{assembly_jar}" }
-# End YARN mode stuff
+# YARN optimization - Disable for now
+# assembly_jar = 'lib/spark-assembly-1.6.1-hadoop2.2.0.jar'
+# spark_defaults = { 'spark.yarn.jar' => "local:#{spark_home}/#{assembly_jar}" }
+# End YARN optimization
 
-if node['spark'].key?('spark-defaults')
-  spark_defaults = node['spark']['spark-defaults'].merge(spark_defaults)
-end
-
+spark_defaults = node['spark'].fetch('spark-defaults', {}).to_hash
 # TODO: Check what parameters can be tweaked on Spark installations and where
 # do those settings reside. Tadej's hunch would be that spark-defaults is that
 # place, but we need to verify this.
 spark_defaults.merge!(node['cloudify']['properties']['configuration'].to_hash)
+spark_defaults['spark.master'] = master
 
-template "#{spark_conf}/spark-defaults.conf" do
+template "#{conf_dir}/spark-defaults.conf" do
   source 'defaults.conf.erb'
   action :create
   variables opts: spark_defaults
 end
 
-# Init script
-master = ''
-if node['cloudify']['runtime_properties'].key?('master_ip')
-  master_ip = node['cloudify']['runtime_properties']['master_ip']
-  master = "spark://#{master_ip}:7077"
-end
-
-template "/etc/init/spark-#{node['spark']['type']}.conf" do
-  source 'spark.conf.erb'
-  action :create
-  variables(
-    spark_home: spark_home,
-    type: node['spark']['type'],
-    user: spark_user,
-    conf_dir: spark_conf,
-    master: master,
-    # Next line is just ridiculous, but spark is a bit inconsistent when it
-    # comes to naming various things.
-    script_name: node['spark']['type'] == 'master' ? 'master' : 'slave'
-  )
+# Init scripts are done in configure phase because master_ip is not known at
+# creation time.
+%w(master worker).each do |name|
+  template "/etc/init/spark-#{name}-#{version}.conf" do
+    source 'spark.conf.erb'
+    action :create
+    variables(
+      spark_home: install_dir,
+      type: node['spark']['type'],
+      user: spark_user,
+      conf_dir: conf_dir,
+      master: name == 'worker' ? master : '',
+      # Next line is just ridiculous, but spark is a bit inconsistent when it
+      # comes to naming various things.
+      script_name: name == 'master' ? 'master' : 'slave'
+    )
+  end
 end

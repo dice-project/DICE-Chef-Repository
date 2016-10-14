@@ -3,6 +3,8 @@ driver:
   name: vagrant
   network:
     - ["private_network", {type: "dhcp"}]
+  customize:
+    memory: 2048
 
 provisioner:
   name: chef_zero
@@ -11,7 +13,7 @@ platforms:
   - name: ubuntu-14.04
 
 suites:
-  - name: master
+  - name: master-16
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
@@ -22,23 +24,61 @@ suites:
     attributes:
       spark:
         type: master
+        version: "1.6"
       cloudify:
         properties:
           configuration: {}
         runtime_properties: {}
 
-  - name: worker
+  - name: master-20
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
       - recipe[java::default]
       - recipe[spark::default]
       - recipe[spark::configure]
+      - recipe[spark::start]
+    attributes:
+      spark:
+        type: master
+        version: "2.0"
+      cloudify:
+        properties:
+          configuration: {}
+        runtime_properties: {}
+
+  - name: worker-16
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[spark::default]
+      - recipe[spark::configure]
+      - recipe[spark::start]
     attributes:
       spark:
         type: worker
+        version: "1.6"
       cloudify:
         properties:
           configuration: {}
         runtime_properties:
-          master_ip: 1.2.3.4
+          master_ip: 172.28.128.8
+
+  - name: worker-20
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[java::default]
+      - recipe[spark::default]
+      - recipe[spark::configure]
+      - recipe[spark::start]
+    attributes:
+      spark:
+        type: worker
+        version: "2.0"
+      cloudify:
+        properties:
+          configuration: {}
+        runtime_properties:
+          master_ip: 172.28.128.9

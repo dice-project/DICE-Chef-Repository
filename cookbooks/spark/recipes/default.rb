@@ -17,10 +17,10 @@
 # limitations under the License.
 #
 
-spark_home = "#{node['spark']['prefix']}/#{node['spark']['version']}"
-spark_conf = node['spark']['spark-env']['SPARK_CONF_DIR']
+install_dir = node['spark']['install_dir']
+conf_dir = node['spark']['spark-env']['SPARK_CONF_DIR']
 spark_user = node['spark']['user']
-tmp_file = "#{Chef::Config[:file_cache_path]}/spark.tar.gz"
+version = node['spark']['version']
 
 group spark_user do
   action :create
@@ -32,19 +32,21 @@ user spark_user do
   shell '/bin/bash'
 end
 
-remote_file tmp_file do
-  source node['spark']['tarball']
-  checksum node['spark']['sha256-checksum']
+spark_tar = "#{Chef::Config[:file_cache_path]}/spark-#{version}.tar.gz"
+remote_file spark_tar do
+  source node['spark'][version]['tarball']
+  checksum node['spark'][version]['checksum']
   action :create
 end
 
-execute 'Extract spark' do
-  command "tar -xf #{tmp_file}"
-  cwd node['spark']['prefix']
-  creates spark_home
+poise_archive spark_tar do
+  destination install_dir
 end
 
-directory spark_conf do
+directory conf_dir do
+  mode '0755'
+  owner 'root'
+  group 'root'
   action :create
   recursive true
 end
@@ -59,5 +61,24 @@ end
     owner spark_user
     group spark_user
     recursive true
+  end
+end
+
+# Wrappers for commands
+suffixes = ["-#{version}"]
+suffixes << '' if node['spark']['alias']
+
+%w(pyspark spark-class sparkR spark-shell spark-sql spark-submit).each do |cmd|
+  suffixes.each do |suffix|
+    template "/usr/bin/#{cmd}#{suffix}" do
+      source 'command.erb'
+      mode '0755'
+      owner 'root'
+      group 'root'
+      action :create
+      variables(
+        command: cmd, install_dir: install_dir, conf_dir: conf_dir
+      )
+    end
   end
 end

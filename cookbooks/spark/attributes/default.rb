@@ -17,47 +17,43 @@
 # limitations under the License.
 #
 
-# Package binaries
-default['spark']['version'] = 'spark-2.0.0-bin-hadoop2.7'
-default['spark']['sha256-checksum'] =
-  '3d46e990c06a362efc23683cf0ec15e1943c28e023e5b5d4e867c78591c937ad'
-default['spark']['tarball'] =
-  'http://d3kbcqa49mib13.cloudfront.net/spark-2.0.0-bin-hadoop2.7.tgz'
+# General settings
+default['spark']['version'] = '2.0' # Also available: '1.6'
+default['spark']['alias'] = true # Create non-suffixed commands too
+
+default['spark']['1.6']['checksum'] =
+  'bddeccec0fb8ac9491cbb4e320467e9263bcc1caf9b45466164f8ae2d97de710'
+default['spark']['1.6']['tarball'] =
+  'http://d3kbcqa49mib13.cloudfront.net/spark-1.6.2-bin-hadoop2.6.tgz'
+
+default['spark']['2.0']['checksum'] =
+  '3d017807650f41377118a736e2f2298cd0146a593e7243a28c2ed72a88b9a043'
+default['spark']['2.0']['tarball'] =
+  'http://d3kbcqa49mib13.cloudfront.net/spark-2.0.1-bin-hadoop2.7.tgz'
 
 # Global settings for installation
-default['spark']['prefix'] = '/usr/share'
+default['spark']['install_dir'] =
+  "/usr/share/spark-#{node['spark']['version']}"
 default['spark']['user'] = 'spark'
 
 # Should node be prepared as master or worker?
 default['spark']['type'] = 'worker' # Set to 'master' for master
 
 # Spark configuration - common
-default['spark']['spark-env']['SPARK_CONF_DIR'] = '/etc/spark'
-default['spark']['spark-env']['SPARK_LOG_DIR'] = '/var/log/spark'
-default['spark']['spark-env']['SPARK_IDENT_STRING'] = 'default_ident'
+default['spark']['spark-env']['SPARK_CONF_DIR'] =
+  "/etc/spark-#{node['spark']['version']}"
+default['spark']['spark-env']['SPARK_LOG_DIR'] =
+  "/var/log/spark-#{node['spark']['version']}"
+default['spark']['spark-env']['SPARK_IDENT_STRING'] = node['hostname']
 
 # YARN integration
-# default['spark']['spark-env']['HADOOP_CONF_DIR'] = '/etc/hadoop'
+default['spark']['spark-env']['HADOOP_CONF_DIR'] = '/etc/hadoop'
 
 # Standalone mode
 default['spark']['spark-env']['SPARK_MASTER_PORT'] = '7077'
 default['spark']['spark-env']['SPARK_WORKER_PORT'] = '7078'
-default['spark']['spark-env']['SPARK_WORKER_DIR'] = '/var/lib/spark/'
+default['spark']['spark-env']['SPARK_WORKER_DIR'] =
+  "/var/lib/spark-#{node['spark']['version']}"
 
-# Configuration that is supplied by Cloudify
-# default['spark']['spark-env']['SPARK_LOCAL_IP']
-# default['spark']['spark-env']['SPARK_MASTER_HOST']
-
-# TODO: Next setting should be autoconfigured by means of hadoop classpath
-# retrieval
-# default['spark']['spark-env']['SPARK_DIST_CLASSPATH'] =
-#   '/etc/hadoop:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/common/lib/*:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/common/*:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/hdfs:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/hdfs/lib/*:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/hdfs/*:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/yarn/lib/*:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/yarn/*:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/mapreduce/lib/*:'\
-#   '/opt/hadoop-2.7.2/share/hadoop/mapreduce/*'
+default['spark']['spark-defaults']['spark.driver.port'] = '7079'
+default['spark']['spark-defaults']['spark.blockManager.port'] = '7080'
