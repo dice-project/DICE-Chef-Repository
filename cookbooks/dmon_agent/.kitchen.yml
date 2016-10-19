@@ -19,7 +19,6 @@ suites:
       - recipe[dmon_agent::storm]
     attributes:
       dmon_agent:
-        node_ip: "10.211.55.110"
         dmon:
           ip: '127.0.0.1' 
         logstash:
@@ -34,8 +33,10 @@ suites:
       - recipe[dmon_agent::collectd]
       - recipe[dmon_agent::spark]
     attributes:
+      spark:
+        spark-env:
+          SPARK_CONF_DIR: /tmp
       dmon_agent:
-        node_ip: "10.211.55.111"
         dmon:
           ip: '127.0.0.1' 
         logstash:

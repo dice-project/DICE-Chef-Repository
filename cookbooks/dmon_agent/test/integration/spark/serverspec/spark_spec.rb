@@ -60,7 +60,6 @@ end
 describe file('/var/log/dmon.log') do
   it { should be_file }
   it { should contain 'PUT /dmon/v1/overlord/nodes' }
-  it { should contain('10.211.55.111').from(/NodeIP/).to(/NodeOS/) }
 end
 
 #test if Collectd is successfully installed, configured and started.

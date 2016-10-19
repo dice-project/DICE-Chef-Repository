@@ -78,13 +78,11 @@ service 'dmon_agent' do
   action [ :enable, :start ]
 end
 
-# generate node hash
-ip = node['dmon_agent']['node_ip'].nil? ? node['ipaddress'] : node['dmon_agent']['node_ip']
-
+# Node registration data
 node_hash = {
   :Nodes => [
     :NodeName => node['hostname'],
-    :NodeIP => ip,
+    :NodeIP => node['ipaddress'],
     :NodeOS => node['platform'],
     :key => "null",
     :username => "null",
@@ -92,7 +90,7 @@ node_hash = {
   ]
 }
 
-# includes the given node into the monitored node pools on dmon
+# Register node on dmon master
 http_request 'nodes' do
   action :put
   url "http://#{node['dmon_agent']['dmon']['ip']}:#{node['dmon_agent']['dmon']['port']}/dmon/v1/overlord/nodes"

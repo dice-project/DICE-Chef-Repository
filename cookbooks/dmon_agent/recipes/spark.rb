@@ -1,13 +1,6 @@
-#create if missing (for testing)
-directory '/etc/spark' do
-  owner "#{node['dmon_agent']['user']}"
-  group "#{node['dmon_agent']['group']}"
-  action :create
-  not_if { File.directory?("/etc/spark") }
-end
+spark_conf_dir = node['spark']['spark-env']['SPARK_CONF_DIR']
 
-#upload spark metrics properties
-template '/etc/spark/metrics.properties' do
+template "#{spark_conf_dir}/metrics.properties" do
   source 'spark-metrics.tmp.erb'
   owner "#{node['dmon_agent']['user']}"
   group "#{node['dmon_agent']['group']}"

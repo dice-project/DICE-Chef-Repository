@@ -2,8 +2,9 @@
 default['dmon_agent']['group'] = 'dmon-agent'
 default['dmon_agent']['user'] = 'dmon-agent'
 default['dmon_agent']['home_dir'] = '/home/dmon-agent'
-default['dmon_agent']['tarball'] = 'https://github.com/igabriel85/IeAT-DICE-Repository/releases/download/v0.0.4-dmon-agent/dmon-agent.tar.gz'
-default['dmon_agent']['node_ip'] = nil
+default['dmon_agent']['tarball'] =
+  'https://github.com/igabriel85/IeAT-DICE-Repository/releases/download/'\
+  'v0.0.4-dmon-agent/dmon-agent.tar.gz'
 
 #dmon related attributes
 default['dmon_agent']['dmon']['ip'] = 'ip'
