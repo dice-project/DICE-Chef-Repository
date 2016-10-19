@@ -1,99 +1,93 @@
-#create new group
-group "#{node['dmon_agent']['group']}"
+dmon_master = [
+  node['dmon_agent']['dmon']['ip'],
+  node['dmon_agent']['dmon']['port']
+].join ':'
 
-#create new user
-user "#{node['dmon_agent']['user']}" do
-  group "#{node['dmon_agent']['group']}"
-  home "#{node['dmon_agent']['home_dir']}"
-  supports :manage_home => true
+dmon_user = node['dmon_agent']['user']
+dmon_group = node['dmon_agent']['group']
+dmon_home = node['dmon_agent']['home_dir']
+
+group dmon_group
+
+user dmon_user do
+  group dmon_group
+  home dmon_home
+  supports manage_home: true
   system true
   shell '/bin/bash'
 end
 
-#download dmon-agent release zip.
-remote_file "#{node['dmon_agent']['home_dir']}/dmon-agent.tar.gz" do
-  source "#{node['dmon_agent']['tarball']}"
-  owner "#{node['dmon_agent']['user']}"
-  group "#{node['dmon_agent']['group']}"
+dmon_tar = "#{Chef::Config[:file_cache_path]}/kafka.tar.gz"
+remote_file dmon_tar do
+  source node['dmon_agent']['tarball']
   action :create_if_missing
 end
 
-#extract zip file
 execute 'extract' do
-  command "tar xvf #{node['dmon_agent']['home_dir']}/dmon-agent.tar.gz"
-  cwd "#{node['dmon_agent']['home_dir']}"
-  user "#{node['dmon_agent']['user']}"
-  not_if { File.exist?("#{node['dmon_agent']['home_dir']}/dmon-agent") }
+  command "tar xvf #{dmon_tar}"
+  cwd dmon_home
+  user dmon_user
+  not_if { File.exist?("#{dmon_home}/dmon-agent") }
 end
 
-#delete dmon-agent release zip.
-file "#{node['dmon_agent']['home_dir']}/dmon-agent.tar.gz" do
-  action :delete
-end
-
-#create necessary directories
-dirs = ['pid', 'log', 'cert', 'lock']
-
-dirs.each do |dir|
-  directory "#{node['dmon_agent']['home_dir']}/dmon-agent/#{dir}" do
-    owner "#{node['dmon_agent']['user']}"
-    group "#{node['dmon_agent']['group']}"
+%w(pid log cert lock).each do |dir|
+  directory "#{dmon_home}/dmon-agent/#{dir}" do
+    owner dmon_user
+    group dmon_group
     action :create
   end
 end
 
-#install python
 python_runtime 'dmonPy' do
   version '2.7'
 end
 
 python_virtualenv 'dmonEnv' do
-  path "#{node['dmon_agent']['home_dir']}/dmon-agent/dmonEnv"
+  path "#{dmon_home}/dmon-agent/dmonEnv"
   python 'dmonPy'
-  user "#{node['dmon_agent']['user']}"
-  group "#{node['dmon_agent']['group']}"
+  user dmon_user
+  group dmon_group
 end
 
 pip_requirements 'dmonPip' do
-  path "#{node['dmon_agent']['home_dir']}/dmon-agent/requirements.txt"
+  path "#{dmon_home}/dmon-agent/requirements.txt"
   virtualenv 'dmonEnv'
-  user "#{node['dmon_agent']['user']}"
-  group "#{node['dmon_agent']['group']}"
-  not_if { File.exists?("#{node['dmon_agent']['home_dir']}/dmon-agent/lock/agent.lock") }
+  user dmon_user
+  group dmon_group
+  not_if { File.exist? "#{dmon_home}/dmon-agent/lock/agent.lock" }
 end
 
-time =  Time.new.strftime("%Y.%m.%d-%H.%M.%S")
-file "#{node['dmon_agent']['home_dir']}/dmon-agent/lock/agent.lock" do
+time = Time.new.strftime('%Y.%m.%d-%H.%M.%S')
+file "#{dmon_home}/dmon-agent/lock/agent.lock" do
   content "Installed on: #{time}"
-  owner "#{node['dmon_agent']['user']}"
-  group "#{node['dmon_agent']['group']}"
+  owner dmon_user
+  group dmon_group
 end
 
-#start the dmon-agent
 template '/etc/init/dmon_agent.conf' do
   source 'dmon_agent.conf.erb'
 end
 
 service 'dmon_agent' do
-  action [ :enable, :start ]
+  action [:enable, :start]
 end
 
 # Node registration data
 node_hash = {
-  :Nodes => [
-    :NodeName => node['hostname'],
-    :NodeIP => node['ipaddress'],
-    :NodeOS => node['platform'],
-    :key => "null",
-    :username => "null",
-    :password => "null"
+  Nodes: [
+    NodeName: node['hostname'],
+    NodeIP: node['ipaddress'],
+    NodeOS: node['platform'],
+    key: 'null',
+    username: 'null',
+    password: 'null'
   ]
 }
 
 # Register node on dmon master
 http_request 'nodes' do
   action :put
-  url "http://#{node['dmon_agent']['dmon']['ip']}:#{node['dmon_agent']['dmon']['port']}/dmon/v1/overlord/nodes"
-  message (node_hash.to_json)
-  headers({'Content-Type' => 'application/json'})
+  url "http://#{dmon_master}/dmon/v1/overlord/nodes"
+  message node_hash.to_json
+  headers 'Content-Type' => 'application/json'
 end

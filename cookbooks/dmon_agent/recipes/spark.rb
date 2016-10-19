@@ -1,24 +1,32 @@
+dmon_master = [
+  node['dmon_agent']['dmon']['ip'],
+  node['dmon_agent']['dmon']['port']
+].join ':'
+
+dmon_user = node['dmon_agent']['user']
+dmon_group = node['dmon_agent']['group']
+
 spark_conf_dir = node['spark']['spark-env']['SPARK_CONF_DIR']
 
 template "#{spark_conf_dir}/metrics.properties" do
   source 'spark-metrics.tmp.erb'
-  owner "#{node['dmon_agent']['user']}"
-  group "#{node['dmon_agent']['group']}"
+  # Next two lines are here to support dmon agent modifications
+  owner dmon_user
+  group dmon_group
   action :create
 end
 
-# generate role hash
+# Role registration data
 role_hash = {
-  :Nodes => [
-    :NodeName => node['hostname'],
-    :Roles => ['spark']
+  Nodes: [
+    NodeName: node['hostname'],
+    Roles: ['spark']
   ]
 }
 
-# add a role to the node
 http_request 'roles' do
   action :put
-  url "http://#{node['dmon_agent']['dmon']['ip']}:#{node['dmon_agent']['dmon']['port']}/dmon/v1/overlord/nodes/roles"
-  message (role_hash.to_json)
-  headers({'Content-Type' => 'application/json'})
+  url "http://#{dmon_master}/dmon/v1/overlord/nodes/roles"
+  message role_hash.to_json
+  headers 'Content-Type' => 'application/json'
 end

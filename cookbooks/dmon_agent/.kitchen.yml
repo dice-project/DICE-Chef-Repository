@@ -20,10 +20,10 @@ suites:
     attributes:
       dmon_agent:
         dmon:
-          ip: '127.0.0.1' 
+          ip: '127.0.0.1'
         logstash:
-          ip: '10.211.55.100' 
-  
+          ip: '10.211.55.100'
+
   - name: spark
     run_list:
       - recipe[dice_common::host]
@@ -38,6 +38,6 @@ suites:
           SPARK_CONF_DIR: /tmp
       dmon_agent:
         dmon:
-          ip: '127.0.0.1' 
+          ip: '127.0.0.1'
         logstash:
           ip: '10.211.55.100'

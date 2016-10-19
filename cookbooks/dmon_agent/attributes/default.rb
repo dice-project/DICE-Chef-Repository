@@ -1,4 +1,4 @@
-#general attributes
+# General attributes
 default['dmon_agent']['group'] = 'dmon-agent'
 default['dmon_agent']['user'] = 'dmon-agent'
 default['dmon_agent']['home_dir'] = '/home/dmon-agent'
@@ -6,11 +6,11 @@ default['dmon_agent']['tarball'] =
   'https://github.com/igabriel85/IeAT-DICE-Repository/releases/download/'\
   'v0.0.4-dmon-agent/dmon-agent.tar.gz'
 
-#dmon related attributes
+# dmon related attributes
 default['dmon_agent']['dmon']['ip'] = 'ip'
 default['dmon_agent']['dmon']['port'] = '5001'
 
-#attributes for service configuration
+# Logstash cofiguration
 default['dmon_agent']['logstash']['ip'] = 'ip'
 default['dmon_agent']['logstash']['udp_port'] = '25826'
 default['dmon_agent']['logstash']['l_port'] = '5000'
