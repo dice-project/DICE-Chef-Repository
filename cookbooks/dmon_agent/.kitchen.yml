@@ -18,6 +18,10 @@ suites:
       - recipe[dmon_agent::collectd]
       - recipe[dmon_agent::storm]
     attributes:
+      cloudify:
+        properties:
+          monitoring:
+            enabled: true
       dmon_agent:
         dmon:
           ip: '127.0.0.1'
@@ -33,6 +37,10 @@ suites:
       - recipe[dmon_agent::collectd]
       - recipe[dmon_agent::spark]
     attributes:
+      cloudify:
+        properties:
+          monitoring:
+            enabled: true
       spark:
         spark-env:
           SPARK_CONF_DIR: /tmp

@@ -1,3 +1,8 @@
+# Sanity check
+Chef::Recipe.send(:include, DmonAgent::Helper)
+return if skip_installation?
+
+# dmon_master_ip = node['cloudify']['properties']['monitoring']['dmon_server']
 dmon_master = [
   node['dmon_agent']['dmon']['ip'],
   node['dmon_agent']['dmon']['port']

@@ -1,3 +1,7 @@
+# Sanity check
+Chef::Recipe.send(:include, DmonAgent::Helper)
+return if skip_installation?
+
 dmon_user = node['dmon_agent']['user']
 dmon_group = node['dmon_agent']['group']
 
