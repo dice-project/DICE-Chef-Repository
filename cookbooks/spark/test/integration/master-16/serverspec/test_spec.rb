@@ -45,11 +45,15 @@ describe port(8080) do
 end
 
 # Test for wrapper creation
-%w(pyspark spark-class sparkR spark-shell spark-sql spark-submit).each do |cmd|
+%w(pyspark sparkR spark-shell spark-sql spark-submit).each do |cmd|
   describe file("/usr/bin/#{cmd}") do
     it { should be_file }
     it { should be_mode 755 }
     it { should be_owned_by 'root' }
     it { should be_grouped_into 'root' }
+  end
+
+  describe command("#{cmd} --help") do
+    its(:exit_status) { should eq 0 }
   end
 end

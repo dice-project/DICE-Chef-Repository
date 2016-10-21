@@ -68,7 +68,7 @@ end
 suffixes = ["-#{version}"]
 suffixes << '' if node['spark']['alias']
 
-%w(pyspark spark-class sparkR spark-shell spark-sql spark-submit).each do |cmd|
+%w(pyspark sparkR spark-shell spark-sql spark-submit).each do |cmd|
   suffixes.each do |suffix|
     template "/usr/bin/#{cmd}#{suffix}" do
       source 'command.erb'
