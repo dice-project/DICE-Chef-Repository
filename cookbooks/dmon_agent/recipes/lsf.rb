@@ -22,18 +22,23 @@ directory '/opt/certs' do
   action :create
 end
 
+crt = node['cloudify']['properties']['monitoring']['logstash_lumberjack_crt']
 file '/opt/certs/logstash-forwarder.crt' do
-  content node['dmon_agent']['logstash']['lsf_crt']
+  content crt
   owner dmon_user
   group dmon_group
   action :create
 end
 
+server =
+  node['cloudify']['properties']['monitoring']['logstash_lumberjack_address']
+dmon_log = "#{node['dmon_agent']['home_dir']}/dmon-agent/log/dmon-agent.log"
 template '/etc/logstash-forwarder.conf' do
   source 'logstash-forwarder.conf.erb'
   owner dmon_user
   group dmon_group
   action :create
+  variables servers: [server], dmon_log_paths: [dmon_log]
 end
 
 service 'logstash-forwarder' do

@@ -5,6 +5,9 @@ return if skip_installation?
 dmon_user = node['dmon_agent']['user']
 dmon_group = node['dmon_agent']['group']
 dmon_home = node['dmon_agent']['home_dir']
+logstash_udp_address =
+  node['cloudify']['properties']['monitoring']['logstash_udp_address']
+logstash_udp_host, logstash_udp_port = logstash_udp_address.split ':'
 
 package 'collectd' do
   action :install
@@ -15,6 +18,7 @@ template '/etc/collectd/collectd.conf' do
   owner dmon_user
   group dmon_group
   action :create
+  variables host: logstash_udp_host, port: logstash_udp_port
 end
 
 service 'collectd' do

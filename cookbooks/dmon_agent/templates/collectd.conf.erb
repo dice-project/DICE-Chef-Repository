@@ -1,6 +1,4 @@
 FQDNLookup false
-	
-Hostname "<%= node['hostname'] %>"
 
 PIDFile "/var/run/collectd.pid"
 
@@ -27,7 +25,7 @@ LoadPlugin network
     IgnoreSelected false
 </Plugin>
 <Plugin "network">
-    Server "<%= node['dmon_agent']['logstash']['ip'] %>" "<%= node['dmon_agent']['logstash']['udp_port'] %>"
+    Server "<%= @host %>" "<%= @port %>"
 </Plugin>
 
 LoadPlugin swap

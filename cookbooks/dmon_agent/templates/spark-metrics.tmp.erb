@@ -1,7 +1,7 @@
 *.sink.Graphite.class=org.apache.spark.metrics.sink.GraphiteSink
-*.sink.Graphite.host=<%= node['dmon_agent']['logstash']['ip'] %>
-*.sink.Graphite.port=<%= node['dmon_agent']['logstash']['g_port'] %>
-*.sink.GraphiteSink.period=<%= node['dmon_agent']['logstash']['period'] %>
+*.sink.Graphite.host=<%= @host %>
+*.sink.Graphite.port=<%= @port %>
+*.sink.GraphiteSink.period=<%= @period %>
 *.sink.GraphiteSink.unit=seconds
 
 

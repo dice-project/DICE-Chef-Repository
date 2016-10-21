@@ -1,6 +1,6 @@
 {
   "network": {
-    "servers": [ "<%= node['dmon_agent']['logstash']['ip'] %>:<%= node['dmon_agent']['logstash']['l_port'] %>" ], 
+    "servers": <%= @servers.to_json %>,
     "timeout": 15,
     "ssl ca": "/opt/certs/logstash-forwarder.crt"
   },
@@ -39,8 +39,8 @@
       "fields":{"type":"mrappmaster-metrics"}
     },
     {
-     "paths": ["<%= node['dmon_agent']['home_dir'] %>/dmon-agent/log/dmon-agent.log"],
-     "fields": { "type": "dmon-agent" }
+      "paths": <%= @dmon_log_paths.to_json %>,
+      "fields": { "type": "dmon-agent" }
     }
-    ]
+  ]
 }

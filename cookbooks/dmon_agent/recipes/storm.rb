@@ -2,10 +2,7 @@
 Chef::Recipe.send(:include, DmonAgent::Helper)
 return if skip_installation?
 
-dmon_master = [
-  node['dmon_agent']['dmon']['ip'],
-  node['dmon_agent']['dmon']['port']
-].join ':'
+dmon_master = node['cloudify']['properties']['monitoring']['dmon_address']
 
 # Generate role hash
 role_hash = {

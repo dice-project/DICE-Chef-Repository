@@ -2,12 +2,7 @@
 Chef::Recipe.send(:include, DmonAgent::Helper)
 return if skip_installation?
 
-# dmon_master_ip = node['cloudify']['properties']['monitoring']['dmon_server']
-dmon_master = [
-  node['dmon_agent']['dmon']['ip'],
-  node['dmon_agent']['dmon']['port']
-].join ':'
-
+dmon_master = node['cloudify']['properties']['monitoring']['dmon_address']
 dmon_user = node['dmon_agent']['user']
 dmon_group = node['dmon_agent']['group']
 dmon_home = node['dmon_agent']['home_dir']
