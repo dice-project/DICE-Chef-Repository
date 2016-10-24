@@ -6,6 +6,7 @@ dmon_master = node['cloudify']['properties']['monitoring']['dmon_address']
 dmon_user = node['dmon_agent']['user']
 dmon_group = node['dmon_agent']['group']
 dmon_home = node['dmon_agent']['home_dir']
+dmon_install_dir = node['dmon_agent']['install_dir']
 
 group dmon_group
 
@@ -17,21 +18,26 @@ user dmon_user do
   shell '/bin/bash'
 end
 
-dmon_tar = "#{Chef::Config[:file_cache_path]}/kafka.tar.gz"
+# NOTE: Basename dmon_agent.tar is NOT a typo. Even if default attributes say
+# that node['dmon_agent']['tarball'] is gzipped tarball, this is not true (we
+# learned that fact the hard way).
+dmon_tar = "#{Chef::Config[:file_cache_path]}/dmon_agent.tar"
 remote_file dmon_tar do
   source node['dmon_agent']['tarball']
-  action :create_if_missing
+  checksum node['dmon_agent']['checksum']
+  action :create
 end
 
-execute 'extract' do
-  command "tar xvf #{dmon_tar}"
-  cwd dmon_home
-  user dmon_user
-  not_if { File.exist?("#{dmon_home}/dmon-agent") }
+poise_archive dmon_tar do
+  destination dmon_install_dir
+end
+
+execute 'Update agent folder ownership' do
+  command "chown -R #{dmon_user}:#{dmon_group} #{dmon_install_dir}"
 end
 
 %w(pid log cert lock).each do |dir|
-  directory "#{dmon_home}/dmon-agent/#{dir}" do
+  directory "#{dmon_install_dir}/#{dir}" do
     owner dmon_user
     group dmon_group
     action :create
@@ -43,22 +49,22 @@ python_runtime 'dmonPy' do
 end
 
 python_virtualenv 'dmonEnv' do
-  path "#{dmon_home}/dmon-agent/dmonEnv"
+  path "#{dmon_install_dir}/dmonEnv"
   python 'dmonPy'
   user dmon_user
   group dmon_group
 end
 
 pip_requirements 'dmonPip' do
-  path "#{dmon_home}/dmon-agent/requirements.txt"
+  path "#{dmon_install_dir}/requirements.txt"
   virtualenv 'dmonEnv'
   user dmon_user
   group dmon_group
-  not_if { File.exist? "#{dmon_home}/dmon-agent/lock/agent.lock" }
+  not_if { File.exist? "#{dmon_install_dir}/lock/agent.lock" }
 end
 
 time = Time.new.strftime('%Y.%m.%d-%H.%M.%S')
-file "#{dmon_home}/dmon-agent/lock/agent.lock" do
+file "#{dmon_install_dir}/lock/agent.lock" do
   content "Installed on: #{time}"
   owner dmon_user
   group dmon_group

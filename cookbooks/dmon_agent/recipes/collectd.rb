@@ -4,7 +4,7 @@ return if skip_installation?
 
 dmon_user = node['dmon_agent']['user']
 dmon_group = node['dmon_agent']['group']
-dmon_home = node['dmon_agent']['home_dir']
+dmon_install_dir = node['dmon_agent']['install_dir']
 logstash_udp_address =
   node['cloudify']['properties']['monitoring']['logstash_udp_address']
 logstash_udp_host, logstash_udp_port = logstash_udp_address.split ':'
@@ -26,6 +26,6 @@ service 'collectd' do
 end
 
 execute 'copy collectd pid' do
-  command "cp /run/collectd.pid #{dmon_home}/dmon-agent/pid/collectd.pid"
+  command "cp /run/collectd.pid #{dmon_install_dir}/pid/collectd.pid"
   user dmon_user
 end

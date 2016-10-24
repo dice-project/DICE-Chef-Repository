@@ -2,9 +2,13 @@
 default['dmon_agent']['group'] = 'dmon-agent'
 default['dmon_agent']['user'] = 'dmon-agent'
 default['dmon_agent']['home_dir'] = '/home/dmon-agent'
+default['dmon_agent']['install_dir'] =
+  "#{node['dmon_agent']['home_dir']}/dmon-agent"
 default['dmon_agent']['tarball'] =
   'https://github.com/igabriel85/IeAT-DICE-Repository/releases/download/'\
   'v0.0.4-dmon-agent/dmon-agent.tar.gz'
+default['dmon_agent']['checksum'] =
+  'bb6c5e519bc3e0fb7865c4ae013bd1c826a769a40e212b8cf6488285c78e8322'
 
 # Apache Spark related attributes
 default['dmon_agent']['spark']['graphite']['period'] = 5
