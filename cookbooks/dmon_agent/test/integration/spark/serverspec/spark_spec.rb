@@ -90,4 +90,5 @@ end
 describe file('/var/log/dmon.log') do
   it { should contain 'PUT /dmon/v1/overlord/nodes/roles' }
   it { should contain('spark').from(/Roles/) }
+  it { should contain 'POST /dmon/v1/overlord/core/ls' }
 end

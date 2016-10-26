@@ -36,3 +36,10 @@ http_request 'roles' do
   message role_hash.to_json
   headers 'Content-Type' => 'application/json'
 end
+
+http_request 'Request Logstash restart on dmon master' do
+  action :post
+  url "http://#{dmon_master}/dmon/v1/overlord/core/ls"
+  message {}.to_json
+  headers 'Content-Type' => 'application/json'
+end
