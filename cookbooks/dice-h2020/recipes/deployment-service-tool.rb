@@ -22,7 +22,7 @@ directory 'install-dir' do
 	action :create
 end
 
-remote_file '/tmp/deployment-service.zip' do
+remote_file '/tmp/deployment-service.tar.gz' do
 	source node["dice-h2020"]["deployment-service"]["release-url"]
 	action :create_if_missing
 end
@@ -33,7 +33,7 @@ bash 'install-ds-tools' do
 		[[ -d deployment-service ]] && rm -rf deployment-service
 		mkdir -p deployment-service
 		cd deployment-service
-		unzip -q -u ../deployment-service.zip
+		tar xzfv ../deployment-service.tar.gz
 
 		cd $(ls)
 
@@ -50,3 +50,11 @@ end
 python_runtime '2'
 
 pip_requirements '/tmp/deployment-service/requirements.txt'
+
+link '/usr/bin/dice-deploy-cli' do
+	to "#{install_path}/dice-deploy-cli"
+	owner 'root'
+	group 'root'
+	link_type :symbolic
+	action :create
+end

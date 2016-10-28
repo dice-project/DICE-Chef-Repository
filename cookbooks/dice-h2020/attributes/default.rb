@@ -21,7 +21,7 @@ default["dice-h2020"]["conf-optim"]["matlab-installpath"] = "/opt/matlab"
 # DICE deployment service parameters
 # url of the DICE deployment release package
 default["dice-h2020"]["deployment-service"]["release-url"] =
-	"https://github.com/dice-project/DICE-Deployment-Service/archive/0.3.1.zip"
+	"https://github.com/dice-project/DICE-Deployment-Service/archive/0.3.2.tar.gz"
 # url of the DICE deployment service's instance
 default["dice-h2020"]["deployment-service"]["url"] = "http://deployer.example.lan:8000"
 # TODO: move into an encrypted vault
@@ -31,7 +31,7 @@ default["dice-h2020"]["deployment-service"]["username"] = "user"
 # deployment services credentials - password
 default["dice-h2020"]["deployment-service"]["password"] = "password"
 # install DICE deployment service CLI tools into this path
-default["dice-h2020"]["deployment-service"]["tools-install-path"] = "/opt/deployment-service/"
+default["dice-h2020"]["deployment-service"]["tools-install-path"] = "/usr/share/deployment-service/"
 
 # DICE monitoring service configuration parameters
 # url of the DICE monitoring service
