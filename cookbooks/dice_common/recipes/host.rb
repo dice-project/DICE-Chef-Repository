@@ -17,6 +17,11 @@
 # limitations under the License.
 #
 
+fqdn = "#{node['hostname']}.node.consul"
+
+node.default['cloudify']['runtime_properties']['ip'] = node['ipaddress']
+node.default['cloudify']['runtime_properties']['fqdn'] = fqdn
+
 ohai 'reload' do
   action :nothing
 end
@@ -26,10 +31,6 @@ template '/etc/hosts' do
   owner 'root'
   group 'root'
   mode 0644
-  variables(
-    ip: node['ipaddress'],
-    fqdn: "#{node['hostname']}.node.consul",
-    hostname: node['hostname']
-  )
+  variables ip: node['ipaddress'], fqdn: fqdn, hostname: node['hostname']
   notifies :reload, 'ohai[reload]', :immediately
 end
