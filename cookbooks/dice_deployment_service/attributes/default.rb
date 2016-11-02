@@ -24,7 +24,7 @@ default['dice_deployment_service']['app_folder'] =
   "#{node['dice_deployment_service']['app_prefix']}/dds"
 default['dice_deployment_service']['app_socket'] =
   "#{node['dice_deployment_service']['app_prefix']}/dds.socket"
-default['dice_deployment_service']['upload_limit'] = '100m'
+default['dice_deployment_service']['upload_limit'] = '2000m'
 default['dice_deployment_service']['app_venv'] =
   "#{node['dice_deployment_service']['app_prefix']}/venv"
 

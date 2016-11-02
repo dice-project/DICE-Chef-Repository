@@ -93,6 +93,6 @@ end
 # nginx
 describe file('/etc/nginx/sites-available/dice-deployment-service') do
   its(:content) do
-    should include 'client_max_body_size 100m;'
+    should include 'client_max_body_size 2000m;'
   end
 end
