@@ -15,14 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-default['cassandra']['version'] = '3.0.8'
-default['cassandra']['tarball'] = 'apache-cassandra-3.0.8-bin.tar.gz'
-default['cassandra']['mirror'] = 'http://www.apache.si/cassandra'
-default['cassandra']['sha256-checksum'] =
-  '5852a9506f133f1b534d5d5faf1a8a56850bda7a623a19b3f180ae3b309a9009'
-
+default['cassandra']['install_dir'] = '/usr/share/cassandra'
 default['cassandra']['group'] = 'cassandra'
 default['cassandra']['user'] = 'cassandra'
+
+default['cassandra']['tarball'] =
+  'http://www.apache.si/cassandra/3.0.8/apache-cassandra-3.0.8-bin.tar.gz'
+default['cassandra']['checksum'] =
+  '5852a9506f133f1b534d5d5faf1a8a56850bda7a623a19b3f180ae3b309a9009'
 
 # Configuration - folders
 default['cassandra']['yaml']['data_file_directories'] = [
@@ -39,7 +39,7 @@ default['cassandra']['yaml']['hints_directory'] =
 default['cassandra']['yaml']['cluster_name'] = 'Sample Cluster'
 default['cassandra']['yaml']['num_tokens'] = 256
 default['cassandra']['yaml']['commitlog_sync'] = 'periodic'
-default['cassandra']['yaml']['commitlog_sync_period_in_ms'] = 10000
+default['cassandra']['yaml']['commitlog_sync_period_in_ms'] = 10_000
 default['cassandra']['yaml']['partitioner'] =
   'org.apache.cassandra.dht.Murmur3Partitioner'
 default['cassandra']['yaml']['endpoint_snitch'] = 'GossipingPropertyFileSnitch'

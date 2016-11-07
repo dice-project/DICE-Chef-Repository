@@ -29,7 +29,7 @@ describe file('/etc/cassandra/cassandra.yaml') do
       'conf_3' => include(
         'this' => 'is',
         'nested' => 'dict',
-        'with' => ['array', 'of', 'strings']
+        'with' => %w(array of strings)
       )
     )
   end

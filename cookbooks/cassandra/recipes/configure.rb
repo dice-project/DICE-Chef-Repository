@@ -43,7 +43,6 @@ cassandra_conf['seed_provider'] = [{
   }]
 }]
 
-
 file '/etc/cassandra/cassandra.yaml' do
   mode 0644
   action :create
@@ -55,9 +54,7 @@ template '/etc/cassandra/logback.xml' do
   owner 'root'
   group 'root'
   mode 0644
-  variables({
-    :log_dir => '/var/log/cassandra'
-  })
+  variables log_dir: '/var/log/cassandra'
 end
 
 remote_file 'Copy Cassandra env file' do

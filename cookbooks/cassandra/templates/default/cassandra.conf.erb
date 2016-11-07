@@ -17,16 +17,8 @@ setgid <%= @group %>
 
 console log
 
-chdir /
-
 limit nofile 100000 100000
 limit memlock unlimited unlimited
-
-pre-start script
-
-  [ -e /usr/share/cassandra/lib/apache-cassandra-<%= @version %>.jar ] || exit 0
-
-end script
 
 script
   /usr/share/cassandra/bin/cassandra -f > /dev/null 2>&1

@@ -17,11 +17,9 @@
 
 # This recipe will install cassandra data files and init scripts.
 
-version = node['cassandra']['version']
-tarball = node['cassandra']['tarball']
-mirror = node['cassandra']['mirror']
 c_group = node['cassandra']['group']
 c_user  = node['cassandra']['user']
+install_dir = node['cassandra']['install_dir']
 
 group c_group do
   action :create
@@ -40,25 +38,15 @@ directory "/home/#{c_user}" do
   action :create
 end
 
-
-local_tar = "#{Chef::Config['file_cache_path']}/#{tarball}"
-local_folder = "#{Chef::Config['file_cache_path']}/apache-cassandra-#{version}"
-remote_tar = "#{mirror}/#{version}/#{tarball}"
-
-remote_file local_tar do
-  source remote_tar
-  checksum node['cassandra']['sha256-checksum']
+cassandra_tar = "#{Chef::Config[:file_cache_path]}/cassandra.tar.gz"
+remote_file cassandra_tar do
+  source node['cassandra']['tarball']
+  checksum node['cassandra']['checksum']
   action :create
 end
 
-execute "Extract Cassandra" do
-  command "tar -xf #{local_tar}"
-  cwd Chef::Config['file_cache_path']
-end
-
-execute "Install Cassandra files" do
-  command "mv #{local_folder} /usr/share/cassandra"
-  creates '/usr/share/cassandra'
+poise_archive cassandra_tar do
+  destination install_dir
 end
 
 dirs = ['/var/log/cassandra', '/var/lib/cassandra']
@@ -82,9 +70,5 @@ template '/etc/init/cassandra.conf' do
   owner 'root'
   group 'root'
   mode 0755
-  variables({
-    :user => c_user,
-    :group => c_group,
-    :version => version
-  })
+  variables user: c_user, group: c_group
 end

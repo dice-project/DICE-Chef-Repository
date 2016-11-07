@@ -1,4 +1,8 @@
 name 'cassandra'
-version '0.1.0'
+maintainer 'XLAB d.o.o.'
+maintainer_email 'tadej.borovsak@xlab.si'
+license 'Apache 2.0'
+description 'Configure and start Apache Cassandra'
+version '0.1.1'
 
-depends 'java'
+depends 'poise-archive'

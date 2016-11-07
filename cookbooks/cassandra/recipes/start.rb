@@ -18,7 +18,6 @@
 Chef::Resource::RubyBlock.send(:include, Cassandra::Helper)
 
 service 'cassandra' do
-  supports :status => true, :restart => true
   provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
   action :start
 end
