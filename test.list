@@ -1,7 +1,10 @@
 cassandra
-dmon_agent
 dice_common
 dice_deployment_service
+dice-h2020
+dmon_agent
+hadoop
+kafka
 spark
 storm
 zookeeper
