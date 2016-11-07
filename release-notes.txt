@@ -1,3 +1,33 @@
+New in v.0.1.7:
+
+* DICE deployment service raised upload file size limit to ensure
+  bigger bundles can get through.
+* Update DICE deployment tools CLI are now installed into a cleaner
+  `/usr/share/deployment-service` location. It installs the
+  dice-deployment-cli to a global path.
+* Common recipe for setting up `/etc/hosts` file now also exports ip
+  address and fully qualified domain name of the node as runtime
+  properties.
+* DMon cookbook now provides separate recipes for ElasticSearch,
+  Kibana and Logstash.
+* DMon cookbook sets up a DMon database with entries for
+  ElasticSearch and Logstash configuration.
+* DMon cookbooks now have a skip switch, enabling conditional
+  installation from Cloudify.
+* DMon agent cookbook recipes make sure that Spark logstash is configured
+  and restarted for the dynamically created nodes.
+* Replaced zookeeper recipe from marketplace with a standalone
+  Apache Zookeeper cookbook. This is a minimalistic rewrite for
+  supporting the up-to-date version of Zookeeper.
+* Replaced Hadoop recipe from marketplace with a standalone
+  HDFS cookbook. Recipes included in this cookbook so far are sufficient for setting up HDFS cluster. It uses upstream-provided binaries.
+* Added Hadoop YARN recipes. Aslo added configuration needed for YARN
+  to connect to HDFS.
+* Added Apache Kafka recipes.
+* Updated Apache Spark cookbook to provide command wrappers, which
+  set and preserve Spark installation settings.
+* Spark cookbook supports Apache Spark versions 1.6.2 and 2.0.1.
+
 New in v.0.1.6:
 
 * Renewed and improved Apache Storm recipe.
