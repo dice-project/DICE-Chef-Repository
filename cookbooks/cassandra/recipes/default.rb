@@ -72,3 +72,12 @@ template '/etc/init/cassandra.conf' do
   mode 0755
   variables user: c_user, group: c_group
 end
+
+template "/usr/bin/cqlsh" do
+  source 'cqlsh.erb'
+  mode '0755'
+  owner 'root'
+  group 'root'
+  action :create
+  variables host: node['ipaddress'], install_dir: install_dir
+end

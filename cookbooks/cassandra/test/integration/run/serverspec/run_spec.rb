@@ -41,3 +41,14 @@ end
 describe port(7199) do
   it { should be_listening.on('127.0.0.1').with('tcp') }
 end
+
+describe file('/usr/bin/cqlsh') do
+  it { should be_file }
+  it { should be_mode 755 }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
+end
+
+describe command('cqlsh --help') do
+  its(:exit_status) { should eq 0 }
+end
