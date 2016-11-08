@@ -16,5 +16,5 @@
 
 
 module PoiseLanguages
-  VERSION = '1.4.0'
+  VERSION = '2.0.3'
 end

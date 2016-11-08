@@ -140,6 +140,7 @@ module PoiseLanguages
               r.version(version)
               r.action(action)
               r.declared_type = :package
+              r.retries(5)
             end
           end
         else
@@ -147,6 +148,7 @@ module PoiseLanguages
             r.version(packages.values)
             r.action(action)
             r.declared_type = :package
+            r.retries(5)
           end]
         end
       end
@@ -189,7 +191,10 @@ module PoiseLanguages
           define_method(:load_current_resource) do
             super().tap do |_|
               each_package do |package_name, new_version, current_version, candidate_version|
-                unless candidate_version && candidate_version.start_with?(version)
+                # In Chef 12.14+, candidate_version is a Chef::Decorator::Lazy object
+                # so we need the nil? check to see if the object being proxied is
+                # nil (i.e. there is no version).
+                unless candidate_version && (!candidate_version.nil?) && candidate_version.start_with?(version)
                   raise PoiseLanguages::Error.new("Package #{package_name} would install #{candidate_version}, which does not match #{version.empty? ? version.inspect : version}. Please set the package_name or package_version provider options.")
                 end
               end

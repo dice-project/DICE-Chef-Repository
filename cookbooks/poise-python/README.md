@@ -27,6 +27,30 @@ end
 pip_requirements '/opt/myapp/requirements.txt'
 ```
 
+## Installing a Package From a URI
+
+While using `python_package 'git+https://github.com/example/mypackage.git'` will
+sometimes work, this approach is not recommended. Unfortunately pip's support
+for installing directly from URI sources is limited and cannot support the API
+used for the `python_package` resource. You can run the install either directly
+from the URI or through an intermediary `git` resource:
+
+```ruby
+# Will re-install on every converge unless you add a not_if/only_if.
+python_execute '-m pip install git+https://github.com/example/mypackage.git'
+
+# Will only re-install when the git repository updates.
+python_execute 'install mypackage' do
+  action :nothing
+  command '-m pip install .'
+  cwd '/opt/mypackage'
+end
+git '/opt/mypackage' do
+  repository 'https://github.com/example/mypackage.git'
+  notifies :run, 'python_execute[install mypackage]', :immediately
+end
+```
+
 ## Supported Python Versions
 
 This cookbook can install at least Python 2.7, Python 3, and PyPy on all
@@ -77,9 +101,11 @@ python_runtime '2'
 
 * `version` – Version of Python to install. If a partial version is given, use the
   latest available version matching that prefix. *(name property)*
+* `get_pip_url` – URL to download the `get-pip.py` bootstrap script from.
+  *(default: https://bootstrap.pypa.io/get-pip.py)*
 * `pip_version` – Version of pip to install. If set to `true`, use the latest.
-  If set to `false`, do not install pip. Can also be set to a URL to a copy of
-  the `get-pip.py` script. *(default: true)*
+  If set to `false`, do not install pip. For backward compatibility, can also be
+  set to a URL instead of `get_pip_url`. *(default: true)*
 * `setuptools_version` – Version of Setuptools to install. If set to `true`, use
   the latest. If set to `false`, do not install Setuptools. *(default: true)*
 * `virtualenv_version` – Version of virtualenv to install. If set to `true`,

@@ -1,5 +1,24 @@
 # Changelog
 
+## v2.0.3
+
+* Correct the subscription repository name used for SCLs on RedHat.
+
+## v2.0.2
+
+* Don't try to use SCL providers on Amazon Linux.
+
+## v2.0.1
+
+* Don't error on `Chef::Decorator::Lazy` proxy objects for `candidate_version`.
+* Retry system and SCL package installs because transient network failures.
+
+## v2.0.0
+
+* Backwards-incompatible change to SCL management to comply with their new repo
+  packages and layout. Uses `centos-release-scl-rh` repo package or the
+  `rhel-variant-rhscl` RedHat subscription.
+
 ## v1.4.0
 
 * Use `poise-archive` to unpack static binary archives. This should work better
