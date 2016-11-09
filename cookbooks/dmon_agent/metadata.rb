@@ -7,4 +7,4 @@ long_description 'Installs/Configures dmon_agent'
 version '0.1.2'
 
 depends 'poise-archive'
-depends 'poise-python', '~>1.4.0'
+depends 'poise-python'
