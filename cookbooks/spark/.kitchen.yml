@@ -22,6 +22,9 @@ suites:
       - recipe[spark::configure]
       - recipe[spark::start]
     attributes:
+      java: &java_attrs
+        jdk_version: "8"
+        install_flavor: openjdk
       spark:
         type: master
         version: "1.6"
@@ -39,6 +42,7 @@ suites:
       - recipe[spark::configure]
       - recipe[spark::start]
     attributes:
+      java: *java_attrs
       spark:
         type: master
         version: "2.0"
@@ -56,6 +60,7 @@ suites:
       - recipe[spark::configure]
       - recipe[spark::start]
     attributes:
+      java: *java_attrs
       spark:
         type: worker
         version: "1.6"
@@ -74,6 +79,7 @@ suites:
       - recipe[spark::configure]
       - recipe[spark::start]
     attributes:
+      java: *java_attrs
       spark:
         type: worker
         version: "2.0"

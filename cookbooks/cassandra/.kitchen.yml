@@ -16,8 +16,9 @@ suites:
       - recipe[cassandra::configure]
       - recipe[cassandra::start]
     attributes:
-      java:
+      java: &java_attrs
         jdk_version: "8"
+        install_flavor: openjdk
       cloudify:
         runtime_properties: {}
         properties:
@@ -29,8 +30,7 @@ suites:
       - recipe[cassandra::default]
       - recipe[cassandra::configure]
     attributes:
-      java:
-        jdk_version: "8"
+      java: *java_attrs
       cloudify:
         runtime_properties:
           host_ip: 123.135.147.159

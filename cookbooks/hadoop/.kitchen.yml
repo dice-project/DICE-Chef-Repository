@@ -23,8 +23,9 @@ suites:
       - recipe[hadoop::namenode_configure]
       - recipe[hadoop::namenode_start]
     attributes:
-      java:
+      java: &java_attrs
         jdk_version: "8"
+        install_flavor: openjdk
       cloudify:
         properties: {}
         runtime_properties: {}
@@ -39,8 +40,7 @@ suites:
       - recipe[hadoop::datanode_configure]
       - recipe[hadoop::datanode_start]
     attributes:
-      java:
-        jdk_version: "8"
+      java: *java_attrs
       cloudify:
         properties: {}
         runtime_properties:
@@ -57,8 +57,7 @@ suites:
       #- recipe[hadoop::resourcemanager_configure]
       - recipe[hadoop::resourcemanager_start]
     attributes:
-      java:
-        jdk_version: "8"
+      java: *java_attrs
       cloudify:
         properties: {}
         runtime_properties:
@@ -74,8 +73,7 @@ suites:
       - recipe[hadoop::nodemanager_configure]
       - recipe[hadoop::nodemanager_start]
     attributes:
-      java:
-        jdk_version: "8"
+      java: *java_attrs
       cloudify:
         properties: {}
         runtime_properties:

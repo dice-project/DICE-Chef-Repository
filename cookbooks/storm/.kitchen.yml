@@ -19,8 +19,9 @@ suites:
       - recipe[storm::start_nimbus]
       - recipe[storm::start_supervisor]
     attributes:
-      java:
-        jdk_version: "7"
+      java: &java_attrs
+        jdk_version: "8"
+        install_flavor: openjdk
       cloudify:
         properties:
           configuration:

@@ -23,6 +23,7 @@ suites:
     attributes:
       java:
         jdk_version: "8"
+        install_flavor: openjdk
       cloudify:
         properties:
           configuration: {}

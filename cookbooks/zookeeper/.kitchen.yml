@@ -19,6 +19,9 @@ suites:
       - recipe[zookeeper::configure]
       - recipe[zookeeper::start]
     attributes:
+      java: &java_attrs
+        jdk_version: "8"
+        install_flavor: openjdk
       cloudify:
         properties:
           configuration: {}
