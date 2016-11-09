@@ -50,6 +50,12 @@ function run_test ()
 
 function exit_with_1_on_failure ()
 {
+  echo
+  echo "# SUMMARY ##################"
+  echo "Failed cookbooks: $FAILED_COOKBOOKS"
+  echo "Skiped cookbooks: $SKIPPED_COOKBOOKS"
+  echo "############################"
+
   # Fail if any skipping/failing occurred
   [[ "x" != "x$SKIPPED_COOKBOOKS" ]] && exit 1
   [[ "x" != "x$FAILED_COOKBOOKS" ]] && exit 1
