@@ -77,6 +77,11 @@ if node['java']['set_default'] && platform_family?('debian')
   include_recipe 'java::default_java_symlink'
 end
 
+# Ugly fix for java 8 on ubuntu 14.04
+execute 'update-ca-certificates -f' do
+  only_if { node['platform'] == 'ubuntu' && node['platform_version'] == '14.04' }
+end
+
 # We must include this recipe AFTER updating the alternatives or else JAVA_HOME
 # will not point to the correct java.
 include_recipe 'java::set_java_home'
