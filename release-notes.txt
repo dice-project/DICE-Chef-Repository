@@ -1,3 +1,26 @@
+New in v.0.1.8:
+
+* Cassandra recipe that starts the service now waits until client can
+  successfully connect.
+* Cassandra cookbook now installs cqlsh wrapper in system path for
+  client's convenience.
+* Cookbook dependencies have been updated to the latest stable releases.
+  * compat_resource (to version 12.16.1)
+  * apt (to version 5.0.0)
+  * java (to version 1.42.0)
+  * windows (to version 2.0.2)
+  * homebrew (to version 2.1.2)
+  * build-essential (to version 7.0.2)
+  * seven_zip (to version 2.0.2)
+  * mingw (to version 1.2.4)
+  * poise-python (to version 1.5.1)
+  * poise-languages (to version 2.0.3)
+  * poise-archive (to version 1.3.0)
+* OpenJDK installation now forces certificate update, which should fix any
+  problems with establishing https connections from java applications.
+* Cassandra package is now downloaded from Apache archive instead of local
+  mirror.
+
 New in v.0.1.7:
 
 * DICE deployment service raised upload file size limit to ensure
