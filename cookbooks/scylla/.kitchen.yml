@@ -1,0 +1,40 @@
+---
+driver:
+  name: vagrant
+  customize:
+    memory: 2048
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-16.04
+  - name: centos-7.2
+
+suites:
+  - name: config
+    run_list:
+      - recipe[apt::default]
+      - recipe[scylla::default]
+      - recipe[scylla::configure]
+    attributes:
+      cloudify:
+        runtime_properties:
+          host_ip: 123.135.147.159
+          seeds:
+            - 111.11.1.123
+            - 111.11.1.124
+        properties:
+          configuration:
+            conf_1: string_value
+            conf_2: 123
+            conf_3:
+              this: is
+              nested: dict
+              with:
+                - array
+                - of
+                - strings
+          # Next property should be overriden by cookbook, since rpc_address
+          # should not be altered by user.
+          listen_address: 43.21.654.32
