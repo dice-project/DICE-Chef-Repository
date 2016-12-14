@@ -21,12 +21,22 @@ template '/etc/init/consul-agent.conf' do
   source 'consul-agent.conf.erb'
   variables(
     master: node['cloudify']['properties']['dns_server'],
+    bind: node['ipaddress'],
     data: '/var/lib/consul'
   )
+  only_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
+end
+
+template '/usr/lib/systemd/system/consul-agent.service' do
+  source 'consul-agent.service.erb'
+  variables(
+    master: node['cloudify']['properties']['dns_server'],
+    bind: node['ipaddress'],
+    data: '/var/lib/consul'
+  )
+  not_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
 end
 
 service 'consul-agent' do
-  supports status: true, restart: true
-  provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
-  action :start
+  action [:enable, :start]
 end

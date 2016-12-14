@@ -8,7 +8,7 @@ respawn
 setuid consul
 setgid consul
 
-exec consul agent -data-dir=<%= @data %>         \
-                  -bind=<%= node['ipaddress'] %> \
-                  -client=0.0.0.0                \
+exec consul agent -data-dir=<%= @data %> \
+                  -bind=<%= @bind %>     \
+                  -client=0.0.0.0        \
                   -join=<%= @master %>
