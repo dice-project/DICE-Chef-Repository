@@ -71,6 +71,16 @@ template '/etc/init/cassandra.conf' do
   group 'root'
   mode 0755
   variables user: c_user, group: c_group
+  only_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
+end
+
+template '/usr/lib/systemd/system/cassandra.service' do
+  source 'cassandra.service.erb'
+  owner 'root'
+  group 'root'
+  mode 0755
+  variables user: c_user, group: c_group
+  not_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
 end
 
 template "/usr/bin/cqlsh" do
