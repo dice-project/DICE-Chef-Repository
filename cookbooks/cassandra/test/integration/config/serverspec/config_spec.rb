@@ -6,7 +6,10 @@ describe file('/etc/cassandra/cassandra.yaml') do
     should include('listen_address' => '123.135.147.159')
   end
   its(:content_as_yaml) do
-    should include('rpc_address' => '123.135.147.159')
+    should include('rpc_address' => '0.0.0.0')
+  end
+  its(:content_as_yaml) do
+    should include('broadcast_rpc_address' => '123.135.147.159')
   end
   its(:content_as_yaml) do
     should include(

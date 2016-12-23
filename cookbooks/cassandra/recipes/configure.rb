@@ -35,7 +35,8 @@ cassandra_conf.merge!(node['cloudify']['properties']['configuration'].to_hash)
 
 # Next three settings cannot be overriden by user
 cassandra_conf['listen_address'] = ip
-cassandra_conf['rpc_address'] = ip
+cassandra_conf['rpc_address'] = '0.0.0.0'
+cassandra_conf['broadcast_rpc_address'] = ip
 cassandra_conf['seed_provider'] = [{
   'class_name' => 'org.apache.cassandra.locator.SimpleSeedProvider',
   'parameters' => [{
