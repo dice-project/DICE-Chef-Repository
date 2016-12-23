@@ -74,13 +74,19 @@ template '/etc/init/cassandra.conf' do
   only_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
 end
 
-template '/usr/lib/systemd/system/cassandra.service' do
+template '/etc/systemd/system/cassandra.service' do
   source 'cassandra.service.erb'
   owner 'root'
   group 'root'
-  mode 0755
+  mode 0664
   variables user: c_user, group: c_group
+  notifies :run, 'execute[daemon-reload]', :immediately
   not_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
+end
+
+execute 'daemon-reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
 end
 
 template "/usr/bin/cqlsh" do
