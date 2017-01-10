@@ -15,10 +15,16 @@ suites:
   - name: elk
     run_list:
       - recipe[apt::default]
-      - recipe[git::default]
       - recipe[java::default]
       - recipe[dmon::default]
       - recipe[dmon::elasticsearch]
       - recipe[dmon::kibana]
       - recipe[dmon::logstash]
-      
+    attributes:
+      java: &java_attrs
+        jdk_version: "8"
+        install_flavor: openjdk
+      cloudify:
+        runtime_properties: {}
+        properties:
+          configuration: {}

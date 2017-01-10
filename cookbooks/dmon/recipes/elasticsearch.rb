@@ -1,12 +1,7 @@
-#create new group
-group "#{node['dmon']['group']}"
 
-#create new user
-user "#{node['dmon']['user']}" do
-  group "#{node['dmon']['group']}"
-  system true
-  shell '/bin/bash'
-end
+install_dir = node['dmon']['es']['install_dir']
+dmon_user = node['dmon']['user']
+dmon_group = node['dmon']['group']
 
 # Configuring VM level setings
 bash 'vm' do
@@ -18,50 +13,29 @@ bash 'vm' do
     EOH
 end
 
-# Install Elasticsearch
-remote_file '/opt/elasticsearch-2.2.0.tar.gz' do
-  source "#{node['dmon']['es']['source']}"
-  action :create_if_missing
+es_tar = "#{Chef::Config[:file_cache_path]}/es.tar.gz"
+remote_file es_tar do
+  source node['dmon']['es']['source']
+  checksum node['dmon']['es']['checksum']
 end
 
-directory '/opt/elasticsearch' do
-  action :create
-end
-
-execute 'extract elasticsearch' do
-  command 'tar xvf elasticsearch-2.2.0.tar.gz -C elasticsearch --strip-components=1'
-  cwd '/opt'
-  not_if { ::File.directory?('/opt/elasticsearch/bin') }
-end
-
-file '/opt/elasticsearch/config/elastcisearch.yml' do
-  action :delete
+poise_archive es_tar do
+  destination install_dir
 end
 
 # Install Marvel
 bash 'install marvel' do
   code <<-EOH
-    /opt/elasticsearch/bin/plugin install license
-    /opt/elasticsearch/bin/plugin install marvel-agent
+    cd #{install_dir}/bin
+    ./plugin install license
+    ./plugin install marvel-agent
     EOH
 end
 
-file '/opt/elasticsearch-2.2.0.tar.gz' do
-  action :delete
-end
-
-directory "#{node['dmon']['install_dir']}/src/logs" do
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
-  recursive true
-  action :create
-end
-
-#upload elasticsearch conf file
-template "/opt/elasticsearch/config/elasticsearch.yml" do
+template "#{install_dir}/config/elasticsearch.yml" do
   source 'elasticsearch.tmp.erb'
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
+  owner dmon_user
+  group dmon_group
   action :create
   variables({
     :clusterName => node['dmon']['es']['cluster_name'],
@@ -70,23 +44,19 @@ template "/opt/elasticsearch/config/elasticsearch.yml" do
   })
 end
 
-execute 'setting permissions' do
-  command "chown -R #{node['dmon']['user']}.#{node['dmon']['group']} /opt/elasticsearch"
+execute 'Setting es permissions' do
+  command "chown -R #{dmon_user}:#{dmon_group} #{install_dir}"
 end
 
-directory "#{node['dmon']['install_dir']}/src/pid" do
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
-  recursive true
-  action :create
+# Copy init script (Chef does not have copy block for some reason)
+remote_file 'Copy ElasticSearch service file' do
+  path '/etc/init.d/dmon-es'
+  source "file://#{node['dmon']['install_dir']}/src/init/dmon-es"
+  owner 'root'
+  group 'root'
+  mode 0755
 end
 
-#start elasticsearch
-bash 'start elasticsearch' do
-  code <<-EOH
-    nohup /opt/elasticsearch/bin/elasticsearch &
-    pid=$!
-    echo $pid > #{node['dmon']['install_dir']}/src/pid/elasticsearch.pid
-    EOH
-  user "#{node['dmon']['user']}"
+service 'dmon-es' do
+  action [:enable, :start]
 end

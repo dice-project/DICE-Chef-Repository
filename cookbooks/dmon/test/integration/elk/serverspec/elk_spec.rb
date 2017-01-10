@@ -2,7 +2,6 @@ require 'serverspec'
 
 set :backend, :exec
 
-#test for group and user
 describe group('ubuntu') do
   it { should exist }
 end
@@ -13,19 +12,16 @@ describe user('ubuntu') do
   it { should have_login_shell '/bin/bash' }
 end
 
-#test if git was cloned
 describe file('/opt/IeAT-DICE-Repository') do
   it { should be_directory }
   it { should be_owned_by 'ubuntu' }
 end
 
-#test if log file was created
 describe file('/opt/IeAT-DICE-Repository/src/logs/dmon-controller.log') do
   it { should be_file }
   it { should be_owned_by 'ubuntu' }
 end
 
-#test if python virtualenv was created
 describe file('/opt/IeAT-DICE-Repository/dmonEnv') do
   it { should be_directory }
   it { should be_owned_by 'ubuntu' }
@@ -35,7 +31,6 @@ describe command('. /opt/IeAT-DICE-Repository/dmonEnv/bin/activate') do
   its(:exit_status) { should eq 0 }
 end
 
-#test if dmon is installed and running
 describe file('/etc/init/dmon.conf') do
   it { should be_file }
   it { should contain('/opt/IeAT-DICE-Repository').from(/DIR/).to(/setuid/) }
@@ -49,14 +44,11 @@ describe service('dmon') do
   it { should be_running }
 end
 
-
-#test if elasticsearch was installed
 describe file("/opt/elasticsearch") do
   it { should be_directory }
   it { should be_owned_by 'ubuntu' }
 end
 
-#test if elasticsearch was correctly configured
 describe file('/opt/elasticsearch/config/elasticsearch.yml') do
   it { should be_file }
   it { should contain('diceMonit').from(/cluster.name:/).to(/#/) }
@@ -64,14 +56,11 @@ describe file('/opt/elasticsearch/config/elasticsearch.yml') do
   it { should contain('/opt/IeAT-DICE-Repository/src/logs').from(/path.logs:/).to(/#/) }
 end
 
-
-#test if kibana was installed
 describe file("/opt/kibana") do
   it { should be_directory }
   it { should be_owned_by 'ubuntu' }
 end
 
-#test if kibana was correctly configured
 describe file('/opt/kibana/config/kibana.yml') do
   it { should be_file }
   it { should contain('5601').from(/server.port:/).to(/#/) }
@@ -81,8 +70,6 @@ describe file('/opt/kibana/config/kibana.yml') do
   it { should contain('/opt/IeAT-DICE-Repository/src/logs/kibana.log').from(/logging.dest:/).to(/#/) }
 end
 
-
-#test if logstash was installed
 describe file("/opt/logstash") do
   it { should be_directory }
   it { should be_owned_by 'ubuntu' }
@@ -93,7 +80,6 @@ describe file("/opt/IeAT-DICE-Repository/src/logs/logstash.log") do
   it { should be_owned_by 'ubuntu' }
 end
 
-#test logstash-forwarder crt and key
 describe x509_certificate('/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder.crt') do
   it { should be_certificate }
   it { should be_valid }
@@ -117,7 +103,6 @@ describe file('/opt/IeAT-DICE-Repository/src/conf/logstash.conf') do
   it { should contain('9200').from(/elasticsearch/).to(/logstash/) }
 end
 
-#test db entry
 describe command("sqlite3 /opt/IeAT-DICE-Repository/src/db/dmon.db 'select * from db_es_core' | grep -e 'monitor' -e '127.0.0.1' -e 'esCoreMaster' -e '9200' -e 'diceMonit' -e 'dummy' -e '1g'") do
   its(:exit_status) { should eq 0 }
 end
@@ -126,10 +111,6 @@ describe command("sqlite3 /opt/IeAT-DICE-Repository/src/db/dmon.db 'select * fro
   its(:exit_status) { should eq 0 }
 end
 
-#test if elk is running
-pids = ['elasticsearch.pid', 'kibana.pid', 'logstash.pid']
-pids.each do |pid|
-  describe file("/opt/IeAT-DICE-Repository/src/pid/#{pid}") do
-    it { should be_file }
-  end
+describe file('/opt/IeAT-DICE-Repository/src/pid/logstash.pid') do
+  it { should be_file }
 end

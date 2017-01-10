@@ -1,57 +1,79 @@
-#create new group
-group "#{node['dmon']['group']}"
 
-#create new user
-user "#{node['dmon']['user']}" do
-  group "#{node['dmon']['group']}"
+install_dir = node['dmon']['install_dir']
+dmon_user = node['dmon']['user']
+dmon_group = node['dmon']['group']
+
+group dmon_group
+
+user dmon_user do
+  group dmon_group
   system true
   shell '/bin/bash'
 end
 
-#clone git repository 
-git "#{node['dmon']['install_dir']}" do
-  repository "#{node['dmon']['git_url']}"
-  revision 'master'
-  action :sync
-  not_if { File.exist?("#{node['dmon']['install_dir']}") }
+dmon_tar = "#{Chef::Config[:file_cache_path]}/dmon.tar.gz"
+remote_file dmon_tar do
+  source node['dmon']['tarball']
+  checksum node['dmon']['checksum']
+  action :create
 end
 
-execute 'setting permissions' do
-  command "chown -R #{node['dmon']['user']}.#{node['dmon']['group']} #{node['dmon']['install_dir']}"
+poise_archive dmon_tar do
+  destination install_dir
 end
 
-#create empty dmon-controller log file
-file "#{node['dmon']['install_dir']}/src/logs/dmon-controller.log" do
+directory "#{node['dmon']['install_dir']}/src/pid" do
+  owner dmon_user
+  group dmon_group
+  recursive true
+  action :create
+end
+
+directory "#{node['dmon']['install_dir']}/src/logs" do
+  owner dmon_user
+  group dmon_group
+  recursive true
+  action :create
+end
+
+execute 'Setting dmon permissions' do
+  command "chown -R #{dmon_user}:#{dmon_group} #{install_dir}"
+end
+
+# Create empty dmon-controller log file
+file "#{install_dir}/src/logs/dmon-controller.log" do
   content ''
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
-  not_if { File.exist?("#{node['dmon']['install_dir']}/src/logs/dmon-controller.log") }
+  owner dmon_user
+  group dmon_group
+  not_if { File.exist?("#{install_dir}/src/logs/dmon-controller.log") }
 end
 
-#install python
 python_runtime 'dmonPy' do
   version '2.7'
 end
 
 python_virtualenv 'dmonEnv' do
-  path "#{node['dmon']['install_dir']}/dmonEnv"
+  path "#{install_dir}/dmonEnv"
   python 'dmonPy'
-  user "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
+  user dmon_user
+  group dmon_group
 end
 
 pip_requirements 'dmonPip' do
-  path "#{node['dmon']['install_dir']}/src/requirements.txt"
+  path "#{install_dir}/src/requirements.txt"
   virtualenv 'dmonEnv'
-  user "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
+  user dmon_user
+  group dmon_group
 end
 
-#start the dmon
+directory '/opt/DmonBackup' do
+  action :create
+end
+
 template '/etc/init/dmon.conf' do
   source 'dmon.conf.erb'
 end
 
 service 'dmon' do
-  action [ :enable, :start ]
+  action [:enable, :start]
 end

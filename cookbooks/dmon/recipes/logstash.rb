@@ -1,3 +1,7 @@
+install_dir = node['dmon']['ls']['install_dir']
+dmon_user = node['dmon']['user']
+dmon_group = node['dmon']['group']
+
 # Configuring VM level setings
 bash 'vm' do
   code <<-EOH
@@ -7,80 +11,73 @@ bash 'vm' do
     EOH
 end
 
-# Install Logstash
-remote_file '/opt/logstash-2.2.1.tar.gz' do
-  source "#{node['dmon']['ls']['source']}"
-  action :create_if_missing
-end
-
-directory '/opt/logstash' do
+ls_tar = "#{Chef::Config[:file_cache_path]}/ls.tar.gz"
+remote_file ls_tar do
+  source node['dmon']['ls']['source']
+  checksum node['dmon']['ls']['checksum']
   action :create
 end
 
-execute 'extract logstash' do
-  command 'tar xvf logstash-2.2.1.tar.gz -C logstash --strip-components=1'
-  cwd '/opt'
-  not_if { ::File.directory?('/opt/logstash/bin') }
+poise_archive ls_tar do
+  destination install_dir
 end
 
 file "#{node['dmon']['install_dir']}/src/logs/logstash.log" do
-  action :create
+  owner dmon_user
+  group dmon_group
 end
 
-#if logstash-forwarder certificate and key are set
+execute 'Setting ls permissions' do
+  command "chown -R #{dmon_user}:#{dmon_group} #{install_dir}"
+end
+
+# If logstash-forwarder certificate and key are set
 if node['dmon']['lsf_crt'] && node['dmon']['lsf_key']
-  
-  #create files 
+
   file "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt" do
-    content "#{node['dmon']['lsf_crt']}"
-    owner "#{node['dmon']['user']}"
-    group "#{node['dmon']['group']}"
+    content node['dmon']['lsf_crt']
+    owner dmon_user
+    group dmon_group
     action :create
   end
 
   file "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.key" do
-    content "#{node['dmon']['lsf_key']}"
-    owner "#{node['dmon']['user']}"
-    group "#{node['dmon']['group']}"
+    content node['dmon']['lsf_key']
+    owner dmon_user
+    group dmon_group
     action :create
   end
 
 else
 
-  #set ip
   if node['dmon']['ip']
     node['dmon']['openssl_conf'].sub! 'ipaddresses', node['dmon']['ip']
   else
     node['dmon']['openssl_conf'].sub! 'ipaddresses', node['ipaddress']
   end
-  
-  #create openssl conf file
-  file "#{node['dmon']['install_dir']}/src/keys/openssl.cnf" do
-    content "#{node['dmon']['openssl_conf']}"
-    owner "#{node['dmon']['user']}"
-    group "#{node['dmon']['group']}"
-    action :create
-  end  
-  
 
-  #generate cerificate
+  file "#{node['dmon']['install_dir']}/src/keys/openssl.cnf" do
+    content node['dmon']['openssl_conf']
+    owner dmon_user
+    group dmon_group
+    action :create
+  end
+
   execute 'generate crt' do
     command 'openssl req -x509 -batch -nodes -days 6000 -newkey rsa:2048 -keyout logstash-forwarder.key -out logstash-forwarder.crt -config openssl.cnf'
     cwd "#{node['dmon']['install_dir']}/src/keys"
-    user "#{node['dmon']['user']}"
+    user dmon_user
   end
 
 end
 
 directory '/etc/logstash/conf.d' do
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
+  owner dmon_user
+  group dmon_group
   action :create
   recursive true
 end
 
-
-# Setting up logrotate
 bash 'logrotate' do
   code <<-EOH
     echo "#{node['dmon']['install_dir']}/src/logs/logstash.log{
@@ -93,37 +90,22 @@ bash 'logrotate' do
     EOH
 end
 
-# Finishing touches
-directory '/opt/DmonBackup' do
-  action :create
-end
-
-execute 'setting permissions' do
-  command "chown -R #{node['dmon']['user']}.#{node['dmon']['group']} /opt"
-end
-
-file '/opt/logstash-2.2.1.tar.gz' do
-  action :delete
-end
-
-#upload logstash conf file
 template "#{node['dmon']['install_dir']}/src/conf/logstash.conf" do
   source 'logstash.tmp.erb'
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
+  owner dmon_user
+  group dmon_group
   action :create
   variables({
-    :lPort => node['dmon']['ls']['l_port'],
-    :sslcert => "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt",
-    :sslkey => "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.key",
-    :gPort => node['dmon']['ls']['g_port'],
-    :udpPort => node['dmon']['ls']['udp_port'],
-    :EShostIP => node['dmon']['es']['ip'],
-    :EShostPort => node['dmon']['es']['port']
+    lPort: node['dmon']['ls']['l_port'],
+    sslcert: "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt",
+    sslkey: "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.key",
+    gPort: node['dmon']['ls']['g_port'],
+    udpPort: node['dmon']['ls']['udp_port'],
+    EShostIP: node['dmon']['es']['ip'],
+    EShostPort: node['dmon']['es']['port']
   })
 end
 
-# install sqlite3
 package 'sqlite'
 
 db = "#{node['dmon']['install_dir']}/src/db"
@@ -133,17 +115,17 @@ t = Time.now
 #upload elasticsearch insert query file
 template "#{db}/elasticsearch.sql" do
   source 'elasticsearch.sql.erb'
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
+  owner dmon_user
+  group dmon_group
   action :create
   variables({
-    :fqdn => node['dmon']['es']['host_FQDN'],
-    :ip => node['dmon']['es']['ip'],
-    :node_name => node['dmon']['es']['node_name'],
-    :port => node['dmon']['es']['port'],
-    :cluster_name => node['dmon']['es']['cluster_name'],
-    :core_heap => node['dmon']['es']['core_heap'],
-    :timestamp => t.strftime("%Y-%m-%d %H:%M:%S.%6N")
+    fqdn: node['dmon']['es']['host_FQDN'],
+    ip: node['dmon']['es']['ip'],
+    node_name: node['dmon']['es']['node_name'],
+    port: node['dmon']['es']['port'],
+    cluster_name: node['dmon']['es']['cluster_name'],
+    core_heap: node['dmon']['es']['core_heap'],
+    timestamp: t.strftime("%Y-%m-%d %H:%M:%S.%6N")
   })
 end
 
@@ -155,21 +137,20 @@ end
 #upload logstash insert query file
 template "#{db}/logstash.sql" do
   source 'logstash.sql.erb'
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
+  owner dmon_user
+  group dmon_group
   action :create
   variables({
-    :fqdn => node['dmon']['ls']['host_FQDN'],
-    :ip => node['dmon']['ls']['ip'],
-    :lumber => node['dmon']['ls']['l_port'],
-    :udp => node['dmon']['ls']['udp_port'],
-    :cluster_name => node['dmon']['ls']['cluster_name'],
-    :core_heap => node['dmon']['ls']['core_heap'],
-    :timestamp => t.strftime("%Y-%m-%d %H:%M:%S.%6N")
+    fqdn: node['dmon']['ls']['host_FQDN'],
+    ip: node['dmon']['ls']['ip'],
+    lumber: node['dmon']['ls']['l_port'],
+    udp: node['dmon']['ls']['udp_port'],
+    cluster_name: node['dmon']['ls']['cluster_name'],
+    core_heap: node['dmon']['ls']['core_heap'],
+    timestamp: t.strftime("%Y-%m-%d %H:%M:%S.%6N")
   })
 end
 
-#start logstash
 conf = "#{node['dmon']['install_dir']}/src/conf/logstash.conf"
 log = "#{node['dmon']['install_dir']}/src/logs/logstash.log"
 
@@ -183,5 +164,5 @@ bash 'start logstash' do
     sed -i "s/lsconf/$lsconf/g" #{db}/logstash.sql
     sqlite3 #{db}/dmon.db <#{db}/logstash.sql
     EOH
-  user "#{node['dmon']['user']}"
+  user dmon_user
 end

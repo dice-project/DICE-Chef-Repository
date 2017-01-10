@@ -1,78 +1,61 @@
-#create new group
-group "#{node['dmon']['group']}"
 
-#create new user
-user "#{node['dmon']['user']}" do
-  group "#{node['dmon']['group']}"
-  system true
-  shell '/bin/bash'
+install_dir = node['dmon']['kb']['install_dir']
+dmon_user = node['dmon']['user']
+dmon_group = node['dmon']['group']
+
+kb_tar = "#{Chef::Config[:file_cache_path]}/kb.tar.gz"
+remote_file kb_tar do
+  source node['dmon']['kb']['source']
+  checksum node['dmon']['kb']['checksum']
 end
 
-# Install kibana
-remote_file '/opt/kibana-4.4.1-linux-x64.tar.gz' do
-  source "#{node['dmon']['kb']['source']}"
-  action :create_if_missing
+poise_archive kb_tar do
+  destination install_dir
 end
 
-directory '/opt/kibana' do
-  action :create
-end
-
-execute 'extract kibana' do
-  command 'tar xvf kibana-4.4.1-linux-x64.tar.gz -C kibana --strip-components=1'
-  cwd '/opt'
-  not_if { ::File.directory?('/opt/kibana/bin') }
-end
-
-# Install Marvel
-execute 'install marvel' do
-  command '/opt/kibana/bin/kibana plugin --install elasticsearch/marvel/2.2.0'
-end
-
-file '/opt/kibana-4.4.1-linux-x64.tar.gz' do
-  action :delete
-end
-
-directory "#{node['dmon']['install_dir']}/src/pid" do
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
-  recursive true
-  action :create
-end
-
-directory "#{node['dmon']['install_dir']}/src/logs" do
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
-  recursive true
-  action :create
-end
-
-#upload kibana conf file
-template "/opt/kibana/config/kibana.yml" do
-  source 'kibana.tmp.erb'
-  owner "#{node['dmon']['user']}"
-  group "#{node['dmon']['group']}"
-  action :create
-  variables({
-    :kbPort => node['dmon']['kb']['port'],
-    :esIp => node['dmon']['es']['ip'],
-    :esPort => node['dmon']['es']['port'],
-    :kibanaPID => "#{node['dmon']['install_dir']}/src/pid/kibana.pid",
-    :kibanaLog => "#{node['dmon']['install_dir']}/src/logs/kibana.log"
-  })
-end
-
-execute 'setting permissions' do
-  command "chown -R #{node['dmon']['user']}.#{node['dmon']['group']} /opt/kibana"
-end
-
-#start kibana
-bash 'start kibana' do
+bash 'Install marvel' do
   code <<-EOH
-    nohup /opt/kibana/bin/kibana &
-    pid=$!
-    echo $pid > #{node['dmon']['install_dir']}/src/pid/kibana.pid
+    cd #{install_dir}/bin
+    ./kibana plugin --install elasticsearch/marvel/2.2.0
     EOH
-  user "#{node['dmon']['user']}"
 end
 
+template "#{install_dir}/config/kibana.yml" do
+  source 'kibana.tmp.erb'
+  owner dmon_user
+  group dmon_group
+  action :create
+  variables(
+    kbPort: node['dmon']['kb']['port'],
+    esIp: node['dmon']['es']['ip'],
+    esPort: node['dmon']['es']['port'],
+    kibanaPID: "#{node['dmon']['install_dir']}/src/pid/kibana.pid",
+    kibanaLog: "#{node['dmon']['install_dir']}/src/logs/kibana.log"
+  )
+end
+
+execute 'Setting Kibana permissions' do
+  command "chown -R #{dmon_user}:#{dmon_group} #{install_dir}"
+end
+
+# Copy init script (Chef does not have copy block for some reason)
+remote_file 'Copy Kibana service file' do
+  path '/etc/init.d/kibana4'
+  source "file://#{node['dmon']['install_dir']}/src/init/kibana4"
+  owner 'root'
+  group 'root'
+  mode 0755
+end
+
+ruby_block 'Patch broken kibana service file' do
+  block do
+    fe = Chef::Util::FileEdit.new('/etc/init.d/kibana4')
+    fe.insert_line_after_match(/KIBANA_BIN/,
+                               'DMONHOME=/opt/IeAT-DICE-Repository')
+    fe.write_file
+  end
+end
+
+service 'kibana4' do
+  action [:enable, :start]
+end
