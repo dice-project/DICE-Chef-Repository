@@ -54,3 +54,14 @@ suites:
       - recipe[dmon_agent::lsf]
     attributes:
       cloudify: *cfy_config
+
+  - name: cassandra
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[apt::default]
+      - recipe[dmon_agent::mock_dmon]
+      - recipe[dmon_agent::default]
+      - recipe[dmon_agent::collectd]
+      - recipe[dmon_agent::cassandra]
+    attributes:
+      cloudify: *cfy_config
