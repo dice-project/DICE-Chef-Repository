@@ -60,7 +60,6 @@ end
 
 describe file('/etc/collectd/collectd.conf') do
   it { should be_file }
-  it { should be_owned_by 'dmon-agent' }
   it do
     should contain('10.211.55.100')\
       .from(/<Plugin "network">/).to(%r{</Plugin>})
@@ -73,11 +72,6 @@ end
 
 describe service('collectd') do
   it { should be_running }
-end
-
-describe file('/home/dmon-agent/dmon-agent/pid/collectd.pid') do
-  it { should be_file }
-  it { should be_owned_by 'dmon-agent' }
 end
 
 describe file('/tmp/metrics.properties') do
