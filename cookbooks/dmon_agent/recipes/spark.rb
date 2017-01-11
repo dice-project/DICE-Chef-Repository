@@ -22,24 +22,7 @@ template "#{spark_conf_dir}/metrics.properties" do
   variables host: graphite_host, port: graphite_port, period: graphite_period
 end
 
-# Role registration data
-role_hash = {
-  Nodes: [
-    NodeName: node['hostname'],
-    Roles: ['spark']
-  ]
-}
-
-http_request 'roles' do
-  action :put
-  url "http://#{dmon_master}/dmon/v1/overlord/nodes/roles"
-  message role_hash.to_json
-  headers 'Content-Type' => 'application/json'
-end
-
-http_request 'Request Logstash restart on dmon master' do
-  action :post
-  url "http://#{dmon_master}/dmon/v1/overlord/core/ls"
-  message {}.to_json
-  headers 'Content-Type' => 'application/json'
+set_role 'spark' do
+  dmon dmon_master
+  hostname node['hostname']
 end
