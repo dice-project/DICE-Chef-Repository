@@ -32,7 +32,7 @@ end
 
 server =
   node['cloudify']['properties']['monitoring']['logstash_lumberjack_address']
-dmon_log = "#{node['dmon_agent']['home_dir']}/dmon-agent/log/dmon-agent.log"
+dmon_log = "#{node['dmon_agent']['install_dir']}/log/dmon-agent.log"
 template '/etc/logstash-forwarder.conf' do
   source 'logstash-forwarder.conf.erb'
   owner dmon_user

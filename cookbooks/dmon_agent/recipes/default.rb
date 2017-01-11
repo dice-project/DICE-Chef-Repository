@@ -5,35 +5,40 @@ return if skip_installation?
 dmon_master = node['cloudify']['properties']['monitoring']['dmon_address']
 dmon_user = node['dmon_agent']['user']
 dmon_group = node['dmon_agent']['group']
-dmon_home = node['dmon_agent']['home_dir']
 dmon_install_dir = node['dmon_agent']['install_dir']
 
 group dmon_group
 
 user dmon_user do
   group dmon_group
-  home dmon_home
+  home node['dmon_agent']['home_dir']
   supports manage_home: true
   system true
   shell '/bin/bash'
 end
 
-# NOTE: Basename dmon_agent.tar is NOT a typo. Even if default attributes say
-# that node['dmon_agent']['tarball'] is gzipped tarball, this is not true (we
-# learned that fact the hard way).
-dmon_tar = "#{Chef::Config[:file_cache_path]}/dmon_agent.tar"
+# NOTE: There is no separate package for dmon agent at the moment and we
+# actually download complete dmon repo. Just something to keep in mind.
+dmon_tar = "#{Chef::Config[:file_cache_path]}/dmon.tar.gz"
 remote_file dmon_tar do
   source node['dmon_agent']['tarball']
   checksum node['dmon_agent']['checksum']
   action :create
 end
 
+dmon_dir = "#{Chef::Config[:file_cache_path]}/dmon"
 poise_archive dmon_tar do
-  destination dmon_install_dir
+  destination dmon_dir
+  user dmon_user
+  group dmon_group
 end
 
-execute 'Update agent folder ownership' do
-  command "chown -R #{dmon_user}:#{dmon_group} #{dmon_install_dir}"
+# Ugly, but needed, because we have no proper agent package
+bash 'Get agent subfolder' do
+  code <<-EOH
+    [[ -d #{dmon_install_dir} ]] || \
+      mv -f #{dmon_dir}/dmon-agent #{dmon_install_dir}
+    EOH
 end
 
 %w(pid log cert lock).each do |dir|

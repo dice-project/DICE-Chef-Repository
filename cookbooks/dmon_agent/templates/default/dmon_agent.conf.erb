@@ -4,7 +4,7 @@ author      "Robert Cvitkovic"
 start on filesystem or runlevel [2345]
 stop on shutdown
 
-env DIR=<%= node['dmon_agent']['home_dir'] %>/dmon-agent
+env DIR=<%= node['dmon_agent']['install_dir'] %>
 
 setuid <%= node['dmon_agent']['user'] %>
 setgid <%= node['dmon_agent']['group'] %>
