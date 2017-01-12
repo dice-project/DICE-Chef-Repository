@@ -29,8 +29,6 @@ end
 dmon_dir = "#{Chef::Config[:file_cache_path]}/dmon"
 poise_archive dmon_tar do
   destination dmon_dir
-  user dmon_user
-  group dmon_group
 end
 
 # Ugly, but needed, because we have no proper agent package
@@ -38,6 +36,7 @@ bash 'Get agent subfolder' do
   code <<-EOH
     [[ -d #{dmon_install_dir} ]] || \
       mv -f #{dmon_dir}/dmon-agent #{dmon_install_dir}
+    chown #{dmon_user}:#{dmon_group} #{dmon_install_dir}
     EOH
 end
 
