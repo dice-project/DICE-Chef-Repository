@@ -29,3 +29,4 @@ suites:
           superuser_username: xuser
           superuser_password: xpass
           superuser_email: xmail
+          no_celery_workers: 5

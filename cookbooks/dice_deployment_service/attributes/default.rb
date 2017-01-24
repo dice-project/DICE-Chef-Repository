@@ -50,3 +50,6 @@ default['dice_deployment_service']['app_venv'] =
 # default['cloudify']['properties']['superuser_username'] = 'username'
 # default['cloudify']['properties']['superuser_password'] = 'password'
 # default['cloudify']['properties']['superuser_email'] = 'email@xlab.si'
+#
+# Number of celery workers
+# default['cloudify']['properties']['no_celery_workers'] = 5

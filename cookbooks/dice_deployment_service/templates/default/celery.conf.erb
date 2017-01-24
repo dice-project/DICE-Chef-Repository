@@ -15,7 +15,7 @@ exec <%= @venv %>/bin/celery worker \
    --queues=dice_deploy \
    --broker='amqp://guest@localhost//' \
    --loglevel=INFO \
-   --concurrency=1 \
+   --concurrency=<%= @no_workers %> \
    --logfile=/var/log/celery/celery.log \
    --workdir=<%= @app_folder %> \
    --config=dice_deploy.settings \

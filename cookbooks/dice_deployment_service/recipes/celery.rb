@@ -20,6 +20,7 @@
 dice_user = node['dice_deployment_service']['app_user']
 app_venv = node['dice_deployment_service']['app_venv']
 app_folder = node['dice_deployment_service']['app_folder']
+no_workers = node['cloudify']['properties']['no_celery_workers']
 
 service 'celery' do
   action :nothing
@@ -33,6 +34,11 @@ end
 
 template '/etc/init/celery.conf' do
   source 'celery.conf.erb'
-  variables(user: dice_user, venv: app_venv, app_folder: app_folder)
+  variables(
+    user: dice_user,
+    venv: app_venv,
+    app_folder: app_folder,
+    no_workers: no_workers
+  )
   notifies :restart, 'service[celery]'
 end
