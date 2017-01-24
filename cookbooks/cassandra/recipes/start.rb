@@ -15,15 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Chef::Resource::RubyBlock.send(:include, Cassandra::Helper)
-
 service 'cassandra' do
   action [:enable, :start]
-end
-
-ruby_block 'Waiting for Cassandra to start' do
-  block do
-    wait_for_cassandra
-  end
-  action :run
 end

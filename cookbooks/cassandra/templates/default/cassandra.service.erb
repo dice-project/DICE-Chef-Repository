@@ -1,5 +1,3 @@
-# /usr/lib/systemd/system/cassandra.service
-
 [Unit]
 Description=Cassandra
 After=network.target
@@ -7,9 +5,10 @@ After=network.target
 [Service]
 User=<%= @user %>
 Group=<%= @group %>
-Environment="CASSANDRA_HOME=/usr/share/cassandra"
+Environment="CASSANDRA_HOME=<%= @install_dir %>"
 Environment="CASSANDRA_CONF=/etc/cassandra"
-ExecStart=/usr/share/cassandra/bin/cassandra -f
+ExecStart=<%= @install_dir %>/bin/cassandra -f
+ExecStartPost=<%= @install_dir %>/bin/is-cassandra-up.sh <%= @timeout %>
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=100000

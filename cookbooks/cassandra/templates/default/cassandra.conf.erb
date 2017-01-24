@@ -3,9 +3,7 @@ description "Cassandra upstart unit"
 start on filesystem
 stop on runlevel[016]
 
-env WAIT_FOR_START=20
-
-env CASSANDRA_HOME=/usr/share/cassandra
+env CASSANDRA_HOME=<%= @install_dir %>
 env CASSANDRA_CONF=/etc/cassandra
 
 respawn
@@ -21,13 +19,9 @@ limit nofile 100000 100000
 limit memlock unlimited unlimited
 
 script
-  /usr/share/cassandra/bin/cassandra -f > /dev/null 2>&1
+  <%= @install_dir %>/bin/cassandra -f > /dev/null 2>&1
 end script
 
 post-start script
-  for tries in `seq $WAIT_FOR_START`; do
-    sleep 1
-    /usr/share/cassandra/bin/nodetool status && exit 0
-  done
-  exit 1
+  <%= @install_dir %>/bin/is-cassandra-up.sh <%= @timeout %>
 end script
