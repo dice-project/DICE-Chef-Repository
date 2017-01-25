@@ -30,7 +30,7 @@ end
 config['core-site']['fs.defaultFS'] =
   "hdfs://#{node['cloudify']['runtime_properties']['namenode_addr']}"
 
-ruby_block 'Lazy load FQDN' do
+ruby_block 'Lazy load FQDNs' do
   # OHAI is real pain to work with when it comes to dynamic values. We must
   # query it ruby_block in order to delay execution from compile phase to
   # converge phase or we will get bad value.
@@ -38,6 +38,21 @@ ruby_block 'Lazy load FQDN' do
     rt_props = node['cloudify']['runtime_properties']
     config['yarn-site']['yarn.resourcemanager.hostname'] =
       rt_props.fetch('resourcemanager_addr', node['fqdn'])
+
+    # Notes on node manager address and port
+    # ======================================
+    #
+    # By default, node manager address is set to 0.0.0.0:0. Official
+    # documentation states nothing about what exactly this means. On UNIX
+    # derived systems, requesting something on port 0 usually means "assign
+    # some random, unused port" and tracking address mangling through Hadoop
+    # code revealed that YARN indeed follows this tradition.
+    #
+    # In order to keep things predictable (which is prerequisite for using
+    # firewall), we fixed port number to which node manager binds.
+    #
+    # Keep this in sync with TOSCA library!
+    config['yarn-site']['yarn.nodemanager.address'] = "#{node['fqdn']}:8039"
   end
 end
 
