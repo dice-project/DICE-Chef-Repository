@@ -105,7 +105,7 @@ template "/usr/bin/cqlsh" do
   owner 'root'
   group 'root'
   action :create
-  variables host: node['ipaddress'], install_dir: install_dir
+  variables install_dir: install_dir
 end
 
 cookbook_file "#{install_dir}/bin/is-cassandra-up.sh" do
