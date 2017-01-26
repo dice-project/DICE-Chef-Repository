@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'serverspec'
+set :backend, :exec
 
 describe file('/etc/hosts') do
   it { should be_file }

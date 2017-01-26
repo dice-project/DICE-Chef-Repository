@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'serverspec'
+set :backend, :exec
 
 describe group('cassandra') do
   it { should exist }

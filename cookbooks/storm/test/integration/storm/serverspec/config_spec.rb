@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'serverspec'
+set :backend, :exec
 
 describe 'Storm configuration' do
   describe file('/usr/share/storm/conf/storm.yaml') do

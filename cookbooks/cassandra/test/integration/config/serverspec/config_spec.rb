@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'serverspec'
+set :backend, :exec
 
 describe file('/etc/cassandra/cassandra.yaml') do
   it { should be_file }

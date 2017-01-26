@@ -1,5 +1,4 @@
 require 'serverspec'
-
 set :backend, :exec
 
 describe group('dmon-agent') do
