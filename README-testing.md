@@ -8,23 +8,19 @@ repository.
 
 ## Running integration tests
 
-For running integration tests, `run-tests.sh` script should be used. This
+For running integration tests, `run-tests.py` script should be used. This
 script will iterate over selected cookbooks and run kitchen test on each of
 them.
 
-In the simplest scenario, one just needs to run `./run-tests.sh all` and script
-will run tests for all cookbooks that are listed in `test.list` file.
+In the simplest scenario, one just needs to run `./run-tests.sh -l test.list`
+and script will run tests for all cookbooks that are listed in `test.list`
+file.
 
-Testing only a subset of cookbooks is also possible by running `./run-tests.sh`
+Testing only a subset of cookbooks is also possible by running `./run-tests.py`
 and specifying cookbooks as a parameters.
 
-Test runner is capable of running tests in parallel. In order to activate this
-feature, simply set `KITCHEN_CONCURRENCY` environment variable to something
-other that default value of 1. What kitchen does on failure is another
-customizable aspect of test runner. This can be controlled by settings
-`KITCHEN_DESTROY_STRATEGY` environment variable. Default action is to always
-destroy virtual machines (for the sake of integration testing), but you can
-specify any value here that is valid for kitchen's `--destroy` option.
+For more information on what parameters are available, run `./run-tests.py`
+with no parameters and read tool documentation.
 
 
 ## Running kitchen during development

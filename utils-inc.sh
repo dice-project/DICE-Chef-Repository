@@ -22,7 +22,7 @@ function validate_cookbook_content ()
 function clean_env ()
 {
   echo "Cleaning environment ..."
-  rm -f test .kitchen.yml .kitchen
+  rm -rf test .kitchen.yml .kitchen
 }
 
 function prepare_env ()
