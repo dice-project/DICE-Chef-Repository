@@ -22,9 +22,10 @@ default['dmon']['user'] = 'ubuntu'
 # END OF DO NOT CHANGE BLOCK
 
 default['dmon']['tarball'] =
-  'https://github.com/dice-project/DICE-Monitoring/archive/master.tar.gz'
+  'http://github.com/dice-project/DICE-Monitoring/archive/'\
+  'e5f1bbe0762d38620aaec4cc8a02d59770cd8cb4.tar.gz'
 default['dmon']['checksum'] =
-  '37d8532519760ae7aa0f7a6dba4783ec03525e0c740544e910baf068f3539f08'
+  '15c390faf5de54e0b0ab4955eb9ada07c615f80dbafec9251d7eddc29fed6033'
 default['dmon']['install_dir'] = '/opt/IeAT-DICE-Repository'
 
 default['dmon']['port'] = '5001'
