@@ -44,3 +44,7 @@ describe file('/etc/resolv.conf') do
     should include 'nameserver 8.8.8.8'
   end
 end
+
+describe host_inventory['hostname'] do
+  it { should match(/^a1b2c3-(abcdefghi-){4}-[0-9a-fA-F]{12}$/) }
+end

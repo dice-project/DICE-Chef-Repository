@@ -17,12 +17,23 @@
 # limitations under the License.
 #
 
-fqdn = "#{node['hostname']}.node.consul"
+# hostname format:
+#  * deployment marker (6 characters)
+#  * node id (max 40 characters)
+#  * MAC address (12 characters)
+deploy_abbrev = node['cloudify']['deployment_id'][0, 6]
+node_name = node['cloudify']['node_id'].sub(/_[^_]*$/, '')
+node_name_dash = node_name.tr('_', '-')[0, 40]
+mac_concat = node['macaddress'].delete ':'
+
+hostname = "#{deploy_abbrev}-#{node_name_dash}-#{mac_concat}"
+fqdn = "#{hostname}.node.consul"
 
 node.default['cloudify']['runtime_properties']['ip'] = node['ipaddress']
 node.default['cloudify']['runtime_properties']['fqdn'] = fqdn
 
 ohai 'reload' do
+  plugin 'hostname'
   action :nothing
 end
 
@@ -31,6 +42,44 @@ template '/etc/hosts' do
   owner 'root'
   group 'root'
   mode 0644
-  variables ip: node['ipaddress'], fqdn: fqdn, hostname: node['hostname']
+  variables ip: node['ipaddress'], fqdn: fqdn, hostname: hostname
+  notifies :reload, 'ohai[reload]', :immediately
+end
+
+case node['platform_family']
+when 'rhel'
+  service 'network' do
+    action :nothing
+  end
+
+  hostfile = '/etc/sysconfig/network'
+  file hostfile do
+    action :create
+    content lazy {
+      ::IO.read(hostfile).gsub(/^HOSTNAME=.*$/, "HOSTNAME=#{fqdn}")
+    }
+    notifies :reload, 'ohai[reload]', :immediately
+    notifies :restart, 'service[network]', :delayed
+  end
+
+  sysctl = '/etc/sysctl.conf'
+  file sysctl do
+    action :create
+    content lazy {
+      ::IO.read(sysctl) + "kernel.hostname=#{hostname}\n"
+    }
+    not_if { ::IO.read(sysctl) =~ /^kernel\.hostname=#{hostname}$/ }
+    notifies :reload, 'ohai[reload]', :immediately
+    notifies :restart, 'service[network]', :delayed
+  end
+else
+  file '/etc/hostname' do
+    content "#{hostname}\n"
+    mode '0644'
+    notifies :reload, 'ohai[reload]', :immediately
+  end
+end
+
+execute "hostname #{hostname}" do
   notifies :reload, 'ohai[reload]', :immediately
 end
