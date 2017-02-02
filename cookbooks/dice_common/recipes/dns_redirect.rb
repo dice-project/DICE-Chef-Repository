@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-# NOTE: This will probably only work on Ubuntu 14.04. For other OSes and
-# versions, we will need to provide custom rules.
 file '/etc/resolv.conf' do
   manage_symlink_source false
   action :delete
@@ -28,3 +26,5 @@ template '/etc/resolv.conf' do
   source 'resolv.conf.erb'
   variables master: node['cloudify']['properties']['dns_server']
 end
+
+execute 'chattr +i /etc/resolv.conf'
