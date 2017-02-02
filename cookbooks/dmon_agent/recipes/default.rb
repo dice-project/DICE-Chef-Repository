@@ -82,22 +82,18 @@ service 'dmon_agent' do
   action [:enable, :start]
 end
 
-# Node registration data
-node_hash = {
-  Nodes: [
-    NodeName: node['hostname'],
-    NodeIP: node['ipaddress'],
-    NodeOS: node['platform'],
-    key: 'null',
-    username: 'null',
-    password: 'null'
-  ]
-}
-
-# Register node on dmon master
-http_request 'nodes' do
+http_request 'Register node on DMon master' do
   action :put
   url "http://#{dmon_master}/dmon/v1/overlord/nodes"
-  message node_hash.to_json
+  message({
+    Nodes: [
+      NodeName: node['hostname'],
+      NodeIP: node['ipaddress'],
+      NodeOS: node['platform'],
+      key: nil,
+      username: nil,
+      password: nil
+    ]
+  }.to_json)
   headers 'Content-Type' => 'application/json'
 end
