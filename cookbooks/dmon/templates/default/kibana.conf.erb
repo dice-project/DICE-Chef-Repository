@@ -1,0 +1,11 @@
+description "Kibana4 ElasticSearch GUI"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+exec <%= @install_dir %>/bin/kibana
