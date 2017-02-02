@@ -19,7 +19,7 @@ action :run do
 
   http_request 'Request Logstash restart' do
     action :post
-    url "http://#{dmon}/dmon/v1/overlord/core/ls"
+    url "http://#{dmon}/dmon/v2/overlord/core/ls"
     message {}.to_json
     headers 'Content-Type' => 'application/json'
   end
