@@ -19,16 +19,6 @@ install_dir = node['dmon']['es']['install_dir']
 dmon_user = node['dmon']['user']
 dmon_group = node['dmon']['group']
 
-# Configuring VM level setings
-bash 'vm' do
-  code <<-EOH
-    export ES_HEAP_SIZE=#{node['dmon']['es']['core_heap']}
-    export ES_USE_GC_LOGGING=yes
-    sysctl -w vm.max_map_count=262144
-    swapoff -a
-    EOH
-end
-
 es_tar = "#{Chef::Config[:file_cache_path]}/es.tar.gz"
 remote_file es_tar do
   source node['dmon']['es']['source']
@@ -49,7 +39,7 @@ bash 'install marvel' do
 end
 
 template "#{install_dir}/config/elasticsearch.yml" do
-  source 'elasticsearch.tmp.erb'
+  source 'elasticsearch.yml.erb'
   owner dmon_user
   group dmon_group
   action :create
@@ -64,13 +54,13 @@ execute 'Setting es permissions' do
   command "chown -R #{dmon_user}:#{dmon_group} #{install_dir}"
 end
 
-# Copy init script (Chef does not have copy block for some reason)
-remote_file 'Copy ElasticSearch service file' do
-  path '/etc/init.d/dmon-es'
-  source "file://#{node['dmon']['install_dir']}/src/init/dmon-es"
-  owner 'root'
-  group 'root'
-  mode 0755
+template '/etc/init/dmon-es.conf' do
+  source 'dmon-es.conf.erb'
+  variables(
+    user: dmon_user,
+    group: dmon_group,
+    install_dir: install_dir
+  )
 end
 
 service 'dmon-es' do

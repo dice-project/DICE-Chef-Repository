@@ -1,0 +1,16 @@
+description "ElasticSearch service"
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on runlevel [016]
+
+respawn
+respawn limit 10 30
+
+limit nofile 32000 32000
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+exec <%= @install_dir %>/bin/elasticsearch
