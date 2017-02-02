@@ -1,0 +1,25 @@
+description "Logstash service"
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on runlevel [016]
+
+respawn
+respawn limit 10 30
+
+limit nofile 32000 32000
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+script
+
+  HOME="<%= @install_dir %>"
+  LS_JAVA_OPTS="-Djava.io.tmpdir=<%= @install_dir %>"
+  LS_HEAP_SIZE="500m"
+  export HOME LS_HEAP_SIZE LS_JAVA_OPTS
+  exec <%= @install_dir %>/bin/logstash agent -f <%= @conf_file %> \
+    -l <%= @log_file %>
+
+end script

@@ -19,15 +19,6 @@ install_dir = node['dmon']['ls']['install_dir']
 dmon_user = node['dmon']['user']
 dmon_group = node['dmon']['group']
 
-# Configuring VM level setings
-bash 'vm' do
-  code <<-EOH
-    export LS_HEAP_SIZE=#{node['dmon']['ls']['core_heap']}
-    sysctl -w vm.max_map_count=262144
-    swapoff -a
-    EOH
-end
-
 ls_tar = "#{Chef::Config[:file_cache_path]}/ls.tar.gz"
 remote_file ls_tar do
   source node['dmon']['ls']['source']
@@ -88,13 +79,6 @@ else
 
 end
 
-directory '/etc/logstash/conf.d' do
-  owner dmon_user
-  group dmon_group
-  action :create
-  recursive true
-end
-
 bash 'logrotate' do
   code <<-EOH
     echo "#{node['dmon']['install_dir']}/src/logs/logstash.log{
@@ -107,79 +91,13 @@ bash 'logrotate' do
     EOH
 end
 
-template "#{node['dmon']['install_dir']}/src/conf/logstash.conf" do
-  source 'logstash.tmp.erb'
-  owner dmon_user
-  group dmon_group
-  action :create
-  variables({
-    lPort: node['dmon']['ls']['l_port'],
-    sslcert: "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt",
-    sslkey: "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.key",
-    gPort: node['dmon']['ls']['g_port'],
-    udpPort: node['dmon']['ls']['udp_port'],
-    EShostIP: node['dmon']['es']['ip'],
-    EShostPort: node['dmon']['es']['port']
-  })
-end
-
-package 'sqlite'
-
-db = "#{node['dmon']['install_dir']}/src/db"
-
-t = Time.now
-
-#upload elasticsearch insert query file
-template "#{db}/elasticsearch.sql" do
-  source 'elasticsearch.sql.erb'
-  owner dmon_user
-  group dmon_group
-  action :create
-  variables({
-    fqdn: node['dmon']['es']['host_FQDN'],
-    ip: node['dmon']['es']['ip'],
-    node_name: node['dmon']['es']['node_name'],
-    port: node['dmon']['es']['port'],
-    cluster_name: node['dmon']['es']['cluster_name'],
-    core_heap: node['dmon']['es']['core_heap'],
-    timestamp: t.strftime("%Y-%m-%d %H:%M:%S.%6N")
-  })
-end
-
-execute 'upload es to db' do
-  command "sqlite3 #{db}/dmon.db <#{db}/elasticsearch.sql"
-end
-
-
-#upload logstash insert query file
-template "#{db}/logstash.sql" do
-  source 'logstash.sql.erb'
-  owner dmon_user
-  group dmon_group
-  action :create
-  variables({
-    fqdn: node['dmon']['ls']['host_FQDN'],
-    ip: node['dmon']['ls']['ip'],
-    lumber: node['dmon']['ls']['l_port'],
-    udp: node['dmon']['ls']['udp_port'],
-    cluster_name: node['dmon']['ls']['cluster_name'],
-    core_heap: node['dmon']['ls']['core_heap'],
-    timestamp: t.strftime("%Y-%m-%d %H:%M:%S.%6N")
-  })
-end
-
-conf = "#{node['dmon']['install_dir']}/src/conf/logstash.conf"
-log = "#{node['dmon']['install_dir']}/src/logs/logstash.log"
-
-bash 'start logstash' do
-  code <<-EOH
-    nohup /opt/logstash/bin/logstash agent  -f #{conf} -l #{log} -w 4 &
-    pid=$!
-    echo $pid > #{node['dmon']['install_dir']}/src/pid/logstash.pid
-    sed -i "s/pid/$pid/g" #{db}/logstash.sql
-    lsconf="X'`hexdump -ve '1/1 \"%.2x\"' #{node['dmon']['install_dir']}/src/conf/logstash.conf`'"
-    sed -i "s/lsconf/$lsconf/g" #{db}/logstash.sql
-    sqlite3 #{db}/dmon.db <#{db}/logstash.sql
-    EOH
-  user dmon_user
+template '/etc/init/dmon-ls.conf' do
+  source 'dmon-ls.conf.erb'
+  variables(
+    user: dmon_user,
+    group: dmon_group,
+    install_dir: install_dir,
+    conf_file: "#{node['dmon']['install_dir']}/src/conf/logstash.conf",
+    log_file: "#{node['dmon']['install_dir']}/src/logs/logstash.log"
+  )
 end
