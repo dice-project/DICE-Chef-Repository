@@ -19,6 +19,8 @@ suites:
       - recipe[dmon_agent::storm]
     attributes:
       cloudify: &cfy_config
+        node_id: sample_id
+        deployment_id: sample_id
         properties:
           monitoring: &monitoring_config
             enabled: true

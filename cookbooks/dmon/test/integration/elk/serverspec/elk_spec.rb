@@ -33,9 +33,8 @@ end
 
 describe file('/etc/init/dmon.conf') do
   it { should be_file }
-  it { should contain('/opt/IeAT-DICE-Repository').from(/DIR/).to(/setuid/) }
-  it { should contain('ubuntu').from(/setuid/).to(/setgid/) }
-  it { should contain('ubuntu').from(/setgid/).to(/script/) }
+  it { should contain('root').from(/setuid/).to(/setgid/) }
+  it { should contain('root').from(/setgid/).to(/script/) }
   it { should contain('5001').from(/script/).to(/end/) }
 end
 
@@ -89,28 +88,4 @@ describe x509_private_key('/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder
   it { should_not be_encrypted }
   it { should be_valid }
   it { should have_matching_certificate('/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder.crt') }
-end
-
-#test if kibana was correctly configured
-describe file('/opt/IeAT-DICE-Repository/src/conf/logstash.conf') do
-  it { should be_file }
-  it { should contain('5000').from(/lumberjack/).to(/ssl_certificate/) }
-  it { should contain('/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder.crt').from(/ssl_certificate/).to(/ssl_key/) }
-  it { should contain('/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder.key').from(/ssl_key/).to(/graphite/) }
-  it { should contain('5002').from(/graphite/).to(/udp/) }
-  it { should contain('25826').from(/udp/).to(/collectd/) }
-  it { should contain('127.0.0.1').from(/elasticsearch/).to(/logstash/) }
-  it { should contain('9200').from(/elasticsearch/).to(/logstash/) }
-end
-
-describe command("sqlite3 /opt/IeAT-DICE-Repository/src/db/dmon.db 'select * from db_es_core' | grep -e 'monitor' -e '127.0.0.1' -e 'esCoreMaster' -e '9200' -e 'diceMonit' -e 'dummy' -e '1g'") do
-  its(:exit_status) { should eq 0 }
-end
-
-describe command("sqlite3 /opt/IeAT-DICE-Repository/src/db/dmon.db 'select * from db_s_core' | grep -e 'monitor' -e '127.0.0.1' -e '5000' -e '25826' -e 'diceMonit' -e '512m'") do
-  its(:exit_status) { should eq 0 }
-end
-
-describe file('/opt/IeAT-DICE-Repository/src/pid/logstash.pid') do
-  it { should be_file }
 end
