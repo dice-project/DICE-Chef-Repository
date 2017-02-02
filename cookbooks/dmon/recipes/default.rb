@@ -88,6 +88,12 @@ end
 
 template '/etc/init/dmon.conf' do
   source 'dmon.conf.erb'
+  variables(
+    install_dir: install_dir,
+    user: 'root',
+    group: 'root',
+    port: node['dmon']['port']
+  )
 end
 
 service 'dmon' do
