@@ -12,7 +12,7 @@ group dmon_group
 user dmon_user do
   group dmon_group
   home node['dmon_agent']['home_dir']
-  supports manage_home: true
+  manage_home true
   system true
   shell '/bin/bash'
 end
