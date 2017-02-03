@@ -32,10 +32,7 @@ fqdn = "#{hostname}.node.consul"
 node.default['cloudify']['runtime_properties']['ip'] = node['ipaddress']
 node.default['cloudify']['runtime_properties']['fqdn'] = fqdn
 
-ohai 'reload' do
-  plugin 'hostname'
-  action :nothing
-end
+set_hostname hostname
 
 template '/etc/hosts' do
   source 'hosts.erb'
@@ -43,43 +40,4 @@ template '/etc/hosts' do
   group 'root'
   mode 0644
   variables ip: node['ipaddress'], fqdn: fqdn, hostname: hostname
-  notifies :reload, 'ohai[reload]', :immediately
-end
-
-case node['platform_family']
-when 'rhel'
-  service 'network' do
-    action :nothing
-  end
-
-  hostfile = '/etc/sysconfig/network'
-  file hostfile do
-    action :create
-    content lazy {
-      ::IO.read(hostfile).gsub(/^HOSTNAME=.*$/, "HOSTNAME=#{fqdn}")
-    }
-    notifies :reload, 'ohai[reload]', :immediately
-    notifies :restart, 'service[network]', :delayed
-  end
-
-  sysctl = '/etc/sysctl.conf'
-  file sysctl do
-    action :create
-    content lazy {
-      ::IO.read(sysctl) + "kernel.hostname=#{hostname}\n"
-    }
-    not_if { ::IO.read(sysctl) =~ /^kernel\.hostname=#{hostname}$/ }
-    notifies :reload, 'ohai[reload]', :immediately
-    notifies :restart, 'service[network]', :delayed
-  end
-else
-  file '/etc/hostname' do
-    content "#{hostname}\n"
-    mode '0644'
-    notifies :reload, 'ohai[reload]', :immediately
-  end
-end
-
-execute "hostname #{hostname}" do
-  notifies :reload, 'ohai[reload]', :immediately
 end
