@@ -7,7 +7,7 @@ describe file('/etc/hosts') do
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
   its(:content) do
-    should include "#{host_inventory['hostname']}.node.consul"
+    should contain "#{host_inventory['hostname']}.node.consul"
   end
 end
 

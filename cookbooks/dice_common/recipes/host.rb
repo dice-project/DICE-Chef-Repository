@@ -26,7 +26,7 @@ node_name = node['cloudify']['node_id'].sub(/_[^_]*$/, '')
 node_name_dash = node_name.tr('_', '-')[0, 40]
 mac_concat = node['macaddress'].delete ':'
 
-hostname = "#{deploy_abbrev}-#{node_name_dash}-#{mac_concat}"
+hostname = "#{deploy_abbrev}-#{node_name_dash}-#{mac_concat}".downcase
 fqdn = "#{hostname}.node.consul"
 
 node.default['cloudify']['runtime_properties']['ip'] = node['ipaddress']
