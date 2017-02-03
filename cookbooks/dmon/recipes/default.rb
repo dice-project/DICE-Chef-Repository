@@ -86,6 +86,19 @@ directory '/opt/DmonBackup' do
   action :create
 end
 
+# Ugly hack that prepopulates DMon database
+template "#{install_dir}/src/fill_db.py" do
+  source 'fill_db.py.erb'
+  variables es_cluster: node['dmon']['es']['cluster_name']
+end
+
+bash 'Populate db' do
+  cwd "#{install_dir}/src"
+  code <<-EOS
+    #{install_dir}/dmonEnv/bin/python fill_db.py
+    EOS
+end
+
 template '/etc/init/dmon.conf' do
   source 'dmon.conf.erb'
   variables(

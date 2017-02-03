@@ -1,0 +1,34 @@
+import os
+import socket
+
+from pyDMON import db, dbSCore, dbESCore, dbKBCore
+
+
+logstash = dbSCore(hostFQDN=socket.getfqdn(),
+                   hostIP=socket.gethostbyname(socket.gethostname()),
+                   hostOS='ubuntu',
+                   outESclusterName='<%= @es_cluster %>',
+                   udpPort=25826,
+                   inLumberPort=5000,
+                   LSCoreHeap=os.getenv('LS_HEAP_SIZE', '512m'))
+db.session.add(logstash)
+
+elasticsearch = dbESCore(hostFQDN=socket.getfqdn(),
+                         hostIP='127.0.0.1',
+                         hostOS='ubuntu',
+                         nodeName='esCoreMaster',
+                         clusterName='<%= @es_cluster %>',
+                         conf='None',
+                         nodePort=9200,
+                         MasterNode=1,
+                         DataNode=1,
+                         ESCoreHeap=os.getenv('ES_HEAP_SIZE', '4g'))
+db.session.add(elasticsearch)
+
+kibana = dbKBCore(hostFQDN=socket.getfqdn(),
+                  hostIP=socket.gethostbyname(socket.gethostname()),
+                  hostOS='ubuntu',
+                  kbPort=5601)
+db.session.add(kibana)
+
+db.session.commit()
