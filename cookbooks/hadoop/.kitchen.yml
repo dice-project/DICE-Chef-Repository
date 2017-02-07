@@ -27,6 +27,8 @@ suites:
         jdk_version: "8"
         install_flavor: openjdk
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties: {}
         runtime_properties: {}
 
@@ -42,6 +44,8 @@ suites:
     attributes:
       java: *java_attrs
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties: {}
         runtime_properties:
           namenode_addr: namenode-ubuntu-1404.node.consul
@@ -59,6 +63,8 @@ suites:
     attributes:
       java: *java_attrs
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties: {}
         runtime_properties:
           namenode_addr: namenode-ubuntu-1404.node.consul
@@ -75,6 +81,8 @@ suites:
     attributes:
       java: *java_attrs
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties: {}
         runtime_properties:
           namenode_addr: namenode-ubuntu-1404.node.consul

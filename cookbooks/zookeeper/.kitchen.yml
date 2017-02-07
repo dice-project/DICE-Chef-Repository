@@ -23,6 +23,8 @@ suites:
         jdk_version: "8"
         install_flavor: openjdk
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties:
           configuration: {}
         runtime_properties:

@@ -18,6 +18,8 @@ suites:
       - recipe[dice_common::consul_server]
     attributes:
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         runtime_properties: {}
         properties:
           ssh_key: abs

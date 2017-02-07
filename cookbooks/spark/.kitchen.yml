@@ -29,6 +29,8 @@ suites:
         type: master
         version: "1.6"
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties:
           configuration: {}
         runtime_properties: {}
@@ -47,6 +49,8 @@ suites:
         type: master
         version: "2.0"
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties:
           configuration: {}
         runtime_properties: {}
@@ -65,6 +69,8 @@ suites:
         type: worker
         version: "1.6"
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties:
           configuration: {}
         runtime_properties:
@@ -84,6 +90,8 @@ suites:
         type: worker
         version: "2.0"
       cloudify:
+        node_id: sample_node_id
+        deployment_id: sample_deploy_id
         properties:
           configuration: {}
         runtime_properties:
