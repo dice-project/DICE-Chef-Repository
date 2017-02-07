@@ -32,12 +32,6 @@ fqdn = "#{hostname}.node.consul"
 node.default['cloudify']['runtime_properties']['ip'] = node['ipaddress']
 node.default['cloudify']['runtime_properties']['fqdn'] = fqdn
 
-set_hostname hostname
-
-template '/etc/hosts' do
-  source 'hosts.erb'
-  owner 'root'
-  group 'root'
-  mode 0644
-  variables ip: node['ipaddress'], fqdn: fqdn, hostname: hostname
+set_hostname hostname do
+  fqdn fqdn
 end

@@ -1,6 +1,7 @@
 resource_name 'set_hostname'
 
 property :hostname, String, name_property: true
+property :fqdn, String
 
 action :set do
   ohai 'reload hostname' do
@@ -22,6 +23,14 @@ action :set do
       mode '0644'
       notifies :reload, 'ohai[reload hostname]'
     end
+  end
+
+  template '/etc/hosts' do
+    source 'hosts.erb'
+    owner 'root'
+    group 'root'
+    mode 0644
+    variables ip: node['ipaddress'], fqdn: fqdn, hostname: hostname
   end
 end
 
