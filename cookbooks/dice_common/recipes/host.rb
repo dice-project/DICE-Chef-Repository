@@ -21,7 +21,7 @@
 #  * deployment marker (6 characters)
 #  * node id (max 40 characters)
 #  * MAC address (12 characters)
-deploy_abbrev = node['cloudify']['deployment_id'][0, 6]
+deploy_abbrev = node['cloudify']['deployment_id'][0, 6].tr('_', '-')
 node_name = node['cloudify']['node_id'].sub(/_[^_]*$/, '')
 node_name_dash = node_name.tr('_', '-')[0, 40]
 mac_concat = node['macaddress'].delete ':'
