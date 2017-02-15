@@ -1,3 +1,18 @@
+New in v.0.1.9:
+
+* CentOS 7 is now supported platform for Cassandra and dice_common cookbooks.
+* Cookbooks for ScyllaDB were added to repository.
+* Support for latest DMon was added to DMon cookbook.
+* Node and application registration on DMon has been updated according to the
+  upstream changes.
+* Monitoring support has been added for Cassandra.
+* Hostname and FQDN of the VM that is set by dice_common cookbook are now
+  deterministic, unique and conform to the standards set by IETF.
+* Ability to run multiple background tasks for DICE Deployment Service was
+  added to celery service file.
+* Concurrent test runner for Chef cookbooks has been added, making it feasible
+  to run test suite on almost every commit.
+
 New in v.0.1.8:
 
 * Cassandra recipe that starts the service now waits until client can
