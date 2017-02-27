@@ -93,12 +93,22 @@ execute 'Install bower packages' do
   cwd app_folder
 end
 
+cfy_crt_source = node['cloudify']['runtime_properties'].fetch('cfy_crt', nil)
+cfy_crt_target = '/etc/ssl/certs/cfy.crt'
+
+remote_file cfy_crt_target do
+  source "file://#{cfy_crt_source}"
+  not_if { cfy_crt_source.nil? }
+end
+
 # Create local settings
 template "#{app_folder}/dice_deploy/local_settings.py" do
   source 'local_settings.py.erb'
   variables(
     manager_url: node['cloudify']['properties']['manager'],
     manager_username: node['cloudify']['properties']['manager_user'],
+    manager_cacert: cfy_crt_source.nil? ? nil : cfy_crt_target,
+    manager_protocol: node['cloudify']['properties']['manager_protocol'],
     manager_password: node['cloudify']['properties']['manager_pass']
   )
   owner dice_user

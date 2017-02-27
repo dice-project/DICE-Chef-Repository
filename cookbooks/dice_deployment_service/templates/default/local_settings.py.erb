@@ -1,3 +1,7 @@
 CFY_MANAGER_URL = "<%= @manager_url %>"
+CFY_MANAGER_PROTOCOL = "<%= @manager_protocol %>"
 CFY_MANAGER_USERNAME = "<%= @manager_username %>"
 CFY_MANAGER_PASSWORD = "<%= @manager_password %>"
+<% unless @manager_cacert.nil? %>
+CFY_MANAGER_CACERT = "<%= @manager_cacert %>"
+<% end %>
