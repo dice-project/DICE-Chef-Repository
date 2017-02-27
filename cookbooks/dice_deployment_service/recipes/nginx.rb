@@ -27,6 +27,14 @@ service 'nginx' do
   action :nothing
 end
 
+remote_file '/etc/ssl/certs/dds.crt' do
+  source "file://#{node['cloudify']['runtime_properties']['dds_crt']}"
+end
+
+remote_file '/etc/ssl/private/dds.key' do
+  source "file://#{node['cloudify']['runtime_properties']['dds_key']}"
+end
+
 template '/etc/nginx/sites-available/dice-deployment-service' do
   source 'dice-deployment-service.erb'
   variables(

@@ -1,7 +1,19 @@
 server {
   listen 80 default_server;
-  client_max_body_size <%= @upload_limit %>;
+  listen [::]:80 default_server;
   server_name _;
+  return 301 https://$host$request_uri;
+}
+
+server {
+  listen 443 ssl default_server;
+  listen [::]:443 ssl default_server;
+  server_name _;
+
+  ssl_certificate /etc/ssl/certs/dds.crt;
+  ssl_certificate_key /etc/ssl/private/dds.key;
+
+  client_max_body_size <%= @upload_limit %>;
 
   location = /favicon.ico {
     access_log off;
