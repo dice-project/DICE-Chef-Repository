@@ -14,6 +14,7 @@ suites:
       - recipe[apt::default]
       - recipe[java::default]
       - recipe[dice_continuous_integration::default]
+      - recipe[dice_continuous_integration::dice-qt]
     attributes:
       java: &java_attrs
         jdk_version: "8"
