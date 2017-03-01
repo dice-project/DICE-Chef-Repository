@@ -33,18 +33,10 @@ describe service('consul-server') do
   it { should be_running }
 end
 
-describe port(8300) do
-  it { should be_listening.with('tcp') }
-end
-
-describe port(8301) do
-  it { should be_listening.with('tcp') }
-  it { should be_listening.with('udp') }
-end
-
-describe port(8302) do
-  it { should be_listening.with('tcp') }
-  it { should be_listening.with('udp') }
+[8300, 8301, 8302].each do |port_num|
+  describe port(port_num) do
+    it { should be_listening.with('tcp') }
+  end
 end
 
 # DNSmasq
@@ -95,5 +87,11 @@ end
 describe file('/etc/nginx/sites-available/dice-deployment-service') do
   its(:content) do
     should include 'client_max_body_size 2000m;'
+  end
+end
+
+[80, 443].each do |port_num|
+  describe port(port_num) do
+    it { should be_listening.with('tcp') }
   end
 end
