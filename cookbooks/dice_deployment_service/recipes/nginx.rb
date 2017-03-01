@@ -21,18 +21,39 @@ app_folder = node['dice_deployment_service']['app_folder']
 app_socket = node['dice_deployment_service']['app_socket']
 upload_limit = node['dice_deployment_service']['upload_limit']
 
+dds_crt = node['cloudify']['runtime_properties'].fetch('dds_crt', nil)
+dds_key = node['cloudify']['runtime_properties'].fetch('dds_key', nil)
+
 package 'nginx'
 
 service 'nginx' do
   action :nothing
 end
 
-remote_file '/etc/ssl/certs/dds.crt' do
-  source "file://#{node['cloudify']['runtime_properties']['dds_crt']}"
-end
+if dds_crt.nil? || dds_key.nil?
+  ssl_cnf = "#{Chef::Config[:file_cache_path]}/ssl.cnf"
 
-remote_file '/etc/ssl/private/dds.key' do
-  source "file://#{node['cloudify']['runtime_properties']['dds_key']}"
+  template ssl_cnf do
+    source 'ssl.cnf.erb'
+    variables ip: node['cloudify']['runtime_properties']['external_ip']
+  end
+
+  bash 'Create certificate' do
+    code <<-EOF
+      openssl req -new -nodes -x509 -newkey rsa:2048 -sha256 -days 730 \
+        -config #{ssl_cnf} \
+        -out /etc/ssl/certs/dds.crt \
+        -keyout /etc/ssl/private/dds.key
+      EOF
+  end
+else
+  remote_file '/etc/ssl/certs/dds.crt' do
+    source "file://#{dds_crt}"
+  end
+
+  remote_file '/etc/ssl/private/dds.key' do
+    source "file://#{dds_key}"
+  end
 end
 
 template '/etc/nginx/sites-available/dice-deployment-service' do
