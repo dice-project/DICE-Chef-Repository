@@ -29,30 +29,6 @@ default['dmon']['checksum'] =
 default['dmon']['install_dir'] = '/opt/IeAT-DICE-Repository'
 
 default['dmon']['port'] = '5001'
-default['dmon']['ip'] = nil
-
-default['dmon']['lsf_crt'] = nil
-default['dmon']['lsf_key'] = nil
-default['dmon']['openssl_conf'] = "
-[req]
-distinguished_name = req_distinguished_name
-x509_extensions = v3_req
-prompt = no
-[req_distinguished_name]
-C = SL
-ST = Slovenia
-L =  Ljubljana
-O = Xlab
-CN = *
-[v3_req]
-subjectKeyIdentifier = hash
-authorityKeyIdentifier = keyid,issuer
-basicConstraints = CA:TRUE
-subjectAltName = IP:ipaddresses
-[v3_ca]
-keyUsage = digitalSignature, keyEncipherment
-subjectAltName = IP:ipaddresses
-"
 
 #Elasticsearch configuration attributes
 default['dmon']['es']['source'] = 'https://download.elasticsearch.org/elasticsearch/release/org/elasticsearch/distribution/tar/elasticsearch/2.2.0/elasticsearch-2.2.0.tar.gz'

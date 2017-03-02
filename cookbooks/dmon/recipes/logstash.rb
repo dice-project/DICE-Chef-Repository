@@ -39,44 +39,20 @@ execute 'Setting ls permissions' do
   command "chown -R #{dmon_user}:#{dmon_group} #{install_dir}"
 end
 
-# If logstash-forwarder certificate and key are set
-if node['dmon']['lsf_crt'] && node['dmon']['lsf_key']
+ssl_cnf = "#{Chef::Config[:file_cache_path]}/ssl.cnf"
+template ssl_cnf do
+  source 'ssl.cnf.erb'
+  variables ip: node['ipaddress']
+end
 
-  file "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt" do
-    content node['dmon']['lsf_crt']
-    owner dmon_user
-    group dmon_group
-    action :create
-  end
-
-  file "#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.key" do
-    content node['dmon']['lsf_key']
-    owner dmon_user
-    group dmon_group
-    action :create
-  end
-
-else
-
-  if node['dmon']['ip']
-    node['dmon']['openssl_conf'].sub! 'ipaddresses', node['dmon']['ip']
-  else
-    node['dmon']['openssl_conf'].sub! 'ipaddresses', node['ipaddress']
-  end
-
-  file "#{node['dmon']['install_dir']}/src/keys/openssl.cnf" do
-    content node['dmon']['openssl_conf']
-    owner dmon_user
-    group dmon_group
-    action :create
-  end
-
-  execute 'generate crt' do
-    command 'openssl req -x509 -batch -nodes -days 6000 -newkey rsa:2048 -keyout logstash-forwarder.key -out logstash-forwarder.crt -config openssl.cnf'
-    cwd "#{node['dmon']['install_dir']}/src/keys"
-    user dmon_user
-  end
-
+bash 'Create Lumberjack certificate' do
+  code <<-EOF
+    openssl req -new -nodes -x509 -newkey rsa:2048 -sha256 -days 730 \
+      -config #{ssl_cnf} \
+      -out    #{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt \
+      -keyout #{node['dmon']['install_dir']}/src/keys/logstash-forwarder.key
+    EOF
+  user dmon_user
 end
 
 bash 'logrotate' do
