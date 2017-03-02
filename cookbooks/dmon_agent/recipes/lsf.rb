@@ -16,31 +16,22 @@ package 'logstash-forwarder' do
   action :install
 end
 
-directory '/opt/certs' do
-  owner dmon_user
-  group dmon_group
+crt = node['cloudify']['properties']['monitoring']['logstash_lumberjack_crt']
+file '/etc/ssl/certs/logstash-forwarder.crt' do
+  content crt
   action :create
 end
 
-crt = node['cloudify']['properties']['monitoring']['logstash_lumberjack_crt']
-file '/opt/certs/logstash-forwarder.crt' do
-  content crt
-  owner dmon_user
-  group dmon_group
-  action :create
-end
+directory '/etc/logstash-forwarder.conf.d'
 
 server =
   node['cloudify']['properties']['monitoring']['logstash_lumberjack_address']
-dmon_log = "#{node['dmon_agent']['install_dir']}/log/dmon-agent.log"
-template '/etc/logstash-forwarder.conf' do
+template '/etc/logstash-forwarder.conf.d/net.conf' do
   source 'logstash-forwarder.conf.erb'
-  owner dmon_user
-  group dmon_group
   action :create
-  variables servers: [server], dmon_log_paths: [dmon_log]
+  variables servers: [server]
 end
 
-service 'logstash-forwarder' do
-  action :start
+cookbook_file '/etc/init/lsf.conf' do
+  source 'lsf.conf'
 end
