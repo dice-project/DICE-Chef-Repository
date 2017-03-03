@@ -29,6 +29,7 @@ suites:
             logstash_lumberjack_crt: crt
             logstash_graphite_address: 10.211.55.100:5002
             logstash_udp_address: 10.211.55.100:25826
+            roles: []
 
   - name: spark
     run_list:
@@ -55,7 +56,20 @@ suites:
       - recipe[dmon_agent::default]
       - recipe[dmon_agent::lsf]
     attributes:
-      cloudify: *cfy_config
+      cloudify:
+        node_id: sample_id
+        deployment_id: sample_id
+        properties:
+          monitoring: &monitoring_config
+            enabled: true
+            dmon_address: 127.0.0.1:5001
+            logstash_lumberjack_address: 10.211.55.100:5000
+            logstash_lumberjack_crt: crt
+            logstash_graphite_address: 10.211.55.100:5002
+            logstash_udp_address: 10.211.55.100:25826
+            roles:
+              - role_1
+              - role_2
 
   - name: cassandra
     run_list:

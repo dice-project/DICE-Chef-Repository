@@ -21,3 +21,9 @@ describe file('/etc/logstash-forwarder.conf.d/net.conf') do
     )
   end
 end
+
+describe file('/var/log/dmon.log') do
+  it { should contain 'PUT /dmon/v1/overlord/nodes/roles' }
+  it { should contain('role_1').from(/Roles/) }
+  it { should contain 'POST /dmon/v2/overlord/core/ls' }
+end

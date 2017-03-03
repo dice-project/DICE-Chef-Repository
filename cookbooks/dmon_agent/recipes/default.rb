@@ -97,3 +97,12 @@ http_request 'Register node on DMon master' do
   }.to_json)
   headers 'Content-Type' => 'application/json'
 end
+
+roles = node['cloudify']['properties']['monitoring']['roles']
+set_role 'Setting node role (ONLY FIRST ROLE)' do
+  role roles[0]
+  dmon dmon_master
+  hostname node['hostname']
+
+  only_if { !roles.empty? }
+end
