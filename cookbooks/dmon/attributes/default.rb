@@ -36,8 +36,8 @@ default['dmon']['es']['checksum'] =
   'ed70cc81e1f55cd5f0032beea2907227b6ad8e7457dcb75ddc97a2cc6e054d30'
 default['dmon']['es']['install_dir'] = '/opt/elasticsearch'
 default['dmon']['es']['cluster_name'] = "diceMonit"
-default['dmon']['es']['core_heap'] = "1g"
-default['dmon']['es']['host_FQDN'] = "monitor"
+default['dmon']['es']['heap_size'] =
+  "#{node['memory']['total'][/\d*/].to_i / 2_000_000}g"
 default['dmon']['es']['ip'] = "127.0.0.1"
 default['dmon']['es']['node_name'] = "esCoreMaster"
 default['dmon']['es']['port'] = 9200
@@ -60,7 +60,7 @@ default['dmon']['ls']['checksum'] =
   'a7c55428aabdf2a2143f5907f3e5bb4bfba897f17359142e4dae70d7b446591e'
 default['dmon']['ls']['install_dir'] = '/opt/logstash'
 default['dmon']['ls']['cluster_name'] = "diceMonit"
-default['dmon']['ls']['core_heap'] = "512m"
+default['dmon']['ls']['heap_size'] = '1g'
 default['dmon']['ls']['host_FQDN'] = "monitor"
 default['dmon']['ls']['ip'] = "127.0.0.1"
 default['dmon']['ls']['l_port'] = 5000

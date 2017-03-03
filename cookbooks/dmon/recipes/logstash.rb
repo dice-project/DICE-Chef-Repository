@@ -81,6 +81,7 @@ template '/etc/init/dmon-ls.conf' do
     group: dmon_group,
     install_dir: install_dir,
     conf_file: "#{node['dmon']['install_dir']}/src/conf/logstash.conf",
-    log_file: "#{node['dmon']['install_dir']}/src/logs/logstash.log"
+    log_file: "#{node['dmon']['install_dir']}/src/logs/logstash.log",
+    heap_size: node['dmon']['ls']['heap_size']
   )
 end

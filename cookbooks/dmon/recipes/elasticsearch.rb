@@ -18,6 +18,7 @@
 install_dir = node['dmon']['es']['install_dir']
 dmon_user = node['dmon']['user']
 dmon_group = node['dmon']['group']
+heap_size = node['dmon']['es']['heap_size']
 
 es_tar = "#{Chef::Config[:file_cache_path]}/es.tar.gz"
 remote_file es_tar do
@@ -59,7 +60,8 @@ template '/etc/init/dmon-es.conf' do
   variables(
     user: dmon_user,
     group: dmon_group,
-    install_dir: install_dir
+    install_dir: install_dir,
+    heap_size: heap_size
   )
 end
 
