@@ -49,11 +49,6 @@ describe service('dmon_agent') do
   it { should be_running }
 end
 
-describe file('/var/log/dmon.log') do
-  it { should be_file }
-  it { should contain 'PUT /dmon/v1/overlord/nodes' }
-end
-
 describe package('collectd') do
   it { should be_installed }
 end
