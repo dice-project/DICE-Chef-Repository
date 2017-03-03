@@ -64,6 +64,10 @@ template '/etc/init/kibana.conf' do
   )
 end
 
+cookbook_file '/opt/kibana/optimize/bundles/src/ui/public/images/kibana.svg' do
+  source 'kibana.svg'
+end
+
 service 'kibana' do
   action [:enable, :start]
 end
