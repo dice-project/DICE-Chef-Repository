@@ -44,11 +44,11 @@ template "#{install_dir}/config/elasticsearch.yml" do
   owner dmon_user
   group dmon_group
   action :create
-  variables({
-    :clusterName => node['dmon']['es']['cluster_name'],
-    :nodeName => node['dmon']['es']['node_name'],
-    :esLogDir => "#{node['dmon']['install_dir']}/src/logs"
-  })
+  variables(
+    clusterName: node['dmon']['es']['cluster_name'],
+    nodeName: node['dmon']['es']['node_name'],
+    esLogDir: "#{node['dmon']['install_dir']}/src/logs"
+  )
 end
 
 execute 'Setting es permissions' do
