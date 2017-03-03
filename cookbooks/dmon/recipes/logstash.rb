@@ -55,6 +55,13 @@ bash 'Create Lumberjack certificate' do
   user dmon_user
 end
 
+ruby_block 'Store lumberjack crt' do
+  block do
+    node.default['cloudify']['runtime_properties']['lsf_crt'] =
+      IO.read("#{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt")
+  end
+end
+
 bash 'logrotate' do
   code <<-EOH
     echo "#{node['dmon']['install_dir']}/src/logs/logstash.log{
