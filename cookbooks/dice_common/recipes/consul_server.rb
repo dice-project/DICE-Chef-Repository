@@ -23,7 +23,5 @@ template '/etc/init/consul-server.conf' do
 end
 
 service 'consul-server' do
-  supports status: true, restart: true
-  provider Chef::Provider::Service::Upstart if node['platform'] == 'ubuntu'
-  action :start
+  action [:enable, :start]
 end
