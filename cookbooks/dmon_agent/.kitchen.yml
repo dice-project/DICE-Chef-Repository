@@ -22,7 +22,7 @@ suites:
         node_id: sample_id
         deployment_id: sample_id
         properties:
-          monitoring: &monitoring_config
+          monitoring:
             enabled: true
             dmon_address: 127.0.0.1:5001
             logstash_lumberjack_address: 10.211.55.100:5000
@@ -60,7 +60,7 @@ suites:
         node_id: sample_id
         deployment_id: sample_id
         properties:
-          monitoring: &monitoring_config
+          monitoring:
             enabled: true
             dmon_address: 127.0.0.1:5001
             logstash_lumberjack_address: 10.211.55.100:5000
@@ -79,5 +79,13 @@ suites:
       - recipe[dmon_agent::default]
       - recipe[dmon_agent::collectd]
       - recipe[dmon_agent::cassandra]
+    attributes:
+      cloudify: *cfy_config
+
+  - name: node_removal
+    run_list:
+      - recipe[dice_common::host]
+      - recipe[dmon_agent::mock_dmon]
+      - recipe[dmon_agent::remove_node]
     attributes:
       cloudify: *cfy_config
