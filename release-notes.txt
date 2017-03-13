@@ -1,3 +1,21 @@
+New in v.0.1.10:
+
+* Added a recipe for removing monitored node from DICE Deployment
+  Service.
+* DICE Monitoring now has an increased default heap sizes for
+  elasticsearch and logstash.
+* Improved generating the lumberjack certificate and handling it in
+  runtime properties.
+* Rebranded Kibana installation to display DICE logo in the banner.
+* Blueprints can now set node roles for DICE.
+* Fix lumberjack certificate generation 
+* c8e221f Generate DDS certificate on the spot if needed 
+* Added recipe for deploying DICE Continuous Integration: deployment of
+  Jenkins and installing the DICE Jenkins plug-in.
+* Enables DICE deployment service to be available over https.
+* Enables DICE Deployment Service as a client to the Cloudify Manager
+  secured with HTTPS.
+
 New in v.0.1.9:
 
 * CentOS 7 is now supported platform for Cassandra and dice_common cookbooks.
