@@ -52,7 +52,6 @@ bash 'Create Lumberjack certificate' do
       -out    #{node['dmon']['install_dir']}/src/keys/logstash-forwarder.crt \
       -keyout #{node['dmon']['install_dir']}/src/keys/logstash-forwarder.key
     EOF
-  user dmon_user
 end
 
 ruby_block 'Store lumberjack crt' do
