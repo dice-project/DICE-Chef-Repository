@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+# Only setup hostname once
+marker = 'DICE-HOSTNAME-SET'
+return unless File.open('/etc/hosts', 'r').read.index(/#{marker}/).nil?
+
 # hostname format:
 #  * deployment marker (6 characters)
 #  * node id (max 40 characters)
@@ -34,4 +38,5 @@ node.default['cloudify']['runtime_properties']['fqdn'] = fqdn
 
 set_hostname hostname do
   fqdn fqdn
+  marker marker
 end

@@ -2,6 +2,7 @@ resource_name 'set_hostname'
 
 property :hostname, String, name_property: true
 property :fqdn, String
+property :marker, String
 
 action :set do
   ohai 'reload hostname' do
@@ -30,7 +31,9 @@ action :set do
     owner 'root'
     group 'root'
     mode 0644
-    variables ip: node['ipaddress'], fqdn: fqdn, hostname: hostname
+    variables(
+      ip: node['ipaddress'], fqdn: fqdn, hostname: hostname, marker: marker
+    )
   end
 end
 
