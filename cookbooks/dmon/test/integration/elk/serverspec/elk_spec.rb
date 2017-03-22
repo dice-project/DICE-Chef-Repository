@@ -12,22 +12,22 @@ describe user('ubuntu') do
   it { should have_login_shell '/bin/bash' }
 end
 
-describe file('/opt/IeAT-DICE-Repository') do
+describe file('/opt/DICE-Monitoring') do
   it { should be_directory }
   it { should be_owned_by 'ubuntu' }
 end
 
-describe file('/opt/IeAT-DICE-Repository/src/logs/dmon-controller.log') do
+describe file('/opt/DICE-Monitoring/src/logs/dmon-controller.log') do
   it { should be_file }
   it { should be_owned_by 'ubuntu' }
 end
 
-describe file('/opt/IeAT-DICE-Repository/dmonEnv') do
+describe file('/opt/DICE-Monitoring/dmonEnv') do
   it { should be_directory }
   it { should be_owned_by 'ubuntu' }
 end
 
-describe command('. /opt/IeAT-DICE-Repository/dmonEnv/bin/activate') do
+describe command('. /opt/DICE-Monitoring/dmonEnv/bin/activate') do
   its(:exit_status) { should eq 0 }
 end
 
@@ -53,7 +53,7 @@ describe file('/opt/elasticsearch/config/elasticsearch.yml') do
   it { should contain('diceMonit').from(/cluster.name:/).to(/#/) }
   it { should contain('esCoreMaster').from(/node.name:/).to(/#/) }
   it do
-    should contain('/opt/IeAT-DICE-Repository/src/logs')
+    should contain('/opt/DICE-Monitoring/src/logs')
       .from(/path.logs:/).to(/#/)
   end
 end
@@ -69,11 +69,11 @@ describe file('/opt/kibana/config/kibana.yml') do
   it { should contain('127.0.0.1').from(/elasticsearch.url:/).to(/#/) }
   it { should contain('9200').from(/elasticsearch.url:/).to(/#/) }
   it do
-    should contain('/opt/IeAT-DICE-Repository/src/pid/kibana.pid')
+    should contain('/opt/DICE-Monitoring/src/pid/kibana.pid')
       .from(/pid.file:/).to(/#/)
   end
   it do
-    should contain('/opt/IeAT-DICE-Repository/src/logs/kibana.log')
+    should contain('/opt/DICE-Monitoring/src/logs/kibana.log')
       .from(/logging.dest:/).to(/#/)
   end
 end
@@ -83,13 +83,13 @@ describe file('/opt/logstash') do
   it { should be_owned_by 'ubuntu' }
 end
 
-describe file('/opt/IeAT-DICE-Repository/src/logs/logstash.log') do
+describe file('/opt/DICE-Monitoring/src/logs/logstash.log') do
   it { should be_file }
   it { should be_owned_by 'ubuntu' }
 end
 
-private_key = '/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder.key'
-certificate = '/opt/IeAT-DICE-Repository/src/keys/logstash-forwarder.crt'
+private_key = '/opt/DICE-Monitoring/src/keys/logstash-forwarder.key'
+certificate = '/opt/DICE-Monitoring/src/keys/logstash-forwarder.crt'
 
 describe x509_certificate(certificate) do
   it { should be_certificate }
