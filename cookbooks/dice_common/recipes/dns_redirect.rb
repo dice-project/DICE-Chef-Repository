@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+execute 'chattr -i /etc/resolv.conf' do
+  not_if { File.symlink?('/etc/resolv.conf') }
+end
+
 file '/etc/resolv.conf' do
   manage_symlink_source false
   action :delete
