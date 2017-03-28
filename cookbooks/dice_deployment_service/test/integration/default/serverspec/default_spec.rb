@@ -95,3 +95,7 @@ end
     it { should be_listening.with('tcp') }
   end
 end
+
+describe service('postgres') do
+  it { should be_running }
+end

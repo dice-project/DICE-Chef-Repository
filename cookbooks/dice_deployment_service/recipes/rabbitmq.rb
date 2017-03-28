@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+package 'rabbitmq-server'
+
 service 'rabbitmq-server' do
   action :nothing
 end

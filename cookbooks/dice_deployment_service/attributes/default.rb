@@ -28,6 +28,9 @@ default['dice_deployment_service']['upload_limit'] = '2000m'
 default['dice_deployment_service']['app_venv'] =
   "#{node['dice_deployment_service']['app_prefix']}/venv"
 
+# DB attributes
+default['dice_deployment_service']['db_name'] = 'dds'
+
 # Cloudify provided attributes (do not uncomment this, this is here for
 # documentation purpose only):
 #

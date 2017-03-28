@@ -5,3 +5,10 @@ CFY_MANAGER_PASSWORD = "<%= @manager_password %>"
 <% unless @manager_cacert.nil? %>
 CFY_MANAGER_CACERT = "<%= @manager_cacert %>"
 <% end %>
+
+DATABASES = {
+  "default": {
+    "ENGINE": "django.db.backends.postgresql_psycopg2",
+    "NAME": "<%= @db_name %>",
+  }
+}

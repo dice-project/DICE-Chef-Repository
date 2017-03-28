@@ -39,7 +39,7 @@ file "/home/#{dice_user}/.ssh/authorized_keys" do
 end
 
 # Installation of system packages
-package ['rabbitmq-server', 'npm', 'git']
+package ['npm', 'git']
 
 # Nodejs fixups
 link '/usr/bin/node' do
@@ -101,6 +101,13 @@ remote_file cfy_crt_target do
   not_if { cfy_crt_source.nil? }
 end
 
+# Install postgres connector
+python_package 'psycopg2' do
+  virtualenv app_venv
+  user dice_user
+  group dice_user
+end
+
 # Create local settings
 template "#{app_folder}/dice_deploy/local_settings.py" do
   source 'local_settings.py.erb'
@@ -109,7 +116,8 @@ template "#{app_folder}/dice_deploy/local_settings.py" do
     manager_username: node['cloudify']['properties']['manager_user'],
     manager_cacert: cfy_crt_source.nil? ? nil : cfy_crt_target,
     manager_protocol: node['cloudify']['properties']['manager_protocol'],
-    manager_password: node['cloudify']['properties']['manager_pass']
+    manager_password: node['cloudify']['properties']['manager_pass'],
+    db_name: node['dice_deployment_service']['db_name']
   )
   owner dice_user
   group dice_user
