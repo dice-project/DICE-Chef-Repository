@@ -1,7 +1,7 @@
 import os
 import socket
 
-from pyDMON import db, dbSCore, dbESCore, dbKBCore
+from pyDMON import db, dbSCore, dbESCore, dbKBCore, dbMetPer
 
 
 logstash = dbSCore(hostFQDN=socket.getfqdn(),
@@ -30,5 +30,8 @@ kibana = dbKBCore(hostFQDN=socket.getfqdn(),
                   hostOS='ubuntu',
                   kbPort=5601)
 db.session.add(kibana)
+
+metrics = dbMetPer(sysMet="15", yarnMet="15", sparkMet="5", stormMet="30")
+db.session.add(metrics)
 
 db.session.commit()
