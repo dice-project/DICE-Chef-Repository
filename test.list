@@ -6,6 +6,7 @@ dice_continuous_integration
 dmon_agent
 hadoop
 kafka
+mongodb
 spark
 storm
 zookeeper

@@ -1,0 +1,6 @@
+<%= render "mongod-standalone.conf.erb", variables: {ip: @ip} %>
+
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: <%= @replica_name %>

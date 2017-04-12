@@ -1,0 +1,97 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_zero
+
+platforms:
+  - name: ubuntu-14.04
+
+suites:
+
+  - name: standalone
+    run_list:
+      - recipe[apt::default]
+      - recipe[dice_common::host]
+      - recipe[mongodb::default]
+      - recipe[mongodb::configure]
+      - recipe[mongodb::start]
+    attributes:
+      cloudify:
+        node_id: sample_node_id
+        node_name: test_name
+        deployment_id: sample_deploy_id
+        properties: {}
+        runtime_properties: {}
+
+  - name: replica
+    run_list:
+      - recipe[apt::default]
+      - recipe[dice_common::host]
+      - recipe[mongodb::default]
+      - recipe[mongodb::configure]
+    attributes:
+      cloudify:
+        node_id: sample_node
+        node_name: test_replica
+        deployment_id: sample_deploy_id
+        properties:
+          bind_ip: global
+          type: replica
+        runtime_properties: {}
+
+  - name: config
+    run_list:
+      - recipe[apt::default]
+      - recipe[dice_common::host]
+      - recipe[mongodb::default]
+      - recipe[mongodb::configure]
+    attributes:
+      cloudify:
+        node_id: test_id
+        node_name: config_replica
+        deployment_id: sample_deploy_id
+        properties:
+          bind_ip: global
+          type: config
+        runtime_properties: {}
+
+  - name: shard
+    run_list:
+      - recipe[apt::default]
+      - recipe[dice_common::host]
+      - recipe[mongodb::default]
+      - recipe[mongodb::configure]
+    attributes:
+      cloudify:
+        node_id: test_id
+        node_name: shard_replica
+        deployment_id: sample_deploy_id
+        properties:
+          bind_ip: global
+          type: shard
+        runtime_properties: {}
+
+  - name: router
+    run_list:
+      - recipe[apt::default]
+      - recipe[dice_common::host]
+      - recipe[mongodb::default]
+      - recipe[mongodb::configure_router]
+      - recipe[mongodb::start]
+    attributes:
+      mongodb:
+        service: mongos
+      cloudify:
+        node_id: sample_node_id
+        node_name: sample_node_id
+        deployment_id: sample_deploy_id
+        properties:
+          bind_ip: global
+        runtime_properties:
+          replica_name: config_replica
+          members:
+            - host1
+            - host2
+            - host3
