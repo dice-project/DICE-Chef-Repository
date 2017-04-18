@@ -1,0 +1,7 @@
+db.getSiblingDB("admin").createUser(
+  {
+    user: "<%= @admin_user %>",
+    pwd: "<%= @admin_pass %>",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+);

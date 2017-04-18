@@ -27,6 +27,8 @@ default['mongodb']['apt']['components'] = ['multiverse']
 # Service info
 default['mongodb']['service'] = 'mongod' # Can also be mongos for router
 
+default['mongodb']['local_admin'] = 'node_admin'
+
 # Orchestrator provided data
 # node['cloudify']['properties']['type'] can be
 #   - standalone, in which case this node is not part of any replica/shard,
