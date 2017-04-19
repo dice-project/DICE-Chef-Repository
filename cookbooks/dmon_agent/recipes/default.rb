@@ -3,19 +3,7 @@ Chef::Recipe.send(:include, DmonAgent::Helper)
 return if skip_installation?
 
 dmon_master = node['cloudify']['properties']['monitoring']['dmon_address']
-dmon_user = node['dmon_agent']['user']
-dmon_group = node['dmon_agent']['group']
 dmon_install_dir = node['dmon_agent']['install_dir']
-
-group dmon_group
-
-user dmon_user do
-  group dmon_group
-  home node['dmon_agent']['home_dir']
-  manage_home true
-  system true
-  shell '/bin/bash'
-end
 
 # NOTE: There is no separate package for dmon agent at the moment and we
 # actually download complete dmon repo. Just something to keep in mind.
@@ -36,50 +24,7 @@ bash 'Get agent subfolder' do
   code <<-EOH
     [[ -d #{dmon_install_dir} ]] || \
       mv -f #{dmon_dir}/dmon-agent #{dmon_install_dir}
-    chown #{dmon_user}:#{dmon_group} #{dmon_install_dir}
     EOH
-end
-
-%w(pid log cert lock).each do |dir|
-  directory "#{dmon_install_dir}/#{dir}" do
-    owner dmon_user
-    group dmon_group
-    action :create
-  end
-end
-
-python_runtime 'dmonPy' do
-  version '2.7'
-end
-
-python_virtualenv 'dmonEnv' do
-  path "#{dmon_install_dir}/dmonEnv"
-  python 'dmonPy'
-  user dmon_user
-  group dmon_group
-end
-
-pip_requirements 'dmonPip' do
-  path "#{dmon_install_dir}/requirements.txt"
-  virtualenv 'dmonEnv'
-  user dmon_user
-  group dmon_group
-  not_if { File.exist? "#{dmon_install_dir}/lock/agent.lock" }
-end
-
-time = Time.new.strftime('%Y.%m.%d-%H.%M.%S')
-file "#{dmon_install_dir}/lock/agent.lock" do
-  content "Installed on: #{time}"
-  owner dmon_user
-  group dmon_group
-end
-
-template '/etc/init/dmon_agent.conf' do
-  source 'dmon_agent.conf.erb'
-end
-
-service 'dmon_agent' do
-  action [:enable, :start]
 end
 
 http_request 'Register node on DMon master' do
@@ -100,9 +45,9 @@ end
 
 roles = node['cloudify']['properties']['monitoring']['roles']
 set_role 'Setting node role (ONLY FIRST ROLE)' do
-  role roles[0]
+  role roles.empty? ? '' : roles[0] # To satisfy strict checking in Chef 13
   dmon dmon_master
   hostname node['hostname']
 
-  only_if { !roles.empty? }
+  not_if { roles.empty? }
 end

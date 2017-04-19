@@ -1,8 +1,5 @@
 # General attributes
-default['dmon_agent']['group'] = 'dmon-agent'
-default['dmon_agent']['user'] = 'dmon-agent'
-default['dmon_agent']['home_dir'] = '/home/dmon-agent'
-default['dmon_agent']['install_dir'] = '/home/dmon-agent/dmon-agent'
+default['dmon_agent']['install_dir'] = '/opt/dmon-agent'
 default['dmon_agent']['tarball'] =
   'https://github.com/dice-project/DICE-Monitoring/archive/v0.2.3.tar.gz'
 default['dmon_agent']['checksum'] =

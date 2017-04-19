@@ -61,12 +61,7 @@ dmon.
 
 # Attributes
 
-### General
-* `['dmon_agent']['group']` - group of the user who runs dmon_agent
-* `['dmon_agent']['user']` - user who runs dmon_agent
-* `['dmon_agent']['home_dir']` - directory of dmon_agent installation
 * `['dmon_agent']['tarball']` - tar url of dmon_agent release
-* `['dmon_agent']['node_ip']` - ip of dmon_agent - for testing only
 
 ### Dmon
 * `['dmon_agent']['dmon']['ip']` - ip of dmon
