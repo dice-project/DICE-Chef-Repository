@@ -17,24 +17,22 @@
 # limitations under the License.
 #
 
-template '/etc/init/consul-agent.conf' do
-  source 'consul-agent.conf.erb'
-  variables(
-    master: node['cloudify']['properties']['dns_server'],
-    bind: node['ipaddress'],
-    data: '/var/lib/consul'
-  )
-  only_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
+is_ubuntu_1404 = platform?('ubuntu') && node['platform_version'] == '14.04'
+if is_ubuntu_1404
+  service_file = '/etc/init/consul-agent.conf'
+  service_template = 'consul-agent.conf.erb'
+else
+  service_file = '/etc/systemd/system/consul-agent.service'
+  service_template = 'consul-agent.service.erb'
 end
 
-template '/usr/lib/systemd/system/consul-agent.service' do
-  source 'consul-agent.service.erb'
+template service_file do
+  source service_template
   variables(
     master: node['cloudify']['properties']['dns_server'],
     bind: node['ipaddress'],
     data: '/var/lib/consul'
   )
-  not_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
 end
 
 service 'consul-agent' do
