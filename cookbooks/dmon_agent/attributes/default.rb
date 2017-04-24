@@ -8,6 +8,9 @@ default['dmon_agent']['checksum'] =
 # Apache Spark related attributes
 default['dmon_agent']['spark']['graphite']['period'] = 5
 
+# Mongo
+default['dmon_agent']['mongodb']['dmon_user'] = 'dmon'
+
 # Cloudify provided attributes
 #
 # node['cloudify']['properties']['monitoring'] contains the following keys:

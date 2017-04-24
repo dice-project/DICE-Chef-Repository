@@ -89,3 +89,18 @@ suites:
       - recipe[dmon_agent::remove_node]
     attributes:
       cloudify: *cfy_config
+#
+#  - name: mongo
+#    run_list:
+#      - recipe[apt::default]
+#      - recipe[dice_common::host]
+#      - recipe[mongodb::default]
+#      - recipe[mongodb::configure]
+#      - recipe[mongodb::start]
+#      - recipe[dmon_agent::mock_dmon]
+#      - recipe[dmon_agent::default]
+#      - recipe[dmon_agent::collectd]
+#      - recipe[dmon_agent::pymongo]
+#      - recipe[dmon_agent::mongo]
+#    attributes:
+#      cloudify: *cfy_config

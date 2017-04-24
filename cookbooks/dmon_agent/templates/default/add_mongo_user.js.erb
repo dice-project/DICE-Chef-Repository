@@ -1,0 +1,9 @@
+auth_db = db.getSiblingDB("<%= @auth_db %>");
+auth_db.auth("<%= @admin_user %>", "<%= @admin_pass %>");
+auth_db.createUser(
+  {
+    user: "<%= @user %>",
+    pwd: "<%= @pass %>",
+      roles: [ { role: "<%= @role %>", db: "<%= @auth_db %>" } ]
+  }
+);
