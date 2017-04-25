@@ -1,5 +1,5 @@
 #
-# Copyright 2015-2016, Noah Kantrowitz
+# Copyright 2015-2017, Noah Kantrowitz
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -170,11 +170,11 @@ EOH
                 python new_resource.name
                 user test_user
               end
-              python_package 'attrs' do
+              python_package 'docopt' do
                 user test_user
                 virtualenv test_venv
               end
-              test_import('attrs', 'attr', python: nil, virtualenv: test_venv, user: test_user)
+              test_import('docopt', python: nil, virtualenv: test_venv, user: test_user)
             end
           end
         end

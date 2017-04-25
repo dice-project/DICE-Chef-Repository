@@ -1,5 +1,5 @@
 #
-# Copyright 2015-2016, Noah Kantrowitz
+# Copyright 2015-2017, Noah Kantrowitz
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -125,7 +125,8 @@ module PoisePython
             end
           else
             converge_by("Creating venv at #{new_resource.path}") do
-              create_virtualenv(%w{venv --without-pip})
+              use_withoutpip = cmd.stdout.include?('--without-pip')
+              create_virtualenv(use_withoutpip ? %w{venv --without-pip} : %w{venv})
             end
           end
         end

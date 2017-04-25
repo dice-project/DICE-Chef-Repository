@@ -1,5 +1,5 @@
 #
-# Copyright 2015-2016, Noah Kantrowitz
+# Copyright 2015-2017, Noah Kantrowitz
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -99,19 +99,19 @@ EOH
         # @!attribute group
         #   System group to install the package.
         #   @return [String, Integer, nil]
-        attribute(:group, kind_of: [String, Integer, NilClass])
+        attribute(:group, kind_of: [String, Integer, NilClass], default: lazy { default_group })
         # @!attribute install_options
         #   Options string to be used with `pip install`.
-        #   @return [String, nil, false]
-        attribute(:install_options, kind_of: [String, NilClass, FalseClass], default: nil)
+        #   @return [String, Array<String>, nil, false]
+        attribute(:install_options, kind_of: [String, Array, NilClass, FalseClass], default: nil)
         # @!attribute list_options
         #   Options string to be used with `pip list`.
-        #   @return [String, nil, false]
-        attribute(:list_options, kind_of: [String, NilClass, FalseClass], default: nil)
+        #   @return [String, Array<String>, nil, false]
+        attribute(:list_options, kind_of: [String, Array, NilClass, FalseClass], default: nil)
         # @!attribute user
         #   System user to install the package.
         #   @return [String, Integer, nil]
-        attribute(:user, kind_of: [String, Integer, NilClass])
+        attribute(:user, kind_of: [String, Integer, NilClass], default: lazy { default_user })
 
         def initialize(*args)
           super
@@ -140,6 +140,35 @@ EOH
         # (see #response_file)
         def source(arg=nil)
           raise NoMethodError if arg
+        end
+
+        private
+
+        # Find a default group, if any, from the parent Python.
+        #
+        # @api private
+        # @return [String, Integer, nil]
+        def default_group
+          # Use an explicit is_a? hack because python_runtime is a container so
+          # it gets the whole DSL and this will always respond_to?(:group).
+          if parent_python && parent_python.is_a?(PoisePython::Resources::PythonVirtualenv::Resource)
+            parent_python.group
+          else
+            nil
+          end
+        end
+
+        # Find a default user, if any, from the parent Python.
+        #
+        # @api private
+        # @return [String, Integer, nil]
+        def default_user
+          # See default_group for explanation of is_a? hack grossness.
+          if parent_python && parent_python.is_a?(PoisePython::Resources::PythonVirtualenv::Resource)
+            parent_python.user
+          else
+            nil
+          end
         end
       end
 
@@ -268,9 +297,15 @@ EOH
           runner = opts.delete(:pip_runner) || %w{-m pip.__main__}
           type_specific_options = new_resource.send(:"#{options_type}_options")
           full_cmd = if new_resource.options || type_specific_options
-            # We have to use a string for this case to be safe because the
-            # options are a string and I don't want to try and parse that.
-            "#{runner.join(' ')} #{pip_command} #{new_resource.options} #{type_specific_options} #{Shellwords.join(pip_options)}"
+            if (new_resource.options && new_resource.options.is_a?(String)) || (type_specific_options && type_specific_options.is_a?(String))
+              # We have to use a string for this case to be safe because the
+              # options are a string and I don't want to try and parse that.
+              global_options = new_resource.options.is_a?(Array) ? Shellwords.join(new_resource.options) : new_resource.options.to_s
+              type_specific_options = type_specific_options.is_a?(Array) ? Shellwords.join(type_specific_options) : type_specific_options.to_s
+              "#{runner.join(' ')} #{pip_command} #{global_options} #{type_specific_options} #{Shellwords.join(pip_options)}"
+            else
+              runner + (pip_command ? [pip_command] : []) + (new_resource.options || []) + (type_specific_options || []) + pip_options
+            end
           else
             # No special options, use an array to skip the extra /bin/sh.
             runner + (pip_command ? [pip_command] : []) + pip_options

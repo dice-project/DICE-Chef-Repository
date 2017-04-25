@@ -2,10 +2,10 @@
 # Author:: Seth Chisamore (<schisamo@chef.io>)
 # Author:: Joshua Timberman (<joshua@chef.io>)
 #
-# Cookbook Name:: java
+# Cookbook:: java
 # Recipe:: openjdk
 #
-# Copyright 2010-2015, Chef Software, Inc.
+# Copyright:: 2010-2015, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -43,7 +43,6 @@ if platform_requires_license_acceptance?
 end
 
 if node['platform'] == 'ubuntu'
-  include_recipe 'apt'
   apt_repository 'openjdk-r-ppa' do
     uri 'ppa:openjdk-r'
     distribution node['lsb']['codename']
@@ -75,11 +74,6 @@ end
 
 if node['java']['set_default'] && platform_family?('debian')
   include_recipe 'java::default_java_symlink'
-end
-
-# Ugly fix for java 8 on ubuntu 14.04
-execute 'update-ca-certificates -f' do
-  only_if { node['platform'] == 'ubuntu' && node['platform_version'] == '14.04' }
 end
 
 # We must include this recipe AFTER updating the alternatives or else JAVA_HOME

@@ -1,8 +1,8 @@
 #
-# Cookbook Name:: apt
+# Cookbook:: apt
 # Attributes:: default
 #
-# Copyright 2009-2016, Chef Software, Inc.
+# Copyright:: 2009-2017, Chef Software, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ default['apt']['unattended_upgrades']['update_package_lists'] = true
 # this needs a good default
 codename = node.attribute?('lsb') ? node['lsb']['codename'] : 'notlinux'
 default['apt']['unattended_upgrades']['allowed_origins'] = [
-  "#{node['platform'].capitalize} #{codename}"
+  "#{node['platform'].capitalize} #{codename}",
 ]
 
 default['apt']['cacher_client']['cacher_server'] = {}
@@ -48,5 +48,10 @@ default['apt']['unattended_upgrades']['automatic_reboot_time'] = 'now'
 default['apt']['unattended_upgrades']['dl_limit'] = nil
 default['apt']['unattended_upgrades']['random_sleep'] = nil
 
+default['apt']['confd']['force_confask'] = false
+default['apt']['confd']['force_confdef'] = false
+default['apt']['confd']['force_confmiss'] = false
+default['apt']['confd']['force_confnew'] = false
+default['apt']['confd']['force_confold'] = false
 default['apt']['confd']['install_recommends'] = true
 default['apt']['confd']['install_suggests'] = false

@@ -2,6 +2,51 @@ Java Cookbook CHANGELOG
 =======================
 This file is used to list changes made in each version of the Java cookbook.
 
+v1.49.0 - 04/21/2017
+----
+- potential 'curl' resource cloning #415
+- Oracle 8u131
+- Add chefspec matchers for java_certificate resource
+- Remove unnecessary apt update
+
+v1.48.0 - 03/31/2017
+----
+- Update Oracle Java links from 101 to 121
+- Remove convergence report
+- Remove Fedora 24 testing
+- Fix test cookbook license
+- Update platforms in the specs
+- Remove testing on EOL platforms
+
+v1.47.0 - 01/30/2017
+-----
+- Fix typo in method name (#397)
+- Remove useless ruby_block[set-env-java-home]
+- Update README: using java::notify
+- Add forgotten "do" to README
+
+v1.46.0 - 01/09/2017
+-----
+- fix jce installation on windows #386
+
+v1.45.0 - 12/27/2016
+-----
+- Update to resolve latest rubocop rules
+
+v1.44.0 - 12/27/2016
+-----
+- Unpublished due to newer rubocop rules in travis
+- Added zlinux defaults
+
+v1.43.0 - 12/6/2016
+-----
+- Switch recursive chown from executing on the jdk parent directory to executing on the jdk directory itself.
+- Added proxy support to curl
+- add java_certificate LWRP from java-libraries cookbook - java-libraries now depricated.
+- (Windows) support removal of obsolete JREs via optional attribute
+- (Windows) Can download from s3 only using an IAM profile
+- (Windows) aws session token for windows java download
+
 v1.42.0 - 8/8/2016
 -----
 - Use openjdk ppa for all ubuntu versions to allow for older/newer jdks to be installed. Fixes #368

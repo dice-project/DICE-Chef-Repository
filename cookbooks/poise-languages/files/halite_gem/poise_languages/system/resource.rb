@@ -1,5 +1,5 @@
 #
-# Copyright 2015-2016, Noah Kantrowitz
+# Copyright 2015-2017, Noah Kantrowitz
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -133,10 +133,11 @@ module PoiseLanguages
         end
 
         Chef::Log.debug("[#{new_resource.parent}] Building package resource using #{packages.inspect}.")
+        package_resource_class = Chef::Resource.resource_for_node(:package, node)
         @package_resource ||= if node.platform_family?('rhel', 'fedora', 'amazon', 'mac_os_x')
           # @todo Can't use multi-package mode with yum pending https://github.com/chef/chef/issues/3476.
           packages.map do |name, version|
-            Chef::Resource::Package.new(name, run_context).tap do |r|
+            package_resource_class.new(name, run_context).tap do |r|
               r.version(version)
               r.action(action)
               r.declared_type = :package
@@ -144,7 +145,7 @@ module PoiseLanguages
             end
           end
         else
-          [Chef::Resource::Package.new(packages.keys, run_context).tap do |r|
+          [package_resource_class.new(packages.keys, run_context).tap do |r|
             r.version(packages.values)
             r.action(action)
             r.declared_type = :package
@@ -194,8 +195,14 @@ module PoiseLanguages
                 # In Chef 12.14+, candidate_version is a Chef::Decorator::Lazy object
                 # so we need the nil? check to see if the object being proxied is
                 # nil (i.e. there is no version).
-                unless candidate_version && (!candidate_version.nil?) && candidate_version.start_with?(version)
-                  raise PoiseLanguages::Error.new("Package #{package_name} would install #{candidate_version}, which does not match #{version.empty? ? version.inspect : version}. Please set the package_name or package_version provider options.")
+                unless candidate_version && (!candidate_version.nil?) && (!candidate_version.empty?) && candidate_version.start_with?(version)
+                  # Don't display a wonky error message if there is no candidate.
+                  candidate_label = if candidate_version && (!candidate_version.nil?) && (!candidate_version.empty?)
+                    candidate_version
+                  else
+                    candidate_version.inspect
+                  end
+                  raise PoiseLanguages::Error.new("Package #{package_name} would install #{candidate_label}, which does not match #{version.empty? ? version.inspect : version}. Please set the package_name or package_version provider options.")
                 end
               end
             end
