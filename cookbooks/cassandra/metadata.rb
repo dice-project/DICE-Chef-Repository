@@ -6,3 +6,4 @@ description 'Configure and start Apache Cassandra'
 version '0.1.1'
 
 depends 'poise-archive'
+depends 'dice_common'

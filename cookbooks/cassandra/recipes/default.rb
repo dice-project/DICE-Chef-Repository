@@ -65,36 +65,12 @@ directory '/etc/cassandra' do
   action :create
 end
 
-template '/etc/init/cassandra.conf' do
-  source 'cassandra.conf.erb'
-  owner 'root'
-  group 'root'
-  mode 0755
+service_template 'cassandra' do
   variables(
     install_dir: install_dir,
     user: c_user,
     group: c_group,
   )
-  only_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
-end
-
-template '/etc/systemd/system/cassandra.service' do
-  source 'cassandra.service.erb'
-  owner 'root'
-  group 'root'
-  mode 0664
-  variables(
-    install_dir: install_dir,
-    user: c_user,
-    group: c_group,
-  )
-  notifies :run, 'execute[daemon-reload]', :immediately
-  not_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
-end
-
-execute 'daemon-reload' do
-  command 'systemctl daemon-reload'
-  action :nothing
 end
 
 template "/usr/bin/cqlsh" do
