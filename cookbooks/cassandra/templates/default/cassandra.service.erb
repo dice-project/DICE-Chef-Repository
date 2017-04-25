@@ -8,7 +8,6 @@ Group=<%= @group %>
 Environment="CASSANDRA_HOME=<%= @install_dir %>"
 Environment="CASSANDRA_CONF=/etc/cassandra"
 ExecStart=<%= @install_dir %>/bin/cassandra -f
-ExecStartPost=<%= @install_dir %>/bin/is-cassandra-up.sh <%= @timeout %>
 StandardOutput=journal
 StandardError=journal
 LimitNOFILE=100000

@@ -74,7 +74,6 @@ template '/etc/init/cassandra.conf' do
     install_dir: install_dir,
     user: c_user,
     group: c_group,
-    timeout: node['cassandra']['service_timeout']
   )
   only_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
 end
@@ -88,7 +87,6 @@ template '/etc/systemd/system/cassandra.service' do
     install_dir: install_dir,
     user: c_user,
     group: c_group,
-    timeout: node['cassandra']['service_timeout']
   )
   notifies :run, 'execute[daemon-reload]', :immediately
   not_if { platform?('ubuntu') && node['platform_version'] == '14.04' }
@@ -106,12 +104,4 @@ template "/usr/bin/cqlsh" do
   group 'root'
   action :create
   variables install_dir: install_dir
-end
-
-cookbook_file "#{install_dir}/bin/is-cassandra-up.sh" do
-  source 'is-cassandra-up.sh'
-  owner c_user
-  group c_group
-  mode '0755'
-  action :create
 end

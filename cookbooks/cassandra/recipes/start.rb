@@ -18,3 +18,8 @@
 service 'cassandra' do
   action [:enable, :start]
 end
+
+execute 'cqlsh -e "show version"' do
+  retries node['cassandra']['connection_retries']
+  retry_delay node['cassandra']['connection_sleep_seconds']
+end

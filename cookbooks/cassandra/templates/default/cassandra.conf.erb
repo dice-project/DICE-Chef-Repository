@@ -21,7 +21,3 @@ limit memlock unlimited unlimited
 script
   <%= @install_dir %>/bin/cassandra -f > /dev/null 2>&1
 end script
-
-post-start script
-  <%= @install_dir %>/bin/is-cassandra-up.sh <%= @timeout %>
-end script
