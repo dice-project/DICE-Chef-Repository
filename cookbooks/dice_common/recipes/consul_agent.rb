@@ -17,17 +17,7 @@
 # limitations under the License.
 #
 
-is_ubuntu_1404 = platform?('ubuntu') && node['platform_version'] == '14.04'
-if is_ubuntu_1404
-  service_file = '/etc/init/consul-agent.conf'
-  service_template = 'consul-agent.conf.erb'
-else
-  service_file = '/etc/systemd/system/consul-agent.service'
-  service_template = 'consul-agent.service.erb'
-end
-
-template service_file do
-  source service_template
+service_template 'consul-agent' do
   variables(
     master: node['cloudify']['properties']['dns_server'],
     bind: node['ipaddress'],
