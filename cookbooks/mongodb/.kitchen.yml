@@ -72,7 +72,6 @@ suites:
       - recipe[dice_common::host]
       - recipe[mongodb::default]
       - recipe[mongodb::configure_router]
-      - recipe[mongodb::start]
     attributes:
       mongodb:
         service: mongos
