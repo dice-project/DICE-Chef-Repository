@@ -1,19 +1,8 @@
 ---
-driver:
-  name: vagrant
-  network:
-    - ["private_network", {type: "dhcp"}]
-  customize:
-    memory: 2048
-
-provisioner:
-  name: chef_zero
-
-platforms:
-  - name: ubuntu-14.04
-
 suites:
   - name: master-16
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
@@ -36,6 +25,8 @@ suites:
         runtime_properties: {}
 
   - name: master-20
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
@@ -56,6 +47,8 @@ suites:
         runtime_properties: {}
 
   - name: worker-16
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
@@ -77,6 +70,8 @@ suites:
           master_ip: 172.28.128.8
 
   - name: worker-20
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]

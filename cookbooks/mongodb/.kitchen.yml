@@ -1,13 +1,4 @@
 ---
-driver:
-  name: vagrant
-
-provisioner:
-  name: chef_zero
-
-platforms:
-  - name: ubuntu-14.04
-
 suites:
 
   - name: standalone
@@ -74,6 +65,8 @@ suites:
         runtime_properties: {}
 
   - name: router
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[apt::default]
       - recipe[dice_common::host]

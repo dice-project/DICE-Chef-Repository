@@ -1,15 +1,8 @@
 ---
-driver:
-  name: vagrant
-
-provisioner:
-  name: chef_zero
-
-platforms:
-  - name: ubuntu-14.04
-
 suites:
   - name: storm
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
@@ -32,6 +25,8 @@ suites:
             roles: []
 
   - name: spark
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
@@ -49,6 +44,8 @@ suites:
   # monitoring hadoop cluster. When we have actual recipe for hadoop, this can
   # be simply updated a bit.
   - name: hadoop
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
@@ -72,6 +69,8 @@ suites:
               - role_2
 
   - name: cassandra
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]

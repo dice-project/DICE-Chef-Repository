@@ -1,18 +1,9 @@
 ---
-driver:
-  name: vagrant
-  customize:
-    memory: 2048
-
-provisioner:
-  name: chef_zero
-
-platforms:
-  - name: ubuntu-14.04
-
 suites:
 
   - name: kafka
+    excludes:
+      - ubuntu-16.04
     run_list:
       - recipe[dice_common::host]
       - recipe[apt::default]
