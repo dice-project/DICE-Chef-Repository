@@ -1,0 +1,14 @@
+[Unit]
+Description=MongoDB
+After=network.target
+
+[Service]
+User=mongodb
+Group=mongodb
+ExecStart=/usr/bin/mongos --config /etc/mongod.conf
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+

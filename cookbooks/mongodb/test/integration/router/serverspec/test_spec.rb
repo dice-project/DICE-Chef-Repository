@@ -13,3 +13,8 @@ end
 describe service('mongod') do
   it { should_not be_enabled }
 end
+
+# This will check if service is present
+describe service('mongos') do
+  it { should_not be_enabled }
+end

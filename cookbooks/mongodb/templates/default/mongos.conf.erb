@@ -3,7 +3,7 @@ description "MongoDB shard router service"
 limit nofile 20000 20000
 kill timeout 60
 
-start on (local-filesystems and net-device-up IFACE=eth0)
+start on started network-services
 stop on runlevel [016]
 
 setuid mongodb

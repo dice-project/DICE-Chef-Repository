@@ -31,9 +31,7 @@ service 'mongod' do
   action [:disable, :stop]
 end
 
-cookbook_file '/etc/init/mongos.conf' do
-  source 'mongos.conf'
-end
+service_template 'mongos'
 
 service 'mongos' do
   action [:disable, :stop]
