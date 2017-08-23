@@ -14,14 +14,18 @@ setuid <%= @user %>
 setgid <%= @group %>
 
 env heap_size="<%= @heap_size %>"
+env core_workers=<%= @core_workers %>
+
 
 script
 
   HOME="<%= @install_dir %>"
   LS_JAVA_OPTS="-Djava.io.tmpdir=<%= @install_dir %>"
   LS_HEAP_SIZE="$heap_size"
-  export HOME LS_HEAP_SIZE LS_JAVA_OPTS
+  LS_WORKERS=$core_workers
+  export HOME LS_HEAP_SIZE LS_JAVA_OPTS LS_WORKERS
   exec <%= @install_dir %>/bin/logstash agent -f <%= @conf_file %> \
-    -l <%= @log_file %>
+    -l <%= @log_file %> \
+    -w $core_workers
 
 end script

@@ -60,3 +60,4 @@ default['dmon']['ls']['checksum'] =
   'a7c55428aabdf2a2143f5907f3e5bb4bfba897f17359142e4dae70d7b446591e'
 default['dmon']['ls']['install_dir'] = '/opt/logstash'
 default['dmon']['ls']['heap_size'] = '1g'
+default['dmon']['ls']['core_workers'] = 2

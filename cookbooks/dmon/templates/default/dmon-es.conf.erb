@@ -13,6 +13,14 @@ limit nofile 32000 32000
 setuid <%= @user %>
 setgid <%= @group %>
 
-env ES_HEAP_SIZE=<%= @heap_size %>
+env heap_size="<%= @heap_size %>"
 
-exec <%= @install_dir %>/bin/elasticsearch
+script
+
+  ES_HEAP_SIZE="$heap_size"
+
+  export ES_HEAP_SIZE
+
+  exec <%= @install_dir %>/bin/elasticsearch
+
+end script
