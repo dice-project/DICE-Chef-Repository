@@ -23,9 +23,10 @@ default['dmon']['user'] = 'ubuntu'
 
 default['dmon']['tarball'] =
   'http://github.com/dice-project/DICE-Monitoring/archive/'\
-  '3487474c775b8ce5d04a5b3826597c4dd1d65721.tar.gz'
+  '483147e4398d955ee2497ea6f3601065b7abbbd0.tar.gz'
 default['dmon']['checksum'] =
-  'a1b1a56a26eafde0601fe19ebdf70d3d199060102519874c3dfa78b86b068dd3'
+  'd2bbca8dd2257949cf9f924b158484e8aafa0bd82c70ba6e162a37be3b908fcd'
+
 default['dmon']['install_dir'] = '/opt/DICE-Monitoring'
 
 default['dmon']['port'] = '5001'
