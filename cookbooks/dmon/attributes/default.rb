@@ -22,10 +22,10 @@ default['dmon']['user'] = 'ubuntu'
 # END OF DO NOT CHANGE BLOCK
 
 default['dmon']['tarball'] =
-  'http://github.com/dice-project/DICE-Monitoring/archive/'\
-  '483147e4398d955ee2497ea6f3601065b7abbbd0.tar.gz'
+  'https://github.com/xlab-si/DICE-Monitoring/releases/download/v0.2.5x/'\
+  'dice-monitoring-0.2.5x.tar.gz'
 default['dmon']['checksum'] =
-  'd2bbca8dd2257949cf9f924b158484e8aafa0bd82c70ba6e162a37be3b908fcd'
+  '69af0547bd29c6c3ac336f2659eb4bebb8d23eeb36b3d4527c72a88032caf3e3'
 
 default['dmon']['install_dir'] = '/opt/DICE-Monitoring'
 
