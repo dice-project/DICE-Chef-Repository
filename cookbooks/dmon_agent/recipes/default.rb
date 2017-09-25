@@ -63,7 +63,8 @@ template '/etc/init/dmon-agent.conf' do
   variables(
     install_dir: dmon_install_dir,
     user: 'root',
-    group: 'root'
+    group: 'root',
+    env_vars: {}
   )
 end
 
