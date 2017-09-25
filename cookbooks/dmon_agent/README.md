@@ -17,7 +17,7 @@ system (role) that you choose.
 
 ## Recipes
 
-- `dmon_agent::default` - installs dmon_agent registers the node on dmon
+- `dmon_agent::default` - installs dmon_agent and registers the node on dmon
 - `dmon_agent::mock_dmon` - runs mock http server for testing http_request
 - `dmon_agent::collectd` - installs Collectd (running dice_common::host before 
 this is required)
@@ -25,6 +25,7 @@ this is required)
 - `dmon_agent::storm` - sets node role (storm) on dmon
 - `dmon_agent::spark` - configure spark (run after spark installation) and sets 
 node role (spark) on dmon
+- `dmon_agent::start` - starts the `dmon-agent` service
 
 
 # Roles
@@ -38,10 +39,14 @@ Use run list:
 - recipe[dmon_agent::default]
 - recipe[dmon_agent::collectd]
 - recipe[dmon_agent::storm]
+- recipe[dmon_agent::start]
 ```
 
-Only Collectd is installed for system data collection. Dmon gets all additional 
-information form the Storm REST API.
+Collectd is installed for system data collection. DMon gets most of the
+additional information from the Storm REST API. Additionally, we start the
+`dmon-agent` to have the DMon agent be able to server the log files to the
+clients. Note that `dmon-agent` requires port 5222 to be open for inbound
+traffic.
 
 ### Spark
 

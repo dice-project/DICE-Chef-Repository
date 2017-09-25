@@ -1,0 +1,21 @@
+description "DICE Monitoring Framework agent"
+
+start on (net-device-up
+          and local-filesystems
+          and runlevel [2345])
+stop on runlevel [016]
+
+respawn
+respawn limit 10 30
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+script
+
+  export HOME="<%= @install_dir %>"
+  exec <%= @install_dir %>/dmonEnv/bin/python \
+    <%= @install_dir %>/dmon-agent.py > \
+    <%= @install_dir %>/log/dmon-agent.out 2>&1
+
+end script

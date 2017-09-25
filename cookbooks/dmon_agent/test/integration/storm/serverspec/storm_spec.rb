@@ -31,3 +31,31 @@ describe file('/var/log/dmon.log') do
   it { should contain('storm').from(/Roles/) }
   it { should contain 'POST /dmon/v2/overlord/core/ls' }
 end
+
+describe file('/etc/init/dmon-agent.conf') do
+  it { should exist }
+  it { should be_file }
+  it { should contain('setuid root') }
+  it { should contain('setgid root') }
+  it { should contain('/opt/dmon-agent/dmon-agent.py') }
+end
+
+describe file('/opt/dmon-agent/dmon-agent.py') do
+  it { should be_file }
+end
+
+['log', 'cert'].each do |dir|
+  describe file("/opt/dmon-agent/#{dir}") do
+    it { should exist }
+    it { should be_directory }
+  end
+end
+
+describe file('/opt/dmon-agent/dmonEnv/bin/activate') do
+  it { should exist }
+  it { should be_file }
+end
+
+describe service('dmon-agent') do
+  it { should be_running }
+end

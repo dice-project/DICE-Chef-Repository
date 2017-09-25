@@ -51,3 +51,24 @@ set_role 'Setting node role (ONLY FIRST ROLE)' do
 
   not_if { roles.empty? }
 end
+
+['log', 'cert'].each do |dir|
+  directory("#{dmon_install_dir}/#{dir}") do
+    action :create
+  end
+end
+
+template '/etc/init/dmon-agent.conf' do
+  source 'dmon-agent.conf.erb'
+  variables(
+    install_dir: dmon_install_dir,
+    user: 'root',
+    group: 'root'
+  )
+end
+
+python_runtime '2'
+
+python_virtualenv "#{dmon_install_dir}/dmonEnv"
+
+pip_requirements "#{dmon_install_dir}/requirements.txt"

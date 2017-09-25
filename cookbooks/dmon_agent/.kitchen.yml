@@ -10,6 +10,7 @@ suites:
       - recipe[dmon_agent::default]
       - recipe[dmon_agent::collectd]
       - recipe[dmon_agent::storm]
+      - recipe[dmon_agent::start]
     attributes:
       cloudify: &cfy_config
         node_id: sample_id
