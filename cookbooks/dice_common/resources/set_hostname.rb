@@ -10,17 +10,17 @@ action :set do
     action :nothing
   end
 
-  execute "hostname #{hostname}" do
+  execute "hostname #{new_resource.hostname}" do
     notifies :reload, 'ohai[reload hostname]'
   end
 
   if ::File.exist?('/usr/bin/hostnamectl')
-    execute "hostnamectl set-hostname #{hostname}" do
+    execute "hostnamectl set-hostname #{new_resource.hostname}" do
       notifies :reload, 'ohai[reload hostname]'
     end
   else
     file '/etc/hostname' do
-      content "#{hostname}\n"
+      content "#{new_resource.hostname}\n"
       mode '0644'
       notifies :reload, 'ohai[reload hostname]'
     end
@@ -32,7 +32,10 @@ action :set do
     group 'root'
     mode 0644
     variables(
-      ip: node['ipaddress'], fqdn: fqdn, hostname: hostname, marker: marker
+      ip: node['ipaddress'],
+      fqdn: new_resource.fqdn,
+      hostname: new_resource.hostname,
+      marker: new_resource.marker
     )
   end
 end
