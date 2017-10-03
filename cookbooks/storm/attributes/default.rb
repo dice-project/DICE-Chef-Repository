@@ -18,6 +18,7 @@
 #
 
 default['storm']['install_dir'] = '/usr/share/storm'
+default['storm']['log_dir'] = '/usr/share/storm/logs'
 default['storm']['user'] = 'storm'
 
 default['storm']['tarball'] =

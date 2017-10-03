@@ -12,6 +12,8 @@ suites:
       - recipe[dmon_agent::storm]
       - recipe[dmon_agent::start]
     attributes:
+      storm:
+        log_dir: /usr/share/storm/logs
       cloudify: &cfy_config
         node_id: sample_id
         deployment_id: sample_id

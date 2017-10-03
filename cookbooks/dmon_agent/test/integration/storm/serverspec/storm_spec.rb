@@ -64,3 +64,9 @@ describe file('/etc/default/dmon-agent.d') do
   it { should exist }
   it { should be_directory }
 end
+
+describe file('/etc/default/dmon-agent.d/storm') do
+  it { should exist }
+  it { should be_file }
+  it { should contain('STORM_LOG=/usr/share/storm/logs') }
+end
