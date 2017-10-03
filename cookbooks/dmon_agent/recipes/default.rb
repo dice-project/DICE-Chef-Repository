@@ -58,13 +58,16 @@ end
   end
 end
 
+directory '/etc/default/dmon-agent.d' do
+  action :create
+end
+
 template '/etc/init/dmon-agent.conf' do
   source 'dmon-agent.conf.erb'
   variables(
     install_dir: dmon_install_dir,
     user: 'root',
-    group: 'root',
-    env_vars: {}
+    group: 'root'
   )
 end
 

@@ -14,9 +14,10 @@ setgid <%= @group %>
 script
 
   export HOME="<%= @install_dir %>"
-  <% @env_vars.each_pair do |var, value| -%>
-  export <%= var %>=<%= value %>
-  <% end -%>
+  for cfg in /etc/default/dmon-agent.d/*
+  do
+    . $cfg
+  done
   exec <%= @install_dir %>/dmonEnv/bin/python \
     <%= @install_dir %>/dmon-agent.py > \
     <%= @install_dir %>/log/dmon-agent.out 2>&1

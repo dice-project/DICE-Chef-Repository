@@ -59,3 +59,8 @@ end
 describe service('dmon-agent') do
   it { should be_running }
 end
+
+describe file('/etc/default/dmon-agent.d') do
+  it { should exist }
+  it { should be_directory }
+end
