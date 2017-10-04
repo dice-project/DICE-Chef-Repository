@@ -1,3 +1,9 @@
+New in v.0.1.15:
+
+* Add DMon agent installation to monitored Apache Storm nodes.
+* Replace functionality that has been deprecated in Chef 13 and will be
+  removed in Chef 14.
+
 New in v.0.1.14:
 
 * Updated to Hadoop v. 2.7.4.
