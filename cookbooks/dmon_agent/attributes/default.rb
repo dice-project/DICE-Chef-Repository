@@ -1,9 +1,10 @@
 # General attributes
 default['dmon_agent']['install_dir'] = '/opt/dmon-agent'
 default['dmon_agent']['tarball'] =
-  'https://github.com/dice-project/DICE-Monitoring/archive/v0.2.3.tar.gz'
+  'https://github.com/xlab-si/DICE-Monitoring/releases/download/v0.2.6x/'\
+  'dice-monitoring-0.2.6x.tar.gz'
 default['dmon_agent']['checksum'] =
-  '1d7b6ced81dd19259a69d1620f0eb0c17992102623d8ea7c731391912cfeb43e'
+  '84a5cedb689f778d146ff044295d00522cf7ed88196814058b4d309a906e8396'
 
 # Apache Spark related attributes
 default['dmon_agent']['spark']['graphite']['period'] = 5
