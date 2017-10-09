@@ -4,6 +4,7 @@ dice_deployment_service
 dice-h2020
 dice_continuous_integration
 dmon_agent
+docker
 hadoop
 kafka
 mongodb
