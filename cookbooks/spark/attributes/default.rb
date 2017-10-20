@@ -27,9 +27,9 @@ default['spark']['1.6']['tarball'] =
   'http://d3kbcqa49mib13.cloudfront.net/spark-1.6.2-bin-hadoop2.6.tgz'
 
 default['spark']['2.0']['checksum'] =
-  '3d017807650f41377118a736e2f2298cd0146a593e7243a28c2ed72a88b9a043'
+  '97fd2cc58e08975d9c4e4ffa8d7f8012c0ac2792bcd9945ce2a561cf937aebcc'
 default['spark']['2.0']['tarball'] =
-  'http://d3kbcqa49mib13.cloudfront.net/spark-2.0.1-bin-hadoop2.7.tgz'
+  'http://d3kbcqa49mib13.cloudfront.net/spark-2.2.0-bin-hadoop2.7.tgz'
 
 # Global settings for installation
 default['spark']['install_dir'] =
