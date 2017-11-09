@@ -24,9 +24,9 @@ default['zookeeper']['data_dir'] = '/var/lib/zookeeper'
 default['zookeeper']['log_dir'] = '/var/log/zookeeper'
 default['zookeeper']['user'] = 'zookeeper'
 default['zookeeper']['tarball'] =
-  'http://www.apache.si/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz'
+  'http://www.apache.si/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz'
 default['zookeeper']['checksum'] =
-  'e7f340412a61c7934b5143faef8d13529b29242ebfba2eba48169f4a8392f535'
+  '7f7f5414e044ac11fee2a1e0bc225469f51fb0cdf821e67df762a43098223f27'
 
 # Zookeeper configuration
 default['zookeeper']['zoo.cfg']['dataDir'] = '/var/lib/zookeeper'
