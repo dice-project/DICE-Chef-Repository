@@ -55,7 +55,6 @@ suites:
       - recipe[java::default]
       - recipe[spark::default]
       - recipe[spark::configure]
-      - recipe[spark::start]
     attributes:
       java: *java_attrs
       spark:
@@ -78,7 +77,6 @@ suites:
       - recipe[java::default]
       - recipe[spark::default]
       - recipe[spark::configure]
-      - recipe[spark::start]
     attributes:
       java: *java_attrs
       spark:

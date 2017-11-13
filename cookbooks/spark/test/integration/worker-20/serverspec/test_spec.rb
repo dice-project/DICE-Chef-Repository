@@ -33,11 +33,3 @@ describe file('/etc/init/spark-worker-2.0.conf') do
   it { should be_mode 644 }
   its(:content) { should contain 'start-slave.sh' }
 end
-
-describe port(7078) do
-  it { should be_listening.with('tcp6') }
-end
-
-describe port(8081) do
-  it { should be_listening.with('tcp6') }
-end
