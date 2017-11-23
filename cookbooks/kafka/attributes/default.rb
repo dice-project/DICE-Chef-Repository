@@ -24,9 +24,9 @@ default['kafka']['conf_dir'] = '/etc/kafka'
 default['kafka']['log_dir'] = '/var/log/kafka'
 default['kafka']['user'] = 'kafka'
 default['kafka']['tarball'] =
-  'http://www.apache.si/kafka/0.10.0.1/kafka_2.11-0.10.0.1.tgz'
+  'http://www.apache.si/kafka/1.0.0/kafka_2.11-1.0.0.tgz'
 default['kafka']['checksum'] =
-  '2d73625aeddd827c9e92eefb3c727a78455725fbca4361c221eaa05ae1fab02d'
+  'b5b535f8db770cda8513e391917d0f5a35ef24c537ef3d29dcd9aa287da529f5'
 
 # Kafka configuration
 default['kafka']['cfg']['log.dirs'] = '/var/lib/kafka'
