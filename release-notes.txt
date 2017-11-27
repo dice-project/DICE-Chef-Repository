@@ -1,3 +1,8 @@
+New in 0.1.18:
+
+* Remove defunct Apache Spark tests.
+* Update Apache Kafka to 1.0.0.
+
 New in 0.1.17:
 
 * Update Apache Spark 2.x branch to 2.2.0.
