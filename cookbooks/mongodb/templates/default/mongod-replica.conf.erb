@@ -1,4 +1,4 @@
-<%= render "mongod-standalone.conf.erb", variables: {ip: @ip} %>
+<%= render "mongod-standalone.conf.erb", variables: {ips: @ips} %>
 
 replication:
   replSetName: <%= @replica_name %>

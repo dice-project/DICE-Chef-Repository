@@ -20,11 +20,15 @@ props = node['cloudify']['properties']
 rt_props = node['cloudify']['runtime_properties']
 
 # IP address that we bind to
-ip = props.fetch('bind_ip', '') == 'global' ? '0.0.0.0' : node['ipaddress']
+ips = if props.fetch('bind_ip', '') == 'global'
+        ['0.0.0.0']
+      else
+        [node['ipaddress'], '127.0.0.1']
+      end
 replica_name = rt_props['replica_name']
 hosts = rt_props['members'].map { |x| x + ':27017' }.join ','
 
 template '/etc/mongod.conf' do
   source 'mongod-router.conf.erb'
-  variables ip: ip, replica_name: replica_name, hosts: hosts
+  variables ips: ips, replica_name: replica_name, hosts: hosts
 end

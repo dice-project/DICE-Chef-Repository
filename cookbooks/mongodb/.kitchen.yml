@@ -13,7 +13,8 @@ suites:
         node_id: sample_node_id
         node_name: test_name
         deployment_id: sample_deploy_id
-        properties: {}
+        properties:
+          bind_ip: global
         runtime_properties: {}
 
   - name: replica
@@ -28,7 +29,6 @@ suites:
         node_name: test_replica
         deployment_id: sample_deploy_id
         properties:
-          bind_ip: global
           type: replica
         runtime_properties: {}
 

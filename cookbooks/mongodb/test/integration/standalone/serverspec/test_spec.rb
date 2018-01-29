@@ -14,7 +14,6 @@ end
 
 describe port(27_017) do
   it { should be_listening.with('tcp') }
-  it { should be_listening.on('127.0.0.1').with('tcp') }
 end
 
 describe command("mongo --eval 'db.foo.insert({x:3})'") do

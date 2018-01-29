@@ -5,7 +5,7 @@ systemLog:
 
 net:
   port: 27017
-  bindIp: <%= @ip %>,127.0.0.1
+  bindIp: <%= @ips.join(',') %>
 
 sharding:
   configDB: <%= @replica_name %>/<%= @hosts %>

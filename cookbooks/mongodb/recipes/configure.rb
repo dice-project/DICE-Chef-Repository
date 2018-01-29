@@ -19,11 +19,15 @@
 props = node['cloudify']['properties']
 
 # IP address that we bind to
-ip = props.fetch('bind_ip', '') == 'global' ? '0.0.0.0' : node['ipaddress']
+ips = if props.fetch('bind_ip', '') == 'global'
+        ['0.0.0.0']
+      else
+        [node['ipaddress'], '127.0.0.1']
+      end
 node_type = props.fetch 'type', 'standalone'
 replica_name = node['cloudify']['node_name']
 
 template '/etc/mongod.conf' do
   source "mongod-#{node_type}.conf.erb"
-  variables ip: ip, replica_name: replica_name
+  variables ips: ips, replica_name: replica_name
 end
