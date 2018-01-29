@@ -1,3 +1,7 @@
+New in 0.1.19:
+
+* Fix MongoDB bind IP settings.
+
 New in 0.1.18:
 
 * Remove defunct Apache Spark tests.
