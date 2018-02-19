@@ -22,6 +22,6 @@ default['storm']['log_dir'] = '/usr/share/storm/logs'
 default['storm']['user'] = 'storm'
 
 default['storm']['tarball'] =
-  'http://www.apache.si/storm/apache-storm-1.0.1/apache-storm-1.0.1.tar.gz'
+  'http://www.apache.si/storm/apache-storm-1.0.6/apache-storm-1.0.6.tar.gz'
 default['storm']['checksum'] =
-  '1574c08d8cfb6bc7509c78871e98a535f1386d6ca50fa71c880c39e8800620bf'
+  'ebf69f0616a97dd4ea2a0dd68bd7204559d77c2a17f2aff2145ef04e87779036'
