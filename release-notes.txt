@@ -1,6 +1,7 @@
 New in 0.1.20:
 
 * Bump Apache Spark release to latest stable upstream version.
+* Bump Apache Cassandra release to latest stable upstream version.
 
 New in 0.1.19:
 
