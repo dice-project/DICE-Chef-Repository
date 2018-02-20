@@ -20,10 +20,10 @@ default['cassandra']['group'] = 'cassandra'
 default['cassandra']['user'] = 'cassandra'
 
 default['cassandra']['tarball'] =
-  'http://www-eu.apache.org/dist/cassandra/3.0.14/'\
-  'apache-cassandra-3.0.14-bin.tar.gz'
+  'http://www-eu.apache.org/dist/cassandra/3.0.16/'\
+  'apache-cassandra-3.0.16-bin.tar.gz'
 default['cassandra']['checksum'] =
-  '0156c1bfc25021b98e9f6ca79e324b393a767fd947ff5825ea99e443b929c1a9'
+  '632cc817828499b94045ae68484e91f5d08a90c24908dd99d94c1972d8b29a39'
 
 default['cassandra']['connection_retries'] = 12
 default['cassandra']['connection_sleep_seconds'] = 5
