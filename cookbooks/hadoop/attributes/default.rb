@@ -19,9 +19,9 @@
 
 # Package binaries
 default['hadoop']['tarball'] =
-  'http://www.apache.si/hadoop/common/hadoop-2.7.4/hadoop-2.7.4.tar.gz'
+  'http://www.apache.si/hadoop/common/hadoop-2.7.5/hadoop-2.7.5.tar.gz'
 default['hadoop']['checksum'] =
-  '8f791bfcfa5bb7c7ccd09910d490c02910dda93b19936ec2aedb8930bc5be111'
+  '0bfc4d9b04be919be2fdf36f67fa3b4526cdbd406c512a7a1f5f1b715661f831'
 
 # Global settings for installation
 default['hadoop']['install_dir'] = '/usr/share/hadoop'
