@@ -47,6 +47,11 @@ link '/usr/bin/node' do
   not_if { ::File.file?('/usr/bin/node') }
 end
 
+# Ugly fix for npm stupidity (https://github.com/npm/npm/issues/20191)
+execute 'Disable strict ssl checking in npm' do
+  command 'npm config set strict-ssl false'
+end
+
 # Install dice deployment service files
 dds_tar = "#{Chef::Config[:file_cache_path]}/dds.tar.gz"
 dds_folder = "#{Chef::Config[:file_cache_path]}/dds"
