@@ -1,3 +1,9 @@
+New in 0.1.21:
+
+* Update Apache Hadoop packages to latest stable upstream version.
+* Update poise cookbook dependencies that were failing with pip 10.
+* Add bypass for NPM certificate bug.
+
 New in 0.1.20:
 
 * Bump Apache Spark release to latest stable upstream version.
